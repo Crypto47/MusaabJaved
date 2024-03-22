@@ -28,7 +28,6 @@ function Projects() {
               title="NOOR BOT"
               description="Your empathetic virtual therapist, equipped with the power of GPT-3 and trained specifically on Pakistani mental health issues. it engages in compassionate conversations. Remember, while NOOR BOT can be helpful, it is not a substitute for professional therapy or medical advice."
               ghLink="https://github.com/Crypto47/NOOR"
-              // demoLink="https://chatify-49.web.app/"
             />
           </Col>
 
@@ -38,8 +37,7 @@ function Projects() {
               isBlog={false}
               title="Eduvision"
               description="EDUVISION: A Pakistani student learning platform with REACT Front End, PHP Backend, and MYSQL DB. Experience personalized learning with its user-friendly interface and comprehensive resources."
-              ghLink="https://careercounselor.pk/"
-              // demoLink="https://editor.soumya-jit.tech/"              
+              demoLink="https://careercounselor.pk/"             
             />
           </Col>
 
@@ -51,7 +49,6 @@ function Projects() {
               title="WhisperFrames"
               description="Introducing WhisperFrames, an advanced Linux tool that harnesses the power of GANs and state-of-the-art Steganography techniques to securely hide secret data within images. Keep your sensitive information covert and protected with this cutting-edge solution."
               ghLink="https://github.com/Crypto47/WhisperFrames"
-              //demoLink="https://plant49-ai.herokuapp.com/"
             />
           </Col>
 
@@ -62,7 +59,6 @@ function Projects() {
               title="Real Time Data Collection of BLE Devices"
               description="This project leverages WEB BLE API to collect data from BLE devices in real-time. Front-end: HTML, CSS, JS, JQuery; Back-end: PHP, MYSQL database for efficient data processing and storage. Experience seamless real-time data monitoring and analysis with this user-friendly solution."
               ghLink="https://github.com/Crypto47/BLEWebConnect"
-              // demoLink="https://blogs.soumya-jit.tech/"
             />
           </Col>
 

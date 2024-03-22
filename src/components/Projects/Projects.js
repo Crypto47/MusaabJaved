@@ -50,7 +50,7 @@ function Projects() {
               isBlog={false}
               title="WhisperFrames"
               description="Introducing WhisperFrames, an advanced Linux tool that harnesses the power of GANs and state-of-the-art Steganography techniques to securely hide secret data within images. Keep your sensitive information covert and protected with this cutting-edge solution."
-              ghLink="https://github.com/Crypto47/BLEWebConnect"
+              ghLink="https://github.com/Crypto47/WhisperFrames"
               //demoLink="https://plant49-ai.herokuapp.com/"
             />
           </Col>
@@ -61,7 +61,7 @@ function Projects() {
               isBlog={false}
               title="Real Time Data Collection of BLE Devices"
               description="This project leverages WEB BLE API to collect data from BLE devices in real-time. Front-end: HTML, CSS, JS, JQuery; Back-end: PHP, MYSQL database for efficient data processing and storage. Experience seamless real-time data monitoring and analysis with this user-friendly solution."
-              ghLink="https://github.com/Crypto47/Web-Ble"
+              ghLink="https://github.com/Crypto47/BLEWebConnect"
               // demoLink="https://blogs.soumya-jit.tech/"
             />
           </Col>

@@ -38,7 +38,7 @@ function Projects() {
               isBlog={false}
               title="Eduvision"
               description="EDUVISION: A Pakistani student learning platform with REACT Front End, PHP Backend, and MYSQL DB. Experience personalized learning with its user-friendly interface and comprehensive resources."
-              ghLink="https://github.com/soumyajit4419/Editor.io"
+              ghLink="https://careercounselor.pk/"
               // demoLink="https://editor.soumya-jit.tech/"              
             />
           </Col>
@@ -50,8 +50,8 @@ function Projects() {
               isBlog={false}
               title="WhisperFrames"
               description="Introducing WhisperFrames, an advanced Linux tool that harnesses the power of GANs and state-of-the-art Steganography techniques to securely hide secret data within images. Keep your sensitive information covert and protected with this cutting-edge solution."
-              ghLink="https://github.com/soumyajit4419/Plant_AI"
-              demoLink="https://plant49-ai.herokuapp.com/"
+              ghLink="https://github.com/Crypto47/BLEWebConnect"
+              //demoLink="https://plant49-ai.herokuapp.com/"
             />
           </Col>
 

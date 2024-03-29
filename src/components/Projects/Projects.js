@@ -56,7 +56,7 @@ function Projects() {
             <ProjectCard
               imgPath={bitsOfCode}
               isBlog={false}
-              title="Real Time Data Collection of BLE Devices"
+              title="Real-Time Data Collection of Bluetooth Low Energy Devices"
               description="This project leverages WEB BLE API to collect data from BLE devices in real-time. Front-end: HTML, CSS, JS, JQuery; Back-end: PHP, MYSQL database for efficient data processing and storage. Experience seamless real-time data monitoring and analysis with this user-friendly solution."
               ghLink="https://github.com/Crypto47/BLEWebConnect"
             />

@@ -31,16 +31,6 @@ function Projects() {
             />
           </Col>
 
-          <Col md={4} className="project-card">
-            <ProjectCard
-              imgPath={editor}
-              isBlog={false}
-              title="Eduvision"
-              description="EDUVISION: A Pakistani student learning platform with REACT Front End, PHP Backend, and MYSQL DB. Experience personalized learning with its user-friendly interface and comprehensive resources."
-              demoLink="https://careercounselor.pk/"             
-            />
-          </Col>
-
 
           <Col md={4} className="project-card">
             <ProjectCard

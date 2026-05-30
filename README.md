@@ -146,3 +146,6 @@ For generating cover images, see [IMAGE.md](./IMAGE.md).
 | `/lab` | Interactive terminal Easter egg — try `knight`, `pikachu`, `hire` |
 | `/doom` | Playable Doom |
 | `/site-map` | Human-readable sitemap |
+
+
+DONE

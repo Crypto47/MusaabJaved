@@ -1,0 +1,40 @@
+# Musaab Javed — AI Integrations Engineer
+
+## About
+Musaab Javed is an AI Integrations Engineer based in Lahore, Pakistan with 3+ years of production experience building AI automation systems, RAG pipelines, and GTM infrastructure for clients and startups.
+
+- Email: musabjaved47@gmail.com
+- GitHub: https://github.com/Crypto47
+- LinkedIn: https://www.linkedin.com/in/musabjaved
+- Education: BSCS — PIEAS Islamabad
+
+## What He Builds
+
+### Lead Intelligence Systems
+Multi-stage lead sourcing, qualification, and enrichment pipelines using Apollo, Clay, and Apify. Automates prospect research and outbound sequencing end-to-end.
+
+### RAG Pipelines
+Production document retrieval systems over 5,000+ documents using LangChain, LlamaIndex, and Pinecone. Deployed for internal knowledge bases and customer-facing AI assistants.
+
+### CRM & Workflow Automation
+Event-driven n8n automations synced to HubSpot and GoHighLevel. Reduces manual operations by 60–70%, eliminating 14–30 hrs/month of CRM data entry and campaign setup work.
+
+### Content Automation
+AI content factories producing SEO articles, newsletters, and reports end-to-end. Replaces agency workflows at 10–20x lower cost.
+
+## Key Projects
+
+### Excelr8 — AI-Powered GTM Automation Platform
+Built the full GTM automation dashboard covering lead import, enrichment, campaign setup, CRM sync, and KPI reporting. Cut campaign launch time from hours to minutes. Built LinkedIn Post Radar for real-time intent tracking, HubSpot 2-way sync, and AI newsletter pipeline.
+
+### Zippit AI Content Engine
+Replaced a $1,000/month content agency with a $50–100/month automated pipeline producing 2+ bilingual SEO articles daily for an 80,000+ customer Dutch health brand. System uses Perplexity-sourced citations, Pinecone RAG for brand consistency, and Shopify GraphQL Translations API for bilingual publishing. Achieved 15–30% month-over-month organic traffic growth.
+
+## Technology Stack
+Python, JavaScript/TypeScript, Next.js, FastAPI, Node.js, LangChain, LlamaIndex, LangGraph, Letta, Ollama, Unsloth, Hugging Face, PyTorch, OpenAI API, Pinecone, PostgreSQL, Redis, Firebase, Supabase, n8n, Zapier, HubSpot, GoHighLevel, Clay, Apollo, Apify, Shopify API, Docker, AWS, GCP, Vercel
+
+## Site Map
+- Homepage: https://musaabjaved.com
+- About / CV: https://musaabjaved.com/about
+- Projects: https://musaabjaved.com/work
+- Blog: https://musaabjaved.com/blog

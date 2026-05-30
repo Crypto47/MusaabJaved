@@ -1,0 +1,31 @@
+@use "./breakpoints.scss" as breakpoints;
+
+.mask {
+    pointer-events: none;
+    backdrop-filter: blur(0.5rem);
+    background: linear-gradient(to bottom, var(--page-background), var(--static-transparent));
+    mask-image: linear-gradient(rgba(0,0,0) 25%, rgba(0, 0, 0, 0) 100%);
+    mask-size: 100% 100%;
+}
+
+@media (max-width: breakpoints.$s) {
+    .position {
+        top: auto;
+        bottom: var(--static-space-24);
+    }
+
+    .mask {
+        transform: rotate(180deg);
+        bottom: 0;
+    }
+}
+
+.navContainer {
+    transition: transform 0.2s ease-in-out;
+    margin-left: -8px;
+
+    @media (max-width: 768px) {
+        transform: scale(1.30);
+        transform-origin: center;
+    }
+}

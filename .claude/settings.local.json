@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Test-Path \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\node_modules\\\\react\\\\jsx-runtime.js\")",
+      "Bash(node -e \"require.resolve\\('react/jsx-runtime'\\)\")",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "WebSearch",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\node_modules\\\\@once-ui-system\\\\core\\\\src\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "WebFetch(domain:docs.once-ui.com)",
+      "Bash(node -e \"const m = require\\('./node_modules/@once-ui-system/core/dist/index.js'\\); console.log\\(Object.keys\\(m\\).filter\\(k => k.toLowerCase\\(\\).includes\\('scroll'\\) || k.toLowerCase\\(\\).includes\\('carousel'\\) || k.toLowerCase\\(\\).includes\\('swiper'\\)\\)\\)\")",
+      "Bash(npm run *)",
+      "Bash(Get-Item \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\\\\Musaab_Javed_Resume.pdf\")",
+      "Bash(Select-Object Name, Length)",
+      "Bash(Get-Item \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\Musaab_Javed_Resume \\(1\\).pdf\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\\\\resume\")",
+      "PowerShell(Copy-Item \"C:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\Musaab_Javed_Resume.pdf\" \"C:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\\\\resume\\\\Musaab_Javed_Resume.pdf\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\src\\\\app\\\\work\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(curl -L \"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\" -o \"c:/Users/Musab/Documents/Code/portfolio-v2/public/videos/demo.mp4\" --create-dirs)",
+      "PowerShell(Invoke-WebRequest -Uri \"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4\" -OutFile \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\\\\videos\\\\demo.mp4\")",
+      "PowerShell(Invoke-WebRequest -Uri \"https://www.w3schools.com/html/mov_bbb.mp4\" -OutFile \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\\\\videos\\\\demo.mp4\")",
+      "Bash(xargs grep -l \"Metadata\\\\|generateMetadata\\\\|viewport\")",
+      "PowerShell(Get-Process node -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "WebFetch(domain:www.likeahuman.ai)",
+      "Bash(curl -L -o \"public/currently/books/lotr-two-towers/image.jpg\" \"https://upload.wikimedia.org/wikipedia/en/a/a2/The_Two_Towers_-__cover.gif\")",
+      "Bash(curl -L -A \"Mozilla/5.0\" -o \"public/currently/books/lotr-two-towers/image.jpg\" \"https://upload.wikimedia.org/wikipedia/en/a/a2/The_Two_Towers_-__cover.gif\")",
+      "Bash(curl -L -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\" -o \"c:/Users/Musab/Documents/Code/portfolio-v2/public/currently/books/lotr-two-towers/image.jpg\" \"https://covers.openlibrary.org/b/id/8743161-L.jpg\")",
+      "Bash(npx remotion *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Musab\\\\Documents\\\\Code\\\\portfolio-v2\\\\public\" -Recurse -Filter \"*.gif\" -ErrorAction SilentlyContinue)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)"
+    ]
+  }
+}

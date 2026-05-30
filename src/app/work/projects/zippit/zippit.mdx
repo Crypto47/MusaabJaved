@@ -1,0 +1,37 @@
+---
+title: "Zippit AI Content Engine — Automated SEO Blog System"
+publishedAt: "2026-02-01"
+summary: "Replaced a $1K/month content agency with a $50–100/month automated pipeline producing 2+ bilingual SEO articles daily for an 80,000+ customer Dutch health brand."
+images:
+  - "/projects/zippit/zippit.png"
+team:
+  - name: "Musaab Javed"
+    role: "Automation Engineer"
+    avatar: "/images/avatar.jpg"
+link: ""
+video: "/projects/zippit/zippit.mp4"
+---
+
+## The Problem
+
+Zippit is a Dutch DTC health brand helping 80,000+ customers sleep and breathe better with medical-grade mouth tape and nasal strips. They were spending $1K/month on a content agency to produce SEO blog articles — slow, expensive, and impossible to scale. The brief: replace the agency with an automated system that maintains content quality and keeps up with Google's post-2023 EEAT standards.
+
+## The System
+
+I built a fully automated content factory that produces 2+ bilingual (English + Dutch) SEO articles every day, end-to-end, with a single human review checkpoint.
+
+**Content Pipeline** — The system pulls topics and source material by date range, passes them through a structured LLM chain, and produces full drafts with proper H1/H2 structure, internal linking anchors, and meta descriptions. No manual assembly, no brief writing.
+
+**EEAT Quality Layer** — To satisfy Google's post-2023 ranking requirements around expertise and credibility, every article is enriched with citations pulled from Perplexity and backed by a Pinecone RAG store. The system doesn't just generate content — it grounds it in verifiable sources.
+
+**Shopify Multi-Language Publishing** — Articles publish natively to Shopify via the GraphQL Translations API. One URL, two language versions, zero duplicate page penalties. This doubles the indexed content surface compared to a separate-subdomain approach.
+
+**Scale** — 30+ articles/month, fully automated, at $50–100/month in API costs versus the previous $1K/month agency spend.
+
+## Outcomes
+
+- 10–20x cost reduction ($1K/month agency → $50–100/month in API costs)
+- 2+ bilingual articles published daily with a single review checkpoint
+- 15–30% month-over-month organic traffic growth
+- 30+ articles/month fully automated end-to-end
+- 20+ manual hours/week reclaimed

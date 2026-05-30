@@ -1,0 +1,22 @@
+{
+  "name": "portfolio-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "npx remotion studio src/Root.tsx",
+    "render:excelr8": "npx remotion render src/Root.tsx Excelr8 ../public/projects/excelr8/excelr8.mp4",
+    "render:zippit": "npx remotion render src/Root.tsx Zippit ../public/projects/zippit/zippit.mp4",
+    "render:all": "npm run render:excelr8 && npm run render:zippit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}

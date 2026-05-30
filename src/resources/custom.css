@@ -1,0 +1,88 @@
+ :root {
+  /* Override default variables here */
+  
+  --font-size-display-multiplier:   1;
+  --font-size-heading-multiplier:   1;
+  --font-size-body-multiplier:      1;
+  --font-size-label-multiplier:     1;
+
+  --line-height-display-multiplier: 1;
+  --line-height-heading-multiplier: 1;
+  --line-height-body-multiplier:    1;
+  --line-height-label-multiplier:   1;
+
+  --default-border:        var(--neutral-border-medium);
+
+
+  /* Example setup for custom colors */
+  /* Generate at: https://once-ui.com/customize */
+
+  --scheme-brand-100: #000035;
+  --scheme-brand-200: #000b4d;
+  --scheme-brand-300: #003e80;
+  --scheme-brand-400: #1c5ba0;
+  --scheme-brand-500: #3976bd;
+  --scheme-brand-600: #5a98e1;
+  --scheme-brand-600-15: rgba(90,152,225,0.15);
+  --scheme-brand-600-30: rgba(90,152,225,0.3);
+  --scheme-brand-600-50: rgba(90,152,225,0.5);
+  --scheme-brand-700: #79b8ff;
+  --scheme-brand-800: #9bdcff;
+  --scheme-brand-900: #abecff;
+  --scheme-brand-1000: #b8faff;
+  --scheme-brand-1100: #c2ffff;
+  --scheme-brand-1200: #c2ffff;
+
+  --scheme-accent-100: #090909;
+  --scheme-accent-200: #161616;
+  --scheme-accent-300: #404040;
+  --scheme-accent-400: #5b5b5b;
+  --scheme-accent-500: #777777;
+  --scheme-accent-600: #959595;
+  --scheme-accent-600-15: rgba(149,149,149,0.15);
+  --scheme-accent-600-30: rgba(149,149,149,0.3);
+  --scheme-accent-600-50: rgba(149,149,149,0.5);
+  --scheme-accent-700: #b4b4b4;
+  --scheme-accent-800: #d4d4d4;
+  --scheme-accent-900: #e1e1e1;
+  --scheme-accent-1000: #eeeeee;
+  --scheme-accent-1100: #f5f5f5;
+  --scheme-accent-1200: #fcfcfc;
+
+  --scheme-neutral-100: #07090d;
+  --scheme-neutral-200: #14161a;
+  --scheme-neutral-300: #3d4045;
+  --scheme-neutral-400: #585b60;
+  --scheme-neutral-500: #75777d;
+  --scheme-neutral-600: #95989e;
+  --scheme-neutral-600-15: rgba(149,152,158,0.15);
+  --scheme-neutral-600-30: rgba(149,152,158,0.3);
+  --scheme-neutral-600-50: rgba(149,152,158,0.5);
+  --scheme-neutral-700: #b1b4ba;
+  --scheme-neutral-800: #d1d4da;
+  --scheme-neutral-900: #dee1e7;
+  --scheme-neutral-1000: #ebeef5;
+  --scheme-neutral-1100: #f2f5fb;
+  --scheme-neutral-1200: #f9fcff;
+
+  /* --font-letter-spacing-heading: 0.01em; */
+  --font-letter-spacing-display: -0.04em;
+  --font-letter-spacing-label: 0.08em;
+}
+
+[class*="font-heading"],
+.font-heading {
+  font-weight: 400 !important;
+}
+
+[class*="font-display"],
+.font-display {
+  letter-spacing: var(--font-letter-spacing-display) !important;
+  font-weight: 400 !important;
+}
+
+[class*="font-label"],
+.font-label {
+  letter-spacing: var(--font-letter-spacing-label) !important;
+  font-weight: 400 !important;
+}

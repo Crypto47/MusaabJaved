@@ -77,6 +77,7 @@ function readMDXFile(filePath: string) {
     team: data.team || [],
     link: data.link || "",
     video: data.video || "",
+    featured: data.featured === true,
   };
 
   return { metadata, content };

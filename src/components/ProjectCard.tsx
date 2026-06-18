@@ -11,7 +11,7 @@ import {
   Row,
   Text,
 } from "@once-ui-system/core";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DUMMY_VIDEO = "/videos/demo.mp4";
 
@@ -39,6 +39,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const [activeMedia, setActiveMedia] = useState<"image" | "video">("video");
   const resolvedVideo = videoSrc || DUMMY_VIDEO;
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (activeMedia === "video" && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [activeMedia]);
 
   return (
     <Column fillWidth gap="m">
@@ -59,6 +66,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           )
         ) : (
           <video
+            ref={videoRef}
             src={resolvedVideo}
             controls
             autoPlay

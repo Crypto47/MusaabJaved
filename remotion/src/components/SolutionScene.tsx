@@ -1,4 +1,20 @@
 import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { FiCpu, FiTrendingUp, FiSend, FiFileText } from "react-icons/fi";
+import { SiN8n, SiGooglesheets } from "@icons-pack/react-simple-icons";
+
+function TechIcon({ tech }: { tech: string }) {
+  const s = 30;
+  const c = "#fff";
+  switch (tech) {
+    case "GPT-4o":        return <FiCpu size={s} color={c} />;
+    case "n8n":           return <SiN8n size={s} color={c} />;
+    case "Yahoo Finance": return <FiTrendingUp size={s} color={c} />;
+    case "Google Sheets": return <SiGooglesheets size={s} color={c} />;
+    case "SendGrid":      return <FiSend size={s} color={c} />;
+    case "html2pdf":      return <FiFileText size={s} color={c} />;
+    default:              return null;
+  }
+}
 
 interface SolutionSceneProps {
   solution: string;
@@ -98,8 +114,12 @@ export function SolutionScene({ solution, techs }: SolutionSceneProps) {
                 transform: `translateX(${x}px)`,
                 border: `1px solid ${color.border}`,
                 boxShadow: `0 4px 20px ${color.border}`,
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
               }}
             >
+              <TechIcon tech={tech} />
               {tech}
             </div>
           );

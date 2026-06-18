@@ -7,151 +7,162 @@
 
 ## What you need to provide
 
-Tell Claude any combination of the following — the more you give, the less Claude has to guess:
-
 | Info | Where it comes from | Example |
 |------|-------------------|---------|
 | Project name | MDX title, or you say it | "Zippit" |
 | Tagline | MDX summary, or you describe it | "Replaced a $1K/month agency with $50/month AI" |
 | Pain point | MDX "The Problem" section, or you describe it | "Teams waste 20+ hrs/week on manual data entry" |
-| Solution | MDX "What I Built" section, or you describe it | "End-to-end automation covering X, Y, Z" |
-| Tech stack | MDX body, or you list it | "LangGraph, Pinecone, GPT-4o" |
+| Solution | MDX "What I Built" section, or you describe it | "Automated X, Y, Z. Two articles a day." |
+| Tech stack | MDX body, or you list it | "Claude AI, n8n, Pinecone, Shopify" |
 | 2–3 outcome metrics | MDX "Outcomes" section, or you state them | "10x cost reduction, 30 hrs/month saved" |
 
-If the project has an MDX file at `src/app/work/projects/{slug}.mdx`, Claude should read it first and extract what it can, then ask only for what's missing.
+If the project has an MDX file at `src/app/work/projects/{slug}/{slug}.mdx`, Claude should read it first and extract what it can.
 
 ---
 
-## What Claude does (do all of this automatically)
+## Copy rules
 
-### 1. Derive the config
-
-From the project info, produce a `ProjectConfig` object:
-
-```ts
-{
-  title: string,      // project name, short — e.g. "Zippit"
-  tagline: string,    // one punchy outcome line, max ~60 chars
-  pain: string,       // the pain point — 1–2 sentences, visceral, specific
-  solution: string,   // what was built — 1–2 sentences, outcome-led
-  techs: string[],    // 4–8 tech names, shortest recognizable form
-  metrics: [          // 2–3 metrics max — pick the most impressive
-    { value: number, label: string, suffix?: string }
-  ]
-}
-```
-
-**Rules for good copy:**
-- `tagline` — lead with the outcome. "Replaced a $1K/month agency with $50/month AI" beats "An automated content pipeline"
-- `pain` — make it feel real. Specific hours, dollars, or frustrations. "Teams waste 20+ hrs/week on manual CRM entry" beats "The process was inefficient"
-- `solution` — outcome-led, not tech-led. "Fully automated content factory producing 2+ articles/day" beats "A LangGraph pipeline with Pinecone RAG"
-- `metrics.value` — must be a plain integer (the counter animates). For ranges (e.g. "10–20x"), use the higher end
-- `metrics.suffix` — only needed for `%`. Everything else has no suffix
-
----
-
-### 2. Create the composition file
-
-Create `remotion/src/compositions/{PascalCaseName}.tsx`:
-
-```tsx
-import { ProjectVideo } from "./ProjectVideo";
-
-export function {PascalCaseName}() {
-  return (
-    <ProjectVideo
-      config={{
-        title: "...",
-        tagline: "...",
-        pain: "...",
-        solution: "...",
-        techs: [...],
-        metrics: [...],
-      }}
-    />
-  );
-}
-```
-
----
-
-### 3. Register in Root.tsx
-
-In `remotion/src/Root.tsx`, add:
-
-```tsx
-// Top of file:
-import { {PascalCaseName} } from "./compositions/{PascalCaseName}";
-
-// Inside RemotionRoot, after the last <Composition>:
-<Composition
-  id="{PascalCaseName}"
-  component={{PascalCaseName}}
-  durationInFrames={540}
-  fps={30}
-  width={1920}
-  height={1080}
-  props={{}}
-/>
-```
-
----
-
-### 4. Add render script to package.json
-
-In `remotion/package.json`, add to `scripts`:
-
-```json
-"render:{lowercasename}": "npx remotion render src/Root.tsx {PascalCaseName} ../public/videos/{lowercasename}.mp4"
-```
-
-Also update `render:all`:
-
-```json
-"render:all": "npm run render:excelr8 && npm run render:zippit && npm run render:{lowercasename}"
-```
-
----
-
-### 5. Run the render
-
-```bash
-cd remotion
-npm run render:{lowercasename}
-```
-
-Output: `public/videos/{lowercasename}.mp4`
-
----
-
-### 6. Wire to the project card
-
-In `src/app/work/projects/{slug}.mdx`, add to frontmatter:
-
-```yaml
-video: "/videos/{lowercasename}.mp4"
-```
+- **Tagline** — lead with the outcome. Short. "Replaced a $1K/month agency with $50/month AI." beats "An automated content pipeline"
+- **Pain** — max 2 short sentences. No jargon. No em dashes. Make it feel real.
+- **Solution** — max 2 short sentences. Outcome-led, not tech-led. No em dashes.
+- **Techs** — 4–6 names, shortest recognizable form. Each gets an icon + label badge.
+- **Metrics** — 2–3 max. `value` must be a plain integer (counter animates). Use `suffix: "%"` only for percentages.
 
 ---
 
 ## Video structure
 
-18 seconds (540 frames at 30fps), 5 scenes:
+31 seconds (930 frames at 30fps), 5 scenes:
 
 | Frames | Duration | Scene | What it shows |
 |--------|----------|-------|---------------|
-| 0–60 | 2s | **Intro** | Project name + tagline. Gradient title slams in with glow. |
-| 60–150 | 3s | **Pain Point** | The problem, bold-slammed onto screen. Red tones, high stiffness spring. |
-| 150–270 | 4s | **Solution** | What was built (1–2 sentences) + tech badges sliding in below. Purple/blue tones. |
-| 270–450 | 6s | **Results** | 2–3 metrics counting up from zero. Each number in a different gradient color. |
-| 450–540 | 3s | **Outro** | musaabjaved.com + "Let's work together." |
+| 0–90 | 3s | **Intro** | Title slides in from left. Colored underline draws across. Tagline fades up. |
+| 90–330 | 8s | **Pain Point** | Words appear one by one with slide-up stagger. Dark warm bg. Accent color highlights every 6th word. |
+| 330–570 | 8s | **Solution** | Solution text fades up. Tech badges drop in from above with bounce spring. Outlined badge style with neon glow. |
+| 570–810 | 8s | **Results** | Grid-line background. 2–3 metrics count up. Neon glow behind each number. Bar fills as counter runs. |
+| 810–930 | 4s | **Outro** | Name slides from left, CTA from right. Divider line grows center-out. |
 
-Audio: `public/audio/funky.mp3` plays throughout at 75% volume (auto-wired in `ProjectVideo.tsx`).
+Audio: `public/audio/funky.mp3` at 75% volume.
+
+---
+
+## Color themes
+
+Each project gets its own color palette. Create a folder `remotion/src/components/{prefix}/` with 5 scene files.
+
+| Project | Prefix | Primary | Secondary | Background |
+|---------|--------|---------|-----------|------------|
+| Equity Pulse | `ep` | `#fbbf24` amber | `#14b8a6` teal | `#020c18` deep navy |
+| Zippit | `zp` | `#4ade80` lime | `#fb923c` coral | `#030d06` dark forest |
+| Excelr8 | `ex` | `#22d3ee` cyan | `#e879f9` magenta | `#06050f` dark slate |
+| **New project** | pick 2-letter prefix | pick primary | pick secondary | keep very dark |
+
+**Color picking guide for new projects:**
+- Background: always very dark (`#02–06` range), never generic black `#000`
+- Primary: the "wow" color — used on title, labels, underline, metric numbers
+- Secondary: the "accent" — used on corners, every-nth-word highlights, divider gradient end
+- Pain scene bg: dark tint of secondary (e.g. coral bg = `#0f0800`)
+- Solution scene bg: dark tint of primary (e.g. lime bg = `#030d06`)
+- Never reuse EP's amber/teal or ZP's lime/coral for new projects
+
+---
+
+## Icon map (available)
+
+| Tech | Icon | Import |
+|------|------|--------|
+| GPT-4o | `FiCpu` | `react-icons/fi` |
+| Claude AI | `SiClaude` | `@icons-pack/react-simple-icons` |
+| n8n | `SiN8n` | `@icons-pack/react-simple-icons` |
+| Yahoo Finance | `FiTrendingUp` | `react-icons/fi` |
+| Google Sheets | `SiGooglesheets` | `@icons-pack/react-simple-icons` |
+| SendGrid | `FiSend` | `react-icons/fi` |
+| html2pdf | `FiFileText` | `react-icons/fi` |
+| Shopify | `SiShopify` | `@icons-pack/react-simple-icons` |
+| Airtable | `SiAirtable` | `@icons-pack/react-simple-icons` |
+| Pinecone | `FiDatabase` | `react-icons/fi` |
+| Anthropic | `SiAnthropic` | `@icons-pack/react-simple-icons` |
+
+For unlisted techs: check `SiXxx` in `@icons-pack/react-simple-icons` first, fall back to `react-icons/fi`.
+
+---
+
+## Steps for a new video
+
+### 1. Create scene components
+
+Copy `remotion/src/components/ep/` → `remotion/src/components/{prefix}/`. Rename all files and function names. Swap every color token to the new palette.
+
+### 2. Create the composition
+
+Create `remotion/src/compositions/{PascalName}.tsx`:
+
+```tsx
+import { AbsoluteFill, Audio, Series, staticFile } from "remotion";
+import { XXIntro }     from "../components/xx/XXIntro";
+import { XXPainPoint } from "../components/xx/XXPainPoint";
+import { XXSolution }  from "../components/xx/XXSolution";
+import { XXMetrics }   from "../components/xx/XXMetrics";
+import { XXOutro }     from "../components/xx/XXOutro";
+
+const config = {
+  tagline:  "...",
+  pain:     "...",
+  solution: "...",
+  techs:    ["...", "..."],
+  metrics:  [{ value: 0, label: "..." }],
+};
+
+export function {PascalName}() {
+  return (
+    <AbsoluteFill style={{ background: "#..." }}>
+      <Audio src={staticFile("audio/funky.mp3")} volume={0.75} />
+      <Series>
+        <Series.Sequence durationInFrames={90}><XXIntro title="{Name}" tagline={config.tagline} /></Series.Sequence>
+        <Series.Sequence durationInFrames={240}><XXPainPoint pain={config.pain} /></Series.Sequence>
+        <Series.Sequence durationInFrames={240}><XXSolution solution={config.solution} techs={config.techs} /></Series.Sequence>
+        <Series.Sequence durationInFrames={240}><XXMetrics metrics={config.metrics} /></Series.Sequence>
+        <Series.Sequence durationInFrames={120}><XXOutro /></Series.Sequence>
+      </Series>
+    </AbsoluteFill>
+  );
+}
+```
+
+### 3. Register in Root.tsx
+
+```tsx
+import { {PascalName} } from "./compositions/{PascalName}";
+
+<Composition id="{PascalName}" component={{PascalName}} durationInFrames={930} fps={30} width={1920} height={1080} props={{}} />
+```
+
+### 4. Add render script to package.json
+
+```json
+"render:{slug}": "npx remotion render src/Root.tsx {PascalName} ../public/projects/{slug}/{slug}.mp4"
+```
+
+Update `render:all` to include the new script.
+
+### 5. Render
+
+```bash
+cd remotion && npm run render:{slug}
+```
+
+### 6. Preview without re-rendering
+
+```bash
+cd remotion && npm run studio
+```
+
+Opens at `localhost:3000` — scrub the timeline frame by frame before committing to a render.
 
 ---
 
 ## Example trigger
 
-> "Read REMOTION.md. The project is called TechCorp AI. It automates invoice processing for a logistics firm — before they had 3 people manually reviewing 800 invoices a day, now it's instant. Stack: GPT-4o, Python, FastAPI, Supabase. Results: 800 invoices/day processed, 90% time saved, 6 seconds per invoice. Make the video."
+> "Read REMOTION.md. Project is PortfolioIQ — it automates investment portfolio analysis. Pain: manually reviewing 20 stocks takes hours. Solution: upload a screenshot, get a PDF report with live prices and risk scores in 10 minutes. Stack: GPT-4o, n8n, Yahoo Finance, SendGrid. Results: 10 min turnaround, 6 enrichment signals per stock, 100% automated. Make the video."
 
-Claude reads this file → derives config → creates 3 files → runs render → wires MDX → done.
+Claude reads this → derives config → copies EP components to new prefix → swaps colors → creates composition → registers → renders → done.

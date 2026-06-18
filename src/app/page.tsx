@@ -182,8 +182,15 @@ export default async function Home() {
                 Selected Projects
               </Heading>
               <Column fillWidth paddingX="l">
-                <Projects />
+                <Projects featuredOnly />
               </Column>
+              <Button
+                href="/work"
+                variant="secondary"
+                size="m"
+                arrowIcon
+                label="View all projects"
+              />
             </Column>
           )}
 

@@ -20,6 +20,7 @@ type Metadata = {
   team: Team[];
   link?: string;
   video?: string;
+  featured?: boolean;
 };
 
 import { notFound } from "next/navigation";

@@ -1,0 +1,61 @@
+---
+title: "Equity Pulse — Automated Portfolio Intelligence for Retail Investors"
+publishedAt: "2025-11-01"
+summary: "Built an end-to-end portfolio analysis engine for retail investors — OCR ingestion, per-holding fundamental enrichment, Graham Fair Value scoring, and AI-written PDF reports delivered by email."
+images:
+  - "/projects/equity-pulse/equity-pulse.png"
+team:
+  - name: "Musaab Javed"
+    role: "AI Integrations Engineer"
+    avatar: "/images/avatar.jpg"
+link: ""
+video: "/projects/equity-pulse/equity-pulse.mp4"
+featured: true
+---
+
+## The Problem
+
+Most retail brokerage platforms give investors access to global markets but zero analytical tooling.
+Getting a meaningful view of a 15–20 stock portfolio — current valuation vs fair value,
+analyst consensus, upcoming earnings, risk profile — means manually pulling data across
+Yahoo Finance, news aggregators, and brokerage research tabs. For an independent advisor
+running the same review across multiple client portfolios, that's hours of work per cycle
+that produces nothing proprietary.
+
+## What I Built
+
+An automation pipeline that takes a brokerage portfolio screenshot and returns a
+PDF investment report — no manual data entry required.
+
+**OCR Ingestion** — GPT-4o vision extracts every holding (stocks and ETFs) directly
+from a brokerage portfolio screenshot or export, including ISINs and position sizes. A batch ID
+groups each upload so multiple portfolios run in parallel without collision.
+
+**Per-Holding Enrichment** — Each ticker runs through a Yahoo Finance enrichment loop:
+live pricing, analyst consensus ratings, recent news, earnings calendar, and beta
+coefficient — all pulled and structured automatically.
+
+**Graham Fair Value Scoring** — Intrinsic value calculated per stock using
+`√(22.5 × EPS × Book Value) × 1.15`, surfacing whether each position is trading
+above or below fundamental fair value at a glance.
+
+**Beta-Based Risk Flagging** — Every holding is tagged Low (β < 1.0),
+Normal (1.0–1.2), or High Risk (β > 1.2) to give the portfolio a quick
+risk-distribution read.
+
+**Two Delivery Modes:**
+- *Direct* — fully automated end-to-end. Portfolio upload → enrich → report in under 10 minutes.
+- *HITL (Human-in-the-Loop)* — enriched data lands in a Google Sheets review
+  interface first. The advisor confirms before the PDF generates, allowing
+  annotations or corrections before client delivery.
+
+**AI Report Generation** — GPT-4o-mini writes a structured HTML investment report
+across all holdings, converted to PDF via html2pdf.app and delivered as an email
+attachment via SendGrid.
+
+## Outcomes
+
+- Per-portfolio analysis time: hours → under 10 minutes
+- Full fundamental snapshot (valuation, analyst view, news, risk) on every holding
+  with zero manual data pulls
+- Advisor-grade review workflow via HITL mode before client-facing delivery

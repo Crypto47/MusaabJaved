@@ -7,10 +7,15 @@ interface ProjectsProps {
   exclude?: string[];
   randomize?: boolean;
   limit?: number;
+  featuredOnly?: boolean;
 }
 
-export function Projects({ range, exclude, randomize, limit }: ProjectsProps) {
+export function Projects({ range, exclude, randomize, limit, featuredOnly }: ProjectsProps) {
   let allProjects = getPosts(["src", "app", "work", "projects"]);
+
+  if (featuredOnly) {
+    allProjects = allProjects.filter((post) => post.metadata.featured === true);
+  }
 
   // Exclude by slug (exact match)
   if (exclude && exclude.length > 0) {

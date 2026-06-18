@@ -36,7 +36,11 @@
       "Bash(git push *)",
       "Bash(git checkout *)",
       "Bash(git branch *)",
-      "Bash(echo 'import { NextResponse } from '\\\\''next/server'\\\\''; *)"
+      "Bash(echo 'import { NextResponse } from '\\\\''next/server'\\\\''; *)",
+      "Bash(bash .claude/skills/run-portfolio-v2/smoke.sh)",
+      "Bash(node -e \"const si = require\\('@icons-pack/react-simple-icons'\\); const keys = Object.keys\\(si\\); console.log\\('OpenAI variants:', keys.filter\\(k => k.toLowerCase\\(\\).includes\\('openai'\\)\\)\\); console.log\\('SendGrid variants:', keys.filter\\(k => k.toLowerCase\\(\\).includes\\('sendgrid'\\) || k.toLowerCase\\(\\).includes\\('twilio'\\)\\)\\); console.log\\('Yahoo variants:', keys.filter\\(k => k.toLowerCase\\(\\).includes\\('yahoo'\\)\\)\\);\")",
+      "Bash(node -e \"const si = require\\('@icons-pack/react-simple-icons'\\); ['SiShopify','SiAirtable','SiAnthropic','SiPinecone','SiN8n','SiClaude'].forEach\\(k => console.log\\(k+':', !!si[k]\\)\\)\")",
+      "Bash(node -e \"const si = require\\('@icons-pack/react-simple-icons'\\); ['SiHubspot','SiClay','SiPython','SiApollo','SiApolloGraphql'].forEach\\(k => console.log\\(k+':', !!si[k]\\)\\)\")"
     ]
   }
 }

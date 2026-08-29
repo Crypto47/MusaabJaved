@@ -1,12 +1,14 @@
 import type {
   About,
   Blog,
+  Contact,
   Gallery,
   Goals,
   Guestbook,
   Home,
   Newsletter,
   Person,
+  ProcessStep,
   Seeker,
   Social,
   Work,
@@ -260,7 +262,7 @@ const about: About = {
         description: <>Storage solutions I use in production</>,
         tags: [
           { name: "PostgreSQL", icon: "postgresql" },
-          { name: "Pinecone", icon: "" },
+          { name: "Pinecone", icon: "pinecone" },
           { name: "Firebase", icon: "firebase" },
           { name: "Supabase", icon: "supabase" },
           { name: "Airtable", icon: "airtable" },
@@ -352,6 +354,27 @@ const about: About = {
   currently: {
     display: true,
     title: "Currently",
+  },
+  specialist: {
+    display: true,
+    title: "AI Integrations Specialist",
+    description: (
+      <>
+        I connect LLMs to the systems businesses actually run on — CRMs, content pipelines,
+        lead databases, and messaging tools — with n8n and custom Python as the backbone.
+        Every build ships with monitoring, human-in-the-loop checkpoints, and a clear ROI story.
+      </>
+    ),
+    image: {
+      src: "/images/musaab-javed.jpg",
+      alt: "Musaab Javed",
+    },
+    stats: [
+      { value: "n8n Expert", label: "Primary automation platform" },
+      { value: "RAG Systems", label: "Pinecone + LangChain in production" },
+      { value: "CRM Integrations", label: "HubSpot & GoHighLevel pipelines" },
+      { value: "LLM Engineering", label: "OpenAI & Anthropic APIs" },
+    ],
   },
 };
 
@@ -613,5 +636,100 @@ export const services = [
     icon: "edit",
   },
 ];
+
+export const process: ProcessStep[] = [
+  {
+    step: "01",
+    title: "Discovery",
+    description:
+      "Map your manual workflows, data sources, and tools to find the highest-ROI automation targets.",
+  },
+  {
+    step: "02",
+    title: "Workflow Design",
+    description:
+      "Blueprint the end-to-end pipeline — triggers, CRM and API integrations, and human-in-the-loop checkpoints.",
+  },
+  {
+    step: "03",
+    title: "AI Logic",
+    description:
+      "Design the LLM layer: prompt chains, RAG grounding, structured outputs, and model selection tuned for cost and accuracy.",
+  },
+  {
+    step: "04",
+    title: "Development",
+    description:
+      "Build the integration in n8n and custom code — API connections, error handling, retries, and deduplication.",
+  },
+  {
+    step: "05",
+    title: "Testing",
+    description:
+      "Validate against real data: edge cases, LLM output QA, and failure-mode drills before anything touches production.",
+  },
+  {
+    step: "06",
+    title: "Deployment",
+    description:
+      "Ship to production with monitoring, alerting, and rollback paths — no silent failures.",
+  },
+  {
+    step: "07",
+    title: "Optimization",
+    description:
+      "Track cost, latency, and output quality; iterate prompts and flows as volume grows.",
+  },
+];
+
+const WHATSAPP_LINK = "https://wa.me/923244606015";
+const CALENDLY_LINK = "https://calendly.com/dr-dre021/30min";
+
+export const contact: Contact = {
+  display: true,
+  title: "Let's Build Your Next Integration",
+  description:
+    "Have a workflow that eats hours every week? Tell me about it — I usually reply within a day.",
+  channels: [
+    {
+      name: "Email",
+      value: person.email,
+      icon: "email",
+      link: `mailto:${person.email}`,
+    },
+    {
+      name: "Book a call",
+      value: "30-min intro call",
+      icon: "calendar",
+      link: CALENDLY_LINK,
+    },
+    {
+      name: "WhatsApp",
+      value: "+92 324 4606015",
+      icon: "whatsapp",
+      link: WHATSAPP_LINK,
+    },
+    {
+      name: "LinkedIn",
+      value: "in/musabjaved",
+      icon: "linkedin",
+      link: "https://www.linkedin.com/in/musabjaved",
+    },
+    {
+      name: "GitHub",
+      value: "Crypto47",
+      icon: "github",
+      link: "https://github.com/Crypto47",
+    },
+  ],
+  cta: {
+    heading: "Ready to get started?",
+    actions: [
+      { label: "Send message", icon: "email", href: `mailto:${person.email}`, variant: "primary" },
+      { label: "WhatsApp", icon: "whatsapp", href: WHATSAPP_LINK, variant: "secondary" },
+      { label: "Book a call", icon: "calendar", href: CALENDLY_LINK, variant: "secondary" },
+    ],
+  },
+};
 
 export { person, social, newsletter, home, about, blog, work, gallery, guestbook, goals, doom, seeker };

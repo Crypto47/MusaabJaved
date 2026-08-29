@@ -14,6 +14,8 @@ export {
   seeker,
   metrics,
   services,
+  process,
+  contact,
 } from "./content";
 
 export {

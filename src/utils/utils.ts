@@ -21,6 +21,12 @@ type Metadata = {
   link?: string;
   video?: string;
   featured?: boolean;
+  problem?: string;
+  solution?: string;
+  techStack?: string[];
+  features?: string[];
+  impact?: string[];
+  architecture?: string[];
 };
 
 import { notFound } from "next/navigation";
@@ -78,6 +84,12 @@ function readMDXFile(filePath: string) {
     link: data.link || "",
     video: data.video || "",
     featured: data.featured === true,
+    problem: data.problem || "",
+    solution: data.solution || "",
+    techStack: data.techStack || [],
+    features: data.features || [],
+    impact: data.impact || [],
+    architecture: data.architecture || [],
   };
 
   return { metadata, content };

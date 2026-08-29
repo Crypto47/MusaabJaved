@@ -18,7 +18,7 @@ import {
 import { baseURL, about, person, social } from "@/resources";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
-import { CurrentlySection } from "@/components";
+import { CurrentlySection, SpecialistSection } from "@/components";
 import React from "react";
 
 export async function generateMetadata() {
@@ -36,6 +36,11 @@ export default function About() {
     {
       title: about.intro.title,
       display: about.intro.display,
+      items: [],
+    },
+    {
+      title: about.specialist.title,
+      display: about.specialist.display,
       items: [],
     },
     {
@@ -228,6 +233,22 @@ export default function About() {
                 </Text>
               ))}
             </Column>
+          )}
+
+          {about.specialist.display && (
+            <>
+              <Heading
+                as="h2"
+                id={about.specialist.title}
+                variant="display-strong-s"
+                marginBottom="m"
+              >
+                {about.specialist.title}
+              </Heading>
+              <Column fillWidth marginBottom="40">
+                <SpecialistSection data={about.specialist} />
+              </Column>
+            </>
           )}
 
           {about.work.display && (

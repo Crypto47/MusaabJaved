@@ -13,3 +13,7 @@ export { ServicesGrid } from "@/components/ServicesGrid";
 export { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 export { ROICalculator } from "@/components/ROICalculator";
 export { CurrentlySection } from "@/components/CurrentlySection";
+export { HeroBackground } from "@/components/HeroBackground";
+export { ProcessSection } from "@/components/ProcessSection";
+export { ContactSection } from "@/components/ContactSection";
+export { SpecialistSection } from "@/components/about/SpecialistSection";

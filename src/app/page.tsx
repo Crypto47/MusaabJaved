@@ -11,7 +11,16 @@ import {
   Meta,
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes, metrics } from "@/resources";
-import { Mailchimp, ClientsCarousel, ServicesGrid, TestimonialsCarousel, ROICalculator } from "@/components";
+import {
+  Mailchimp,
+  ClientsCarousel,
+  ServicesGrid,
+  TestimonialsCarousel,
+  ROICalculator,
+  HeroBackground,
+  ProcessSection,
+  ContactSection,
+} from "@/components";
 import { getClientLogos, getTestimonials } from "@/utils/utils";
 import { Projects } from "@/components/work/Projects";
 
@@ -84,8 +93,9 @@ export default async function Home() {
           }),
         }}
       />
-      <Column fillWidth horizontal="center" gap="m">
-        <Column maxWidth="s" horizontal="center" align="center">
+      <Column fillWidth horizontal="center" gap="m" position="relative">
+        <HeroBackground />
+        <Column maxWidth="s" horizontal="center" align="center" position="relative" zIndex={1}>
           {home.featured.display && (
             <RevealFx
               fillWidth
@@ -174,37 +184,41 @@ export default async function Home() {
         <ClientsCarousel clients={clients} />
       </RevealFx>
 
-      <RevealFx translateY="12" delay={1.0} fillWidth>
-        <Column fillWidth gap="32" marginBottom="l" horizontal="center">
-          {routes["/work"] && (
-            <Column fillWidth horizontal="center" gap="32" marginTop="24">
-              <Heading as="h2" variant="display-strong-xs" wrap="balance" align="center">
-                Selected Projects
-              </Heading>
-              <Column fillWidth paddingX="l">
-                <Projects featuredOnly />
-              </Column>
-              <Button
-                href="/work"
-                variant="secondary"
-                size="m"
-                arrowIcon
-                label="View all projects"
-              />
-            </Column>
-          )}
+      {routes["/work"] && (
+        <RevealFx translateY="12" delay={1.0} fillWidth>
+          <Column fillWidth horizontal="center" gap="32" marginTop="24">
+            <Heading as="h2" variant="display-strong-xs" wrap="balance" align="center">
+              Selected Projects
+            </Heading>
+            <Projects featuredOnly />
+            <Button
+              href="/work"
+              variant="secondary"
+              size="m"
+              arrowIcon
+              label="View all projects"
+            />
+          </Column>
+        </RevealFx>
+      )}
 
-          <RevealFx translateY="12" delay={1.05} fillWidth>
-            <TestimonialsCarousel testimonials={testimonials} />
-          </RevealFx>
-
-          <RevealFx translateY="12" delay={1.1} fillWidth>
-            <ROICalculator />
-          </RevealFx>
-
-          <Mailchimp />
-        </Column>
+      <RevealFx translateY="12" delay={1.05} fillWidth>
+        <TestimonialsCarousel testimonials={testimonials} />
       </RevealFx>
+
+      <RevealFx translateY="12" delay={1.1} fillWidth>
+        <ProcessSection />
+      </RevealFx>
+
+      <RevealFx translateY="12" delay={1.15} fillWidth>
+        <ROICalculator />
+      </RevealFx>
+
+      <RevealFx translateY="12" delay={1.2} fillWidth>
+        <ContactSection />
+      </RevealFx>
+
+      <Mailchimp />
     </Column>
   );
 }

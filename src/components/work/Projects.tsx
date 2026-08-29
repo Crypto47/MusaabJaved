@@ -46,6 +46,12 @@ export function Projects({ range, exclude, randomize, limit, featuredOnly }: Pro
           avatars={post.metadata.team?.map((member) => ({ src: member.avatar })) || []}
           link={post.metadata.link || ""}
           videoSrc={post.metadata.video || ""}
+          problem={post.metadata.problem}
+          solution={post.metadata.solution}
+          techStack={post.metadata.techStack}
+          features={post.metadata.features}
+          impact={post.metadata.impact}
+          architecture={post.metadata.architecture}
         />
       ))}
     </Column>

@@ -277,6 +277,77 @@ export interface About extends BasePageConfig {
     /** Title for the currently section */
     title: string;
   };
+  /** Specialist section (photo + pitch + expertise stat-cards) */
+  specialist: {
+    /** Whether to display the specialist section */
+    display: boolean;
+    /** Title for the specialist section */
+    title: string;
+    /** Pitch paragraph */
+    description: React.ReactNode;
+    /** Portrait image */
+    image: {
+      src: string;
+      alt: string;
+    };
+    /** Expertise stat-cards */
+    stats: Array<{
+      value: string;
+      label: string;
+    }>;
+  };
+}
+
+/**
+ * A single step in the "How I Work" process section.
+ */
+export interface ProcessStep {
+  /** Step number, e.g. "01" */
+  step: string;
+  /** Step title */
+  title: string;
+  /** One-liner description */
+  description: string;
+  /** Optional icon */
+  icon?: IconName;
+}
+
+/**
+ * A single contact channel card.
+ */
+export interface ContactChannel {
+  /** Channel name, e.g. "Email" */
+  name: string;
+  /** Secondary line shown on the card */
+  value: string;
+  /** Icon name from iconLibrary */
+  icon: IconName;
+  /** Target link */
+  link: string;
+}
+
+/**
+ * Contact section configuration (homepage).
+ */
+export interface Contact {
+  /** Whether to display the contact section */
+  display: boolean;
+  /** Section heading */
+  title: string;
+  /** Intro line under the heading */
+  description: string;
+  /** Contact channel cards */
+  channels: ContactChannel[];
+  /** Bottom call-to-action row */
+  cta: {
+    heading: string;
+    actions: Array<{
+      label: string;
+      icon: IconName;
+      href: string;
+      variant: "primary" | "secondary";
+    }>;
+  };
 }
 
 /**

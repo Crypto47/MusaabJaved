@@ -21,6 +21,9 @@ import {
   HiPencilSquare,
   HiPlayCircle,
   HiPhoto,
+  HiChevronRight,
+  HiChevronDown,
+  HiMagnifyingGlass,
 } from 'react-icons/hi2';
 
 import {
@@ -109,6 +112,7 @@ import {
   SiAmazonwebservices,
   SiGooglecloud,
   SiDigitalocean,
+  SiGmail,
 } from 'react-icons/si';
 
 import {
@@ -130,7 +134,7 @@ import {
 } from 'react-icons/fa6';
 import { DiVisualstudio } from 'react-icons/di';
 import { FaCut, FaHandHolding, FaDatabase } from 'react-icons/fa';
-import { GiBullseye, GiFishingHook } from 'react-icons/gi';
+import { GiBullseye, GiFishingHook, GiPineTree } from 'react-icons/gi';
 
 export const iconLibrary: Record<string, IconType> = {
   signin: PiSignIn,
@@ -255,6 +259,13 @@ export const iconLibrary: Record<string, IconType> = {
   aws: SiAmazonwebservices,
   gcp: SiGooglecloud,
   digitalocean: SiDigitalocean,
+  gmail: SiGmail,
+  pinecone: GiPineTree,
+  chevronRight: HiChevronRight,
+  chevronDown: HiChevronDown,
+  checkCircle: HiOutlineCheckCircle,
+  database: FaDatabase,
+  search: HiMagnifyingGlass,
 };
 
 

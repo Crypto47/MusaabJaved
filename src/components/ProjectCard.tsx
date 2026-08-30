@@ -93,60 +93,60 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <Column fillWidth background="surface" border="neutral-alpha-weak" radius="l" overflow="hidden">
       <Row fillWidth s={{ direction: "column" }}>
-        <Column flex={11} minWidth={0} position="relative">
-          {activeMedia === "image" ? (
-            images.length > 0 && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={images[0]}
-                alt={title}
+        <Column flex={10} minWidth={0} vertical="center">
+          <Column fillWidth position="relative">
+            {activeMedia === "image" ? (
+              images.length > 0 && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={images[0]}
+                  alt={title}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    aspectRatio: "16/9",
+                    objectFit: "cover",
+                  }}
+                />
+              )
+            ) : (
+              <video
+                ref={videoRef}
+                src={resolvedVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster={images[0]}
                 style={{
                   display: "block",
                   width: "100%",
-                  height: "100%",
-                  aspectRatio: "16/10",
+                  aspectRatio: "16/9",
                   objectFit: "cover",
                 }}
               />
-            )
-          ) : (
-            <video
-              ref={videoRef}
-              src={resolvedVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster={images[0]}
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                aspectRatio: "16/10",
-                objectFit: "cover",
-              }}
-            />
-          )}
+            )}
 
-          <Row gap="4" className={styles.mediaToggle}>
-            <IconButton
-              icon="photo"
-              size="s"
-              variant={activeMedia === "image" ? "primary" : "secondary"}
-              onClick={() => setActiveMedia("image")}
-              aria-label="Show image"
-            />
-            <IconButton
-              icon="playCircle"
-              size="s"
-              variant={activeMedia === "video" ? "primary" : "secondary"}
-              onClick={() => setActiveMedia("video")}
-              aria-label="Show video"
-            />
-          </Row>
+            <Row gap="4" className={styles.mediaToggle}>
+              <IconButton
+                icon="photo"
+                size="s"
+                variant={activeMedia === "image" ? "primary" : "secondary"}
+                onClick={() => setActiveMedia("image")}
+                aria-label="Show image"
+              />
+              <IconButton
+                icon="playCircle"
+                size="s"
+                variant={activeMedia === "video" ? "primary" : "secondary"}
+                onClick={() => setActiveMedia("video")}
+                aria-label="Show video"
+              />
+            </Row>
+          </Column>
         </Column>
 
-        <Column flex={9} minWidth={0} padding="24" gap="16">
+        <Column flex={12} minWidth={0} padding="24" gap="16">
           {title && (
             <Heading as="h2" wrap="balance" variant="heading-strong-l">
               {title}

@@ -15,12 +15,12 @@ interface HeroBackgroundProps {
 const HUB = { x: 50, y: 42 };
 
 const HERO_NODES = [
-  { icon: "n8n", x: 6, y: 18 },
-  { icon: "openai", x: 3, y: 58 },
-  { icon: "hubspot", x: 14, y: 88 },
-  { icon: "slack", x: 94, y: 18 },
-  { icon: "gmail", x: 97, y: 58 },
-  { icon: "pinecone", x: 86, y: 88 },
+  { icon: "n8n", x: 8, y: 16 },
+  { icon: "openai", x: 3, y: 52 },
+  { icon: "hubspot", x: 7, y: 88 },
+  { icon: "slack", x: 92, y: 16 },
+  { icon: "gmail", x: 97, y: 52 },
+  { icon: "pinecone", x: 93, y: 88 },
 ] as const;
 
 const beamPath = (x: number, y: number) => {

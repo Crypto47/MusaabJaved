@@ -1,0 +1,52 @@
+---
+title: "One URL or two: bilingual SEO on Shopify"
+summary: "Shopify's Translations API keeps both languages on one URL. A locale subdomain gives each its own. I picked the first for a Dutch health brand publishing daily in two languages — here is the reasoning and the cost."
+publishedAt: "2026-08-28"
+tag: "engineering"
+---
+
+If you publish in two languages on Shopify you have to decide where the second language lives. The decision is architectural, it is annoying to reverse, and almost everything written about it is aimed at storefronts rather than content.
+
+I made this call for a Dutch health brand publishing two or more SEO articles a day in English and Dutch. This is what the options actually are and why I chose the one I did.
+
+## The two shapes
+
+**Locale-prefixed paths on one domain**, using Shopify's Translations API. The Dutch version of an article is a translation *of that article*, registered against the same underlying resource. One canonical resource, one place the article exists, locale served according to the visitor.
+
+**A separate subdomain or domain per language** — `nl.brand.com`, or `brand.nl`. Two independent surfaces. Each has its own pages, its own analytics, its own link graph.
+
+Shopify supports both. The Translations API only makes sense with the first.
+
+## Why I chose translations
+
+**Authority stays consolidated.** This was the deciding factor. A subdomain builds its own authority from zero. For a brand publishing daily, splitting a link profile across two properties means neither compounds. On one domain, every article in either language contributes to the same host.
+
+**The indexed surface doubles without duplicating the resource.** Each article yields two indexable locale variants, correctly `hreflang`-linked to one another, without a second copy of the content existing anywhere. That distinction matters: duplicate-content risk comes from the same content at multiple addresses with nothing declaring the relationship. A registered translation *is* the declaration.
+
+**One publishing path.** This was the practical argument, and it turned out to be larger than expected. The pipeline writes an article, then registers its Dutch translation against the same resource. With a subdomain I would have needed a second publishing target, a second set of credentials, and a reconciliation step to keep the two in sync when either side was edited. Every one of those is a place for the two languages to drift apart, and drift is invisible until someone who reads both notices.
+
+**Metafields carry translations too, and this is the part that bites.** Article body and title are the obvious fields. Meta description, custom SEO fields, and anything else stored as a metafield each need their own translation registered. Miss them and you ship a Dutch article with an English meta description — which is worse than no translation, because it is the snippet a Dutch searcher sees.
+
+My flow ends up doing this explicitly, per metafield: fetch the article's metafields, build a translation payload for each, register it, confirm. It reads as tedious because it is tedious, and it is the step I would most expect someone to skip.
+
+## What it costs
+
+I do not think this is a free win, and the trade-offs are real.
+
+**Analytics get harder.** Two subdomains give you clean separation for free. On one domain you are segmenting by locale path in every report you build, forever.
+
+**You cannot target a country separately.** A `brand.nl` domain carries a geographic signal that a locale path does not. If Dutch and Belgian markets ever needed different treatment, the subdomain shape would have been the right call and I would be migrating.
+
+**You are inside Shopify's model.** Translations are a Shopify concept. If the brand ever leaves Shopify, the translation relationships do not travel — they have to be rebuilt in whatever comes next. A subdomain is portable in a way this is not.
+
+**hreflang is now load-bearing and easy to get wrong.** Both variants must reference each other and themselves. A one-directional `hreflang` is ignored. `nl` versus `nl-NL` matters if you ever add Flemish. This is the kind of thing that is correct on launch day and quietly wrong eighteen months later.
+
+## How I would decide again
+
+The question that actually settles it is not about SEO. It is: **are these two languages one publication or two?**
+
+For this brand they were one — the same articles, the same positions, the same editorial voice, served in two languages. Translations was right, and the consolidated authority compounded the way I hoped.
+
+If the two languages were going to diverge — different topics, different writers, different market positioning — then they are two publications, and forcing them into one resource model creates friction at every edit. Take the subdomain, accept the slower authority ramp, and get the independence.
+
+Volume pushes toward one domain. Divergence pushes toward two. Pick whichever pressure is stronger in your case, and write the `hreflang` tests before you need them.

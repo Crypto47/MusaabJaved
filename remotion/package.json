@@ -7,18 +7,26 @@
     "render:excelr8": "npx remotion render src/Root.tsx Excelr8 ../public/projects/excelr8/excelr8.mp4",
     "render:zippit": "npx remotion render src/Root.tsx Zippit ../public/projects/zippit/zippit.mp4",
     "render:equity-pulse": "npx remotion render src/Root.tsx EquityPulse ../public/projects/equity-pulse/equity-pulse.mp4",
-    "render:all": "npm run render:excelr8 && npm run render:zippit && npm run render:equity-pulse"
+    "render:all": "npm run render:excelr8 && npm run render:zippit && npm run render:equity-pulse",
+    "audio-info": "node scripts/audio-info.mjs",
+    "render:films": "npx remotion render src/Root.tsx EquityPulseFilm out/EquityPulseFilm.mp4 --concurrency=1 --crf=12 && npx remotion render src/Root.tsx Excelr8Film out/Excelr8Film.mp4 --concurrency=1 --crf=12 && npx remotion render src/Root.tsx ZippitFilm out/ZippitFilm.mp4 --concurrency=1 --crf=12"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.11.1",
-    "@remotion/cli": "^4.0.0",
-    "@remotion/renderer": "^4.0.0",
+    "@remotion/cli": "4.0.466",
+    "@remotion/google-fonts": "4.0.466",
+    "@remotion/paths": "4.0.466",
+    "@remotion/renderer": "4.0.466",
+    "@remotion/transitions": "4.0.466",
+    "@xyflow/system": "^0.0.82",
+    "d3-interpolate": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.6.0",
-    "remotion": "^4.0.0"
+    "remotion": "4.0.466"
   },
   "devDependencies": {
+    "@types/d3-interpolate": "^3.0.4",
     "@types/react": "^18.2.0",
     "typescript": "^5.0.0"
   }

@@ -1,0 +1,1584 @@
+{
+  "name": "Shopify Advanced Flow Tri Image System",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Schedule Trigger",
+      "label": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3936,
+        304
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3040,
+        64
+      ]
+    },
+    {
+      "name": "Return Dutch Loop Items",
+      "label": "Return Dutch Loop Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1392,
+        -448
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI3",
+      "label": "Embeddings OpenAI3",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2304,
+        -560
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI1",
+      "label": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1824,
+        -560
+      ]
+    },
+    {
+      "name": "Zippit Company Profile",
+      "label": "Zippit Company Profile",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1680,
+        -720
+      ]
+    },
+    {
+      "name": "Zippit Content Guidelines / Tone of Voice",
+      "label": "Zippit Content Guidelines / Tone of Voice",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        2272,
+        -752
+      ]
+    },
+    {
+      "name": "Get Tone/Content Guideline",
+      "label": "Get Tone/Content Guideline",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2608,
+        -752
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI",
+      "label": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2784,
+        -544
+      ]
+    },
+    {
+      "name": "Zippit Blog Instructions",
+      "label": "Zippit Blog Instructions",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        2752,
+        -752
+      ]
+    },
+    {
+      "name": "Get Blog",
+      "label": "Get Blog",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3056,
+        -752
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI7",
+      "label": "Embeddings OpenAI7",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3104,
+        -496
+      ]
+    },
+    {
+      "name": "Dynamic Search",
+      "label": "Dynamic Search",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        3216,
+        -736
+      ]
+    },
+    {
+      "name": "Get Dynamic Search Response",
+      "label": "Get Dynamic Search Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3488,
+        -752
+      ]
+    },
+    {
+      "name": "Get Company Values",
+      "label": "Get Company Values",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        -752
+      ]
+    },
+    {
+      "name": "Anthropic Chat Model",
+      "label": "Anthropic Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        5968,
+        -272
+      ]
+    },
+    {
+      "name": "JSON-L",
+      "label": "JSON-L",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6736,
+        -304
+      ]
+    },
+    {
+      "name": "Clean the output",
+      "label": "Clean the output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6560,
+        -304
+      ]
+    },
+    {
+      "name": "Create a record",
+      "label": "Create a record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        6928,
+        -320
+      ]
+    },
+    {
+      "name": "Dutch Agent",
+      "label": "Dutch Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        6272,
+        -464
+      ]
+    },
+    {
+      "name": "Get EEAT Sources",
+      "label": "Get EEAT Sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5040,
+        -992
+      ]
+    },
+    {
+      "name": "Search SEO Content",
+      "label": "Search SEO Content",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -3776,
+        304
+      ]
+    },
+    {
+      "name": "Update record",
+      "label": "Update record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1712,
+        864
+      ]
+    },
+    {
+      "name": "Search Theme & Sub-keywords1",
+      "label": "Search Theme & Sub-keywords1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -3296,
+        2832
+      ]
+    },
+    {
+      "name": "Inner Loop",
+      "label": "Inner Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3552,
+        2752
+      ]
+    },
+    {
+      "name": "Append Image2",
+      "label": "Append Image2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        720
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI11",
+      "label": "Embeddings OpenAI11",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2352,
+        768
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI12",
+      "label": "Embeddings OpenAI12",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        736
+      ]
+    },
+    {
+      "name": "Zippit Company Profile2",
+      "label": "Zippit Company Profile2",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1568,
+        560
+      ]
+    },
+    {
+      "name": "Zippit Content Guidelines / Tone of Voice2",
+      "label": "Zippit Content Guidelines / Tone of Voice2",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        2288,
+        592
+      ]
+    },
+    {
+      "name": "Get Tone/Content Guideline2",
+      "label": "Get Tone/Content Guideline2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2592,
+        592
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI13",
+      "label": "Embeddings OpenAI13",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2992,
+        800
+      ]
+    },
+    {
+      "name": "Zippit Blog Instructions2",
+      "label": "Zippit Blog Instructions2",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        2736,
+        592
+      ]
+    },
+    {
+      "name": "Get Blog2",
+      "label": "Get Blog2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3024,
+        592
+      ]
+    },
+    {
+      "name": "Embeddings OpenAI14",
+      "label": "Embeddings OpenAI14",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3248,
+        784
+      ]
+    },
+    {
+      "name": "Dynamic Search2",
+      "label": "Dynamic Search2",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        3168,
+        608
+      ]
+    },
+    {
+      "name": "Get Dynamic Search Response2",
+      "label": "Get Dynamic Search Response2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3424,
+        592
+      ]
+    },
+    {
+      "name": "Get Company Values2",
+      "label": "Get Company Values2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        592
+      ]
+    },
+    {
+      "name": "JSON-L2",
+      "label": "JSON-L2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6512,
+        832
+      ]
+    },
+    {
+      "name": "Create a record2",
+      "label": "Create a record2",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        6720,
+        832
+      ]
+    },
+    {
+      "name": "Search Theme & Sub-keywords",
+      "label": "Search Theme & Sub-keywords",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -3552,
+        3024
+      ]
+    },
+    {
+      "name": "Inner Loop1",
+      "label": "Inner Loop1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3840,
+        3008
+      ]
+    },
+    {
+      "name": "Return English Loop Items",
+      "label": "Return English Loop Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        384
+      ]
+    },
+    {
+      "name": "Anthropic Chat Model2",
+      "label": "Anthropic Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        5824,
+        1024
+      ]
+    },
+    {
+      "name": "English Content Agent",
+      "label": "English Content Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        5968,
+        832
+      ]
+    },
+    {
+      "name": "English EEAT",
+      "label": "English EEAT",
+      "type": "n8n-nodes-base.perplexity",
+      "typeVersion": 1,
+      "position": [
+        5040,
+        288
+      ]
+    },
+    {
+      "name": "DUTCH EEAT",
+      "label": "DUTCH EEAT",
+      "type": "n8n-nodes-base.perplexity",
+      "typeVersion": 1,
+      "position": [
+        4816,
+        -992
+      ]
+    },
+    {
+      "name": "Get Theme Subkeywords",
+      "label": "Get Theme Subkeywords",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1776,
+        384
+      ]
+    },
+    {
+      "name": "Split into Items",
+      "label": "Split into Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1216,
+        -448
+      ]
+    },
+    {
+      "name": "Combine Images",
+      "label": "Combine Images",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        -560
+      ]
+    },
+    {
+      "name": "Call 'Tri Image Flow'",
+      "label": "Call 'Tri Image Flow'",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -784,
+        -560
+      ]
+    },
+    {
+      "name": "Call 'Tri Image Flow'1",
+      "label": "Call 'Tri Image Flow'1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        352
+      ]
+    },
+    {
+      "name": "Split into Items English",
+      "label": "Split into Items English",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1152,
+        384
+      ]
+    },
+    {
+      "name": "HTTP Request7",
+      "label": "HTTP Request7",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        704
+      ]
+    },
+    {
+      "name": "Extract metadata of image2",
+      "label": "Extract metadata of image2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        704
+      ]
+    },
+    {
+      "name": "Generate an image2",
+      "label": "Generate an image2",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        64,
+        704
+      ]
+    },
+    {
+      "name": "Get EEAT Sources English",
+      "label": "Get EEAT Sources English",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5312,
+        288
+      ]
+    },
+    {
+      "name": "Combine Images English",
+      "label": "Combine Images English",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        352
+      ]
+    },
+    {
+      "name": "Return Input Sheet Items English",
+      "label": "Return Input Sheet Items English",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1984,
+        384
+      ]
+    },
+    {
+      "name": "Search Theme & Sub-keywords English",
+      "label": "Search Theme & Sub-keywords English",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        384
+      ]
+    },
+    {
+      "name": "Clean the output english",
+      "label": "Clean the output english",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6304,
+        848
+      ]
+    },
+    {
+      "name": "Return Input Sheet Items Dutch",
+      "label": "Return Input Sheet Items Dutch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2048,
+        -448
+      ]
+    },
+    {
+      "name": "Wait",
+      "label": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4832,
+        288
+      ]
+    },
+    {
+      "name": "Wait1",
+      "label": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4624,
+        -992
+      ]
+    },
+    {
+      "name": "Dutch Isolator 1",
+      "label": "Dutch Isolator 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3680,
+        -784
+      ]
+    },
+    {
+      "name": "Dutch Isolator 2",
+      "label": "Dutch Isolator 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4624,
+        -1552
+      ]
+    },
+    {
+      "name": "English Isolator 1",
+      "label": "English Isolator 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3632,
+        592
+      ]
+    },
+    {
+      "name": "English Isolator 2",
+      "label": "English Isolator 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4640,
+        288
+      ]
+    },
+    {
+      "name": "Blog Amount Selector",
+      "label": "Blog Amount Selector",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3392,
+        304
+      ]
+    },
+    {
+      "name": "Get Only Dutch Articles",
+      "label": "Get Only Dutch Articles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3856,
+        -1616
+      ]
+    },
+    {
+      "name": "Get Internal Links Dutch",
+      "label": "Get Internal Links Dutch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4080,
+        -1600
+      ]
+    },
+    {
+      "name": "Create inner blog2",
+      "label": "Create inner blog2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4512,
+        608
+      ]
+    },
+    {
+      "name": "Get English Blogs",
+      "label": "Get English Blogs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3776,
+        288
+      ]
+    },
+    {
+      "name": "Get Internal Links English",
+      "label": "Get Internal Links English",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4032,
+        288
+      ]
+    },
+    {
+      "name": "Get Theme Subkeywords Dtuch",
+      "label": "Get Theme Subkeywords Dtuch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1792,
+        -448
+      ]
+    },
+    {
+      "name": "Search Theme & Sub-keywords Dutch",
+      "label": "Search Theme & Sub-keywords Dutch",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1600,
+        -448
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search SEO Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Return Input Sheet Items Dutch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Return Input Sheet Items English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Dutch Loop Items": {
+      "main": [
+        [
+          {
+            "node": "Split into Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI3": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Content Guidelines / Tone of Voice",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Company Profile",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Company Profile": {
+      "main": [
+        [
+          {
+            "node": "Get Company Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Content Guidelines / Tone of Voice": {
+      "main": [
+        [
+          {
+            "node": "Get Tone/Content Guideline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Tone/Content Guideline": {
+      "main": [
+        [
+          {
+            "node": "Zippit Blog Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Blog Instructions",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Blog Instructions": {
+      "main": [
+        [
+          {
+            "node": "Get Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Blog": {
+      "main": [
+        [
+          {
+            "node": "Dynamic Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI7": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Dynamic Search",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dynamic Search": {
+      "main": [
+        [
+          {
+            "node": "Get Dynamic Search Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Company Values": {
+      "main": [
+        [
+          {
+            "node": "Zippit Content Guidelines / Tone of Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dynamic Search Response": {
+      "main": [
+        [
+          {
+            "node": "Dutch Isolator 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Dutch Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean the output": {
+      "main": [
+        [
+          {
+            "node": "JSON-L",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON-L": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dutch Agent": {
+      "main": [
+        [
+          {
+            "node": "Clean the output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get EEAT Sources": {
+      "main": [
+        [
+          {
+            "node": "Dutch Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search SEO Content": {
+      "main": [
+        [
+          {
+            "node": "Blog Amount Selector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Theme & Sub-keywords1": {
+      "main": [
+        [
+          {
+            "node": "Inner Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inner Loop": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Search Theme & Sub-keywords1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI11": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Content Guidelines / Tone of Voice2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI12": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Company Profile2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Company Profile2": {
+      "main": [
+        [
+          {
+            "node": "Get Company Values2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Content Guidelines / Tone of Voice2": {
+      "main": [
+        [
+          {
+            "node": "Get Tone/Content Guideline2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Tone/Content Guideline2": {
+      "main": [
+        [
+          {
+            "node": "Zippit Blog Instructions2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI13": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zippit Blog Instructions2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zippit Blog Instructions2": {
+      "main": [
+        [
+          {
+            "node": "Get Blog2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Blog2": {
+      "main": [
+        [
+          {
+            "node": "Dynamic Search2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI14": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Dynamic Search2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dynamic Search2": {
+      "main": [
+        [
+          {
+            "node": "Get Dynamic Search Response2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dynamic Search Response2": {
+      "main": [
+        [
+          {
+            "node": "English Isolator 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Company Values2": {
+      "main": [
+        [
+          {
+            "node": "Zippit Content Guidelines / Tone of Voice2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON-L2": {
+      "main": [
+        [
+          {
+            "node": "Create a record2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Theme & Sub-keywords": {
+      "main": [
+        [
+          {
+            "node": "Inner Loop1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inner Loop1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Search Theme & Sub-keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return English Loop Items": {
+      "main": [
+        [
+          {
+            "node": "Split into Items English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "English Content Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Content Agent": {
+      "main": [
+        [
+          {
+            "node": "Clean the output english",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English EEAT": {
+      "main": [
+        [
+          {
+            "node": "Get EEAT Sources English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DUTCH EEAT": {
+      "main": [
+        [
+          {
+            "node": "Get EEAT Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Theme Subkeywords": {
+      "main": [
+        [
+          {
+            "node": "Search Theme & Sub-keywords English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split into Items": {
+      "main": [
+        [
+          {
+            "node": "Call 'Tri Image Flow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Images": {
+      "main": [
+        [
+          {
+            "node": "Zippit Company Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Tri Image Flow'": {
+      "main": [
+        [
+          {
+            "node": "Combine Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Tri Image Flow'1": {
+      "main": [
+        [
+          {
+            "node": "Combine Images English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split into Items English": {
+      "main": [
+        [
+          {
+            "node": "Call 'Tri Image Flow'1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "Append Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract metadata of image2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image2": {
+      "main": [
+        [
+          {
+            "node": "Extract metadata of image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get EEAT Sources English": {
+      "main": [
+        [
+          {
+            "node": "English Content Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Images English": {
+      "main": [
+        [
+          {
+            "node": "Zippit Company Profile2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Input Sheet Items English": {
+      "main": [
+        [
+          {
+            "node": "Get Theme Subkeywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Theme & Sub-keywords English": {
+      "main": [
+        [
+          {
+            "node": "Return English Loop Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean the output english": {
+      "main": [
+        [
+          {
+            "node": "JSON-L2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Input Sheet Items Dutch": {
+      "main": [
+        [
+          {
+            "node": "Get Theme Subkeywords Dtuch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "English EEAT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "DUTCH EEAT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dutch Isolator 1": {
+      "main": [
+        [
+          {
+            "node": "Get Only Dutch Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dutch Isolator 2": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Isolator 1": {
+      "main": [
+        [
+          {
+            "node": "Get English Blogs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Isolator 2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blog Amount Selector": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Only Dutch Articles": {
+      "main": [
+        [
+          {
+            "node": "Get Internal Links Dutch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Internal Links Dutch": {
+      "main": [
+        [
+          {
+            "node": "Dutch Isolator 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get English Blogs": {
+      "main": [
+        [
+          {
+            "node": "Get Internal Links English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Internal Links English": {
+      "main": [
+        [
+          {
+            "node": "English Isolator 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Theme Subkeywords Dtuch": {
+      "main": [
+        [
+          {
+            "node": "Search Theme & Sub-keywords Dutch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Theme & Sub-keywords Dutch": {
+      "main": [
+        [
+          {
+            "node": "Return Dutch Loop Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

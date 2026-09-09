@@ -1,0 +1,843 @@
+{
+  "name": "Shopify Post English Breathing Stories",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Airtable Trigger",
+      "label": "Airtable Trigger",
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        368
+      ]
+    },
+    {
+      "name": "HTTP Request",
+      "label": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -32
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -32,
+        -128
+      ]
+    },
+    {
+      "name": "Success",
+      "label": "Success",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3984,
+        208
+      ]
+    },
+    {
+      "name": "ERROR",
+      "label": "ERROR",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        0
+      ]
+    },
+    {
+      "name": "Code in JavaScript",
+      "label": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -352
+      ]
+    },
+    {
+      "name": "Google Sheets Trigger",
+      "label": "Google Sheets Trigger",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        608
+      ]
+    },
+    {
+      "name": "Prepare fields for Blog article Posting1",
+      "label": "Prepare fields for Blog article Posting1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        608
+      ]
+    },
+    {
+      "name": "HTTP Request1",
+      "label": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        528,
+        784
+      ]
+    },
+    {
+      "name": "Loop Over Items1",
+      "label": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        608
+      ]
+    },
+    {
+      "name": "Success1",
+      "label": "Success1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3152,
+        1024
+      ]
+    },
+    {
+      "name": "ERROR1",
+      "label": "ERROR1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1136
+      ]
+    },
+    {
+      "name": "Code in JavaScript1",
+      "label": "Code in JavaScript1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        448
+      ]
+    },
+    {
+      "name": "Extract Translation Contents",
+      "label": "Extract Translation Contents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        704
+      ]
+    },
+    {
+      "name": "Get Translations",
+      "label": "Get Translations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1552,
+        704
+      ]
+    },
+    {
+      "name": "Register Translations",
+      "label": "Register Translations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2192,
+        704
+      ]
+    },
+    {
+      "name": "Prepare Digest variables",
+      "label": "Prepare Digest variables",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        704
+      ]
+    },
+    {
+      "name": "Extract Translation Contents1",
+      "label": "Extract Translation Contents1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        32
+      ]
+    },
+    {
+      "name": "Get Translations1",
+      "label": "Get Translations1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1744,
+        32
+      ]
+    },
+    {
+      "name": "Register Translations1",
+      "label": "Register Translations1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2288,
+        32
+      ]
+    },
+    {
+      "name": "Prepare Digest variables1",
+      "label": "Prepare Digest variables1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        32
+      ]
+    },
+    {
+      "name": "Search records",
+      "label": "Search records",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        704
+      ]
+    },
+    {
+      "name": "Include record id",
+      "label": "Include record id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        608
+      ]
+    },
+    {
+      "name": "Get Article Metafields",
+      "label": "Get Article Metafields",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2752,
+        576
+      ]
+    },
+    {
+      "name": "Get Metafield Digest ID",
+      "label": "Get Metafield Digest ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3248,
+        544
+      ]
+    },
+    {
+      "name": "Prepare metafields for translations",
+      "label": "Prepare metafields for translations",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2960,
+        560
+      ]
+    },
+    {
+      "name": "Build translation payload",
+      "label": "Build translation payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3424,
+        560
+      ]
+    },
+    {
+      "name": "Register Translation per Metafield",
+      "label": "Register Translation per Metafield",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3648,
+        560
+      ]
+    },
+    {
+      "name": "Get Article Metafields1",
+      "label": "Get Article Metafields1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2704,
+        -16
+      ]
+    },
+    {
+      "name": "Get Metafield Digest ID1",
+      "label": "Get Metafield Digest ID1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3312,
+        -16
+      ]
+    },
+    {
+      "name": "Prepare metafields for translations1",
+      "label": "Prepare metafields for translations1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3024,
+        -16
+      ]
+    },
+    {
+      "name": "Build translation payload1",
+      "label": "Build translation payload1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3504,
+        -16
+      ]
+    },
+    {
+      "name": "Register Translation per Metafield1",
+      "label": "Register Translation per Metafield1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3792,
+        0
+      ]
+    },
+    {
+      "name": "Schedule Trigger",
+      "label": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1072,
+        976
+      ]
+    },
+    {
+      "name": "Search records1",
+      "label": "Search records1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -864,
+        976
+      ]
+    },
+    {
+      "name": "Prepare fields for Blog article Posting Schedule",
+      "label": "Prepare fields for Blog article Posting Schedule",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        976
+      ]
+    },
+    {
+      "name": "Include record id Schedule",
+      "label": "Include record id Schedule",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        976
+      ]
+    },
+    {
+      "name": "Update record",
+      "label": "Update record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        3376,
+        1056
+      ]
+    },
+    {
+      "name": "Prepare fields for Blog article Posting2",
+      "label": "Prepare fields for Blog article Posting2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        320
+      ]
+    },
+    {
+      "name": "Include record id1",
+      "label": "Include record id1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        432
+      ]
+    }
+  ],
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for Blog article Posting2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Extract Translation Contents1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERROR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERROR": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for Blog article Posting1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for Blog article Posting1": {
+      "main": [
+        [
+          {
+            "node": "Include record id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Extract Translation Contents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ERROR1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success1": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ERROR1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Translation Contents": {
+      "main": [
+        [
+          {
+            "node": "Get Translations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Translations": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Digest variables": {
+      "main": [
+        [
+          {
+            "node": "Register Translations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Translations": {
+      "main": [
+        [
+          {
+            "node": "Get Article Metafields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Translation Contents1": {
+      "main": [
+        [
+          {
+            "node": "Get Translations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Translations1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Digest variables1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Digest variables1": {
+      "main": [
+        [
+          {
+            "node": "Register Translations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Translations1": {
+      "main": [
+        [
+          {
+            "node": "Get Article Metafields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Prepare Digest variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Article Metafields": {
+      "main": [
+        [
+          {
+            "node": "Prepare metafields for translations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Metafield Digest ID": {
+      "main": [
+        [
+          {
+            "node": "Build translation payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare metafields for translations": {
+      "main": [
+        [
+          {
+            "node": "Get Metafield Digest ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build translation payload": {
+      "main": [
+        [
+          {
+            "node": "Register Translation per Metafield",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Translation per Metafield": {
+      "main": [
+        [
+          {
+            "node": "Success1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Article Metafields1": {
+      "main": [
+        [
+          {
+            "node": "Prepare metafields for translations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Metafield Digest ID1": {
+      "main": [
+        [
+          {
+            "node": "Build translation payload1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare metafields for translations1": {
+      "main": [
+        [
+          {
+            "node": "Get Metafield Digest ID1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build translation payload1": {
+      "main": [
+        [
+          {
+            "node": "Register Translation per Metafield1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Translation per Metafield1": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search records1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records1": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for Blog article Posting Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for Blog article Posting Schedule": {
+      "main": [
+        [
+          {
+            "node": "Include record id Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Include record id Schedule": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for Blog article Posting2": {
+      "main": [
+        [
+          {
+            "node": "Include record id1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Include record id1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

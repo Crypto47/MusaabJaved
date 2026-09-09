@@ -1,0 +1,456 @@
+{
+  "name": "Enrichment & Report Flow HITL (3/3)",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Code",
+      "label": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        -20
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        20
+      ]
+    },
+    {
+      "name": "Get Yahoo Quote",
+      "label": "Get Yahoo Quote",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        80
+      ]
+    },
+    {
+      "name": "Get What Analysts are saying",
+      "label": "Get What Analysts are saying",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2180,
+        120
+      ]
+    },
+    {
+      "name": "Get latest news",
+      "label": "Get latest news",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        80
+      ]
+    },
+    {
+      "name": "Parse News",
+      "label": "Parse News",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2760,
+        80
+      ]
+    },
+    {
+      "name": "Get Earnings Call",
+      "label": "Get Earnings Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2920,
+        80
+      ]
+    },
+    {
+      "name": "Earnings Call Parser",
+      "label": "Earnings Call Parser",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3100,
+        80
+      ]
+    },
+    {
+      "name": "Get Beta Stats",
+      "label": "Get Beta Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        80
+      ]
+    },
+    {
+      "name": "Parse Beta and Get Flag",
+      "label": "Parse Beta and Get Flag",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3480,
+        80
+      ]
+    },
+    {
+      "name": "Get Symbol Info",
+      "label": "Get Symbol Info",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        80
+      ]
+    },
+    {
+      "name": "Merge Row Node",
+      "label": "Merge Row Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3920,
+        80
+      ]
+    },
+    {
+      "name": "Get Live Pricing and Valuation stats",
+      "label": "Get Live Pricing and Valuation stats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        80
+      ]
+    },
+    {
+      "name": "Get What Analysts are saying1",
+      "label": "Get What Analysts are saying1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2360,
+        100
+      ]
+    },
+    {
+      "name": "Merge",
+      "label": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3680,
+        -420
+      ]
+    },
+    {
+      "name": "If",
+      "label": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1480,
+        100
+      ]
+    },
+    {
+      "name": "Get Symbol Info2",
+      "label": "Get Symbol Info2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        360
+      ]
+    },
+    {
+      "name": "When Executed by Another Workflow",
+      "label": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        -40
+      ]
+    },
+    {
+      "name": "Execute Workflow",
+      "label": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        -220
+      ]
+    },
+    {
+      "name": "Update Rows with Live Price & Delta Value",
+      "label": "Update Rows with Live Price & Delta Value",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3960,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Symbol Info",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Yahoo Quote": {
+      "main": [
+        [
+          {
+            "node": "Get Live Pricing and Valuation stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get What Analysts are saying": {
+      "main": [
+        [
+          {
+            "node": "Get What Analysts are saying1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get latest news": {
+      "main": [
+        [
+          {
+            "node": "Parse News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse News": {
+      "main": [
+        [
+          {
+            "node": "Get Earnings Call",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Get Earnings Call": {
+      "main": [
+        [
+          {
+            "node": "Earnings Call Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Earnings Call Parser": {
+      "main": [
+        [
+          {
+            "node": "Get Beta Stats",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Get Beta Stats": {
+      "main": [
+        [
+          {
+            "node": "Parse Beta and Get Flag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Beta and Get Flag": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Get Symbol Info": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Row Node": {
+      "main": [
+        [
+          {
+            "node": "Update Rows with Live Price & Delta Value",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Live Pricing and Valuation stats": {
+      "main": [
+        [
+          {
+            "node": "Get What Analysts are saying",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get What Analysts are saying1": {
+      "main": [
+        [
+          {
+            "node": "Get latest news",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge Row Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get Yahoo Quote",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Symbol Info2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Symbol Info2": {
+      "main": [
+        [
+          {
+            "node": "Get Yahoo Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Rows with Live Price & Delta Value": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

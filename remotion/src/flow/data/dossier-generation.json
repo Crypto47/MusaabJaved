@@ -1,0 +1,396 @@
+{
+  "name": "Dossier <> Generation",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Schedule Trigger",
+      "label": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -540,
+        -60
+      ]
+    },
+    {
+      "name": "Supabase",
+      "label": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -60
+      ]
+    },
+    {
+      "name": "Extract First N Items",
+      "label": "Extract First N Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        -60
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        140,
+        -60
+      ]
+    },
+    {
+      "name": "Updating Is_Dossier Flag",
+      "label": "Updating Is_Dossier Flag",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -40
+      ]
+    },
+    {
+      "name": "HTTP Request",
+      "label": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2320,
+        140
+      ]
+    },
+    {
+      "name": "Convert to HTML",
+      "label": "Convert to HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        -180
+      ]
+    },
+    {
+      "name": "Get Lead Posts",
+      "label": "Get Lead Posts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -40
+      ]
+    },
+    {
+      "name": "Code",
+      "label": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -40
+      ]
+    },
+    {
+      "name": "Supabase1",
+      "label": "Supabase1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        140
+      ]
+    },
+    {
+      "name": "Create and Store Pdf",
+      "label": "Create and Store Pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        -160
+      ]
+    },
+    {
+      "name": "Create Pdf",
+      "label": "Create Pdf",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3140,
+        -160
+      ]
+    },
+    {
+      "name": "Updating Dossier Link",
+      "label": "Updating Dossier Link",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        -160
+      ]
+    },
+    {
+      "name": "AI Agent1",
+      "label": "AI Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        -220
+      ]
+    },
+    {
+      "name": "OpenAI Chat Model1",
+      "label": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -60
+      ]
+    },
+    {
+      "name": "Code1",
+      "label": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -200
+      ]
+    },
+    {
+      "name": "Create Pdf2",
+      "label": "Create Pdf2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2280,
+        -400
+      ]
+    },
+    {
+      "name": "Create and Store Pdf1",
+      "label": "Create and Store Pdf1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        -400
+      ]
+    },
+    {
+      "name": "Updating Dossier Link1",
+      "label": "Updating Dossier Link1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        -400
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Extract First N Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract First N Items": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Lead Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Updating Is_Dossier Flag": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to HTML": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Pdf",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Pdf2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Supabase1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead Posts": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Updating Is_Dossier Flag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Pdf": {
+      "main": [
+        [
+          {
+            "node": "Create and Store Pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create and Store Pdf": {
+      "main": [
+        [
+          {
+            "node": "Updating Dossier Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Convert to HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Pdf2": {
+      "main": [
+        [
+          {
+            "node": "Create and Store Pdf1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create and Store Pdf1": {
+      "main": [
+        [
+          {
+            "node": "Updating Dossier Link1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

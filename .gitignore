@@ -38,3 +38,9 @@ next-env.d.ts
 
 n8n flows/
 n8n flows
+
+# graphify generated output
+graphify-out/
+
+# remotion render + QA artifacts (source is tracked)
+/remotion/out/

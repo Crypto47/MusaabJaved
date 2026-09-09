@@ -91,7 +91,7 @@ Also update `generate:all-covers`:
 npm run generate:{slug}
 ```
 
-Output: `public/images/projects/{slug}.png` (1200×630px PNG, ~70–100kb)
+Output: `public/projects/{slug}/{slug}.png` (1200×630px PNG, ~70–100kb)
 
 ---
 

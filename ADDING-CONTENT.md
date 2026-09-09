@@ -21,12 +21,12 @@ Everything you need to add, update, or remove content from the portfolio. No cod
 ## 1. Add a new project
 
 ### Files involved
-- `src/app/work/projects/your-project.mdx` ← create this
-- `public/images/projects/your-project.png` ← drop image here
+- `src/app/work/projects/your-project/your-project.mdx` ← create this
+- `public/projects/your-project/your-project.png` ← drop image here
 
 ### Steps
 
-**Step 1** — Create the MDX file at `src/app/work/projects/your-project.mdx`:
+**Step 1** — Create the MDX file at `src/app/work/projects/your-project/your-project.mdx`:
 
 ```mdx
 ---
@@ -58,7 +58,7 @@ Write the full case study here using Markdown.
 ...
 ```
 
-**Step 2** — Drop your project image at `public/images/projects/your-project.png`.
+**Step 2** — Drop your project image at `public/projects/your-project/your-project.png`.
 
 That's it. The project card and detail page generate automatically.
 
@@ -74,12 +74,12 @@ That's it. The project card and detail page generate automatically.
 ## 2. Add images to a project
 
 ### Files involved
-- `public/images/projects/` ← drop images here
-- `src/app/work/projects/your-project.mdx` ← update `images:` frontmatter
+- `public/projects/{slug}/` ← drop images here
+- `src/app/work/projects/your-project/your-project.mdx` ← update `images:` frontmatter
 
 ### Steps
 
-**Step 1** — Drop your image at `public/images/projects/my-image.png`.
+**Step 1** — Drop your image at `public/projects/{slug}/my-image.png`.
 
 **Step 2** — Add it to the `images:` array in the project's MDX frontmatter:
 
@@ -107,8 +107,8 @@ Remotion renders a branded motion-graphic MP4 (no screen recording needed). The 
 ### Files involved
 - `remotion/src/compositions/YourProject.tsx` ← create this
 - `remotion/src/Root.tsx` ← register the composition
-- `public/videos/your-project.mp4` ← output goes here (auto-created on render)
-- `src/app/work/projects/your-project.mdx` ← add `video:` frontmatter field
+- `public/projects/your-project/your-project.mp4` ← output goes here (auto-created on render)
+- `src/app/work/projects/your-project/your-project.mdx` ← add `video:` frontmatter field
 
 ### Steps
 
@@ -158,7 +158,7 @@ import { YourProject } from "./compositions/YourProject";
 **Step 3** — Add a render script to `remotion/package.json`:
 
 ```json
-"render:yourproject": "npx remotion render src/Root.tsx YourProject ../public/videos/your-project.mp4"
+"render:yourproject": "npx remotion render src/Root.tsx YourProject ../public/projects/your-project/your-project.mp4"
 ```
 
 **Step 4** — Install and render:
@@ -170,7 +170,7 @@ npm run studio     # preview in browser (optional)
 npm run render:yourproject
 ```
 
-The MP4 is saved to `public/videos/your-project.mp4`.
+The MP4 is saved to `public/projects/your-project/your-project.mp4`.
 
 **Step 5** — Add the `video:` field to the project's MDX frontmatter:
 
@@ -259,7 +259,7 @@ If you don't have a real photo yet, the placeholder SVG in the folder will be us
 
 ### Files involved
 - `src/app/blog/posts/your-post.mdx` ← create this
-- `public/images/projects/your-post-cover.png` ← optional cover image
+- `public/projects/{slug}/your-post-cover.png` ← optional cover image
 
 ### Steps
 
@@ -281,7 +281,7 @@ Write the full post here in Markdown.
 Body text...
 ```
 
-**Step 2** — (Optional) Drop a cover image at `public/images/projects/your-post-cover.png`.
+**Step 2** — (Optional) Drop a cover image at `public/projects/{slug}/your-post-cover.png`.
 
 The post card and detail page generate automatically.
 

@@ -1,0 +1,417 @@
+{
+  "name": "Campaign Manager",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Webhook",
+      "label": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1984,
+        -64
+      ]
+    },
+    {
+      "name": "Extract from File",
+      "label": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        -64
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -976,
+        -144
+      ]
+    },
+    {
+      "name": "Get Row against linkedin_url",
+      "label": "Get Row against linkedin_url",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        192
+      ]
+    },
+    {
+      "name": "If",
+      "label": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        176
+      ]
+    },
+    {
+      "name": "Create new lead",
+      "label": "Create new lead",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        32,
+        304
+      ]
+    },
+    {
+      "name": "Update lead",
+      "label": "Update lead",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -112
+      ]
+    },
+    {
+      "name": "Normalizer Node",
+      "label": "Normalizer Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1344,
+        -64
+      ]
+    },
+    {
+      "name": "Get many bases",
+      "label": "Get many bases",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        -800
+      ]
+    },
+    {
+      "name": "HTTP Request",
+      "label": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -128,
+        -800
+      ]
+    },
+    {
+      "name": "Get base schema",
+      "label": "Get base schema",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        992,
+        -1120
+      ]
+    },
+    {
+      "name": "Create a row",
+      "label": "Create a row",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        -832
+      ]
+    },
+    {
+      "name": "Fresh Items Parameter",
+      "label": "Fresh Items Parameter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        -384
+      ]
+    },
+    {
+      "name": "Loop Over Items1",
+      "label": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        288,
+        -800
+      ]
+    },
+    {
+      "name": "Create a record",
+      "label": "Create a record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        -656
+      ]
+    },
+    {
+      "name": "Prepare for Airtable Mapping",
+      "label": "Prepare for Airtable Mapping",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -800
+      ]
+    },
+    {
+      "name": "Isoalte",
+      "label": "Isoalte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        -720
+      ]
+    },
+    {
+      "name": "Isolator",
+      "label": "Isolator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        -912
+      ]
+    },
+    {
+      "name": "Code in JavaScript",
+      "label": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        -1056
+      ]
+    }
+  ],
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Normalizer Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Fresh Items Parameter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Row against linkedin_url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Row against linkedin_url": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create new lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new lead": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update lead": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizer Node": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many bases": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get base schema": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fresh Items Parameter": {
+      "main": [
+        [
+          {
+            "node": "Isoalte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Prepare for Airtable Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Isolator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for Airtable Mapping": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isoalte": {
+      "main": [
+        [
+          {
+            "node": "Get many bases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isolator": {
+      "main": [
+        [
+          {
+            "node": "Get base schema",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

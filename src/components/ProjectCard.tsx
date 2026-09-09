@@ -17,8 +17,6 @@ import {
 import { Fragment, useEffect, useRef, useState } from "react";
 import styles from "./ProjectCard.module.scss";
 
-const DUMMY_VIDEO = "/videos/demo.mp4";
-
 interface ProjectCardProps {
   href: string;
   priority?: boolean;
@@ -77,9 +75,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   impact = [],
   architecture = [],
 }) => {
-  const [activeMedia, setActiveMedia] = useState<"image" | "video">("video");
+  // A project with no video of its own shows its cover image instead. The
+  // previous fallback substituted an unrelated /videos/demo.mp4 and autoplayed
+  // it, so any new project without a rendered video would silently present
+  // someone else's footage as its own.
+  const hasVideo = Boolean(videoSrc);
+  const [activeMedia, setActiveMedia] = useState<"image" | "video">(
+    hasVideo ? "video" : "image",
+  );
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const resolvedVideo = videoSrc || DUMMY_VIDEO;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -112,7 +116,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             ) : (
               <video
                 ref={videoRef}
-                src={resolvedVideo}
+                src={videoSrc}
                 autoPlay
                 muted
                 loop
@@ -127,22 +131,25 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               />
             )}
 
-            <Row gap="4" className={styles.mediaToggle}>
-              <IconButton
-                icon="photo"
-                size="s"
-                variant={activeMedia === "image" ? "primary" : "secondary"}
-                onClick={() => setActiveMedia("image")}
-                aria-label="Show image"
-              />
-              <IconButton
-                icon="playCircle"
-                size="s"
-                variant={activeMedia === "video" ? "primary" : "secondary"}
-                onClick={() => setActiveMedia("video")}
-                aria-label="Show video"
-              />
-            </Row>
+            {/* No toggle when there is only one thing to show. */}
+            {hasVideo && images.length > 0 && (
+              <Row gap="4" className={styles.mediaToggle}>
+                <IconButton
+                  icon="photo"
+                  size="s"
+                  variant={activeMedia === "image" ? "primary" : "secondary"}
+                  onClick={() => setActiveMedia("image")}
+                  aria-label="Show image"
+                />
+                <IconButton
+                  icon="playCircle"
+                  size="s"
+                  variant={activeMedia === "video" ? "primary" : "secondary"}
+                  onClick={() => setActiveMedia("video")}
+                  aria-label="Show video"
+                />
+              </Row>
+            )}
           </Column>
         </Column>
 

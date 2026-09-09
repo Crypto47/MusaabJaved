@@ -1,0 +1,233 @@
+{
+  "name": "Ingestion Flow Direct (1/3)",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Webhook",
+      "label": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -60
+      ]
+    },
+    {
+      "name": "OpenAI",
+      "label": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        260,
+        -180
+      ]
+    },
+    {
+      "name": "Google Sheets",
+      "label": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        940,
+        -420
+      ]
+    },
+    {
+      "name": "Extract Binary Key",
+      "label": "Extract Binary Key",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -280,
+        -60
+      ]
+    },
+    {
+      "name": "Prepare for sheets mapping",
+      "label": "Prepare for sheets mapping",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        -160
+      ]
+    },
+    {
+      "name": "If",
+      "label": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -60,
+        -60
+      ]
+    },
+    {
+      "name": "OpenAI1",
+      "label": "OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        160,
+        140
+      ]
+    },
+    {
+      "name": "Prepare for sheets mapping1",
+      "label": "Prepare for sheets mapping1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        140
+      ]
+    },
+    {
+      "name": "Sent to Sheet for Review",
+      "label": "Sent to Sheet for Review",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        760,
+        160
+      ]
+    },
+    {
+      "name": "Execute Workflow",
+      "label": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        920,
+        -40
+      ]
+    },
+    {
+      "name": "Google Sheets1",
+      "label": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1220,
+        -160
+      ]
+    },
+    {
+      "name": "Convert to unified",
+      "label": "Convert to unified",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        -220
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Binary Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Prepare for sheets mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Binary Key": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for sheets mapping": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to unified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Prepare for sheets mapping1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for sheets mapping1": {
+      "main": [
+        [
+          {
+            "node": "Sent to Sheet for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to unified": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

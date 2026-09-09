@@ -1,0 +1,67 @@
+---
+title: "What an E-E-A-T layer actually looks like in a content pipeline"
+summary: "You cannot add Experience to an article after the fact. Here is what I built instead — Perplexity citations plus a Pinecone grounding store — and what it does and does not fix."
+publishedAt: "2026-09-09"
+tag: "engineering"
+---
+
+Most writing about E-E-A-T treats it as a checklist you apply to a finished draft. Add an author bio. Link a few sources. Mention your years of experience. That framing is wrong, and if you are building an automated content pipeline it will actively mislead you.
+
+E-E-A-T — Experience, Expertise, Authoritativeness, Trustworthiness — comes from Google's Search Quality Rater Guidelines. It is not a ranking factor with a score attached. It is a description of what human raters are asked to look for when they judge whether a page deserves to rank. The systems that actually do the ranking are trained to approximate that judgement.
+
+Which means the useful question is not "how do I add E-E-A-T" but "what would make a reader, or a rater, able to check that this page is telling the truth?"
+
+## The system I was actually building
+
+I replaced a content agency for a Dutch health brand with an automated pipeline producing two or more bilingual SEO articles a day. The economics were the reason: per-article pricing does not reach daily output in two languages at any headcount.
+
+The obvious failure mode of a pipeline like that is confident nonsense. An LLM asked to write about nasal breathing will produce something fluent, on-topic, and unverifiable. It will invent a study. It will state a mechanism with more certainty than the literature supports. At two articles a day, you are manufacturing liability.
+
+So the pipeline has two grounding layers before anything gets written.
+
+## Layer one: retrieval over the brand's own material
+
+Four Pinecone vector stores, each with its own embeddings step, hold the brand's own positions:
+
+- the company profile
+- content guidelines and tone of voice
+- blog instructions
+- a dynamic search over everything already published
+
+Every draft retrieves from all four before generation. This is the part people skip, and it is the part that does the most work.
+
+It is not about factual accuracy. It is about **consistency of claim**. If the brand has published that their product helps with nasal congestion but has never claimed it treats sleep apnoea, the retrieval layer is what stops article 47 from quietly making the stronger claim. A single article overreaching is a copy problem. Thirty articles a month drifting in the same direction is a compliance problem.
+
+The dynamic search over published articles does something else useful: it prevents the pipeline from contradicting itself. Two articles taking opposite positions on the same question is exactly the signal that tells a reader nobody is home.
+
+## Layer two: external citations
+
+Every article is then enriched with citations pulled through Perplexity. Two separate calls — one for the Dutch track, one for the English — because the sources worth citing differ by language, and translating an English citation set into Dutch produces references a Dutch reader cannot follow.
+
+The point is not decoration. It is that a claim with a source attached is checkable, and a claim without one is not. That is the whole of Trustworthiness, mechanically.
+
+## What this does not do
+
+It does not manufacture Experience.
+
+This is the honest limit, and I have not found a way around it. Experience — the first E, added to the framework in December 2022 — means first-hand involvement. Having used the product. Having been the patient. Having run the test. That cannot be retrieved, because it is not information; it is provenance.
+
+A grounded pipeline can be expert, authoritative and trustworthy. It cannot be experienced. If your content strategy depends on first-hand experience being visible, part of your pipeline has to be a human who actually has it, and the honest move is to name them.
+
+For the brand in question, that split worked out cleanly. Informational articles about mechanisms and research were a good fit for the automated track. Anything that read as personal testimony stayed with a human.
+
+## What it cost, and what it returned
+
+The pipeline runs at $50–100/month in API costs, replacing $1,000/month of agency retainer. Thirty-plus articles a month, in two languages, with a single human review checkpoint before publishing. The brand reported 15–30% month-over-month organic traffic growth.
+
+I want to be careful about that last number. Organic growth on a site publishing thirty new articles a month is over-determined — more indexed pages will move traffic regardless of whether the grounding layers are doing anything. I do not have a clean counterfactual, and I would not claim the citation layer caused the growth. What I can say is that the review checkpoint stopped catching factual problems, which is what the grounding was built to do.
+
+## If you are building one of these
+
+Three things I would tell myself at the start.
+
+**Retrieval over your own material matters more than external citations.** Citations are easier to add and easier to demonstrate to a client, so they get built first. Consistency is what actually degrades at volume.
+
+**Ground per language, not once.** A single retrieval pass reused across locales produces articles that are technically translated and culturally wrong.
+
+**Keep the human checkpoint even after it stops finding things.** The checkpoint's value is not the errors it catches once the system is tuned. It is that someone is accountable for what publishes, which is a different property from the content being correct.

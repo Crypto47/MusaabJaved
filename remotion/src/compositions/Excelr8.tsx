@@ -11,7 +11,7 @@ const config = {
   solution: "Full GTM automation covering lead import, enrichment, CRM sync, and campaign setup. End to end.",
   techs:    ["HubSpot", "Clay", "GPT-4o", "Python", "n8n", "Apollo"],
   metrics:  [
-    { value: 96, label: "% less time per campaign", suffix: "%" },
+    { value: 96, label: "less time per campaign", suffix: "%" },
     { value: 30, label: "hrs/month CRM entry eliminated" },
     { value: 36, label: "hrs/month content automated" },
   ],

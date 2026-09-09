@@ -1,0 +1,87 @@
+---
+title: "Dossier Bot — On-Demand Lead Briefings in Slack"
+publishedAt: "2026-06-15"
+summary: "A Slack bot that turns a name or a LinkedIn URL into a PDF lead briefing. An agent with memory and four tools decides whether to fetch an existing dossier or build a new one, and a nightly run briefs the top five leads before anyone asks."
+images:
+  - "/projects/dossier-bot/dossier-bot.png"
+team:
+  - name: "Musaab Javed"
+    role: "AI Integrations Engineer"
+    avatar: "/images/avatar.jpg"
+link: ""
+video: "/projects/dossier-bot/dossier-bot.mp4"
+featured: true
+problem: "Pre-call research is the same twenty minutes every time — open the profile, read the recent posts, work out what they actually care about, and write it somewhere the rest of the team can find. It never gets done for every lead, so it gets done for none of them."
+solution: "A Slack-native agent that answers with a briefing. Mention it with a name or a profile URL and it checks whether a dossier already exists, looks the lead up by URL or by name if not, generates one from their profile and recent posts, renders it to PDF, stores it, and replies with the link — all inside the thread."
+techStack:
+  - "n8n"
+  - "Slack API"
+  - "LangChain Agent"
+  - "GPT-4o"
+  - "Supabase"
+  - "html2pdf.app"
+features:
+  - "Answers an @mention in-thread"
+  - "Conversation memory across turns"
+  - "Cache-first: checks the bucket before generating"
+  - "Lookup by profile URL or by name"
+  - "On-demand generation as an agent tool"
+  - "Briefing written from the lead's own recent posts"
+  - "PDF rendered, stored and linked"
+  - "Nightly pre-briefing of the top five leads"
+impact:
+  - "Briefing on demand, without leaving Slack"
+  - "Top 5 leads pre-briefed nightly"
+  - "Cached before generated — no duplicate work"
+  - "One shared PDF instead of scattered notes"
+architecture:
+  - "Slack @mention trigger"
+  - "Session parsing"
+  - "Agent with memory buffer"
+  - "Bucket lookup for existing dossier"
+  - "Lead search by URL or name"
+  - "On-demand generation tool"
+  - "Agent writes from profile + posts"
+  - "PDF render, store, reply in-thread"
+---
+
+## The Problem
+
+Every sales call has the same twenty minutes in front of it. Open the profile. Read the last handful of posts. Work out what this person actually cares about right now, as opposed to what their headline says. Write it down somewhere the rest of the team can find it later.
+
+It is not hard work. It is just work that has to happen for every lead, every time, and it competes with the calls themselves. So in practice it gets done thoroughly for the two or three leads that seem most promising and skipped for everyone else — which is exactly backwards, because the whole point of research is finding out which ones are promising.
+
+The failure mode is not "nobody researches." It is that research quality is inversely correlated with how busy the week is.
+
+## What I Built
+
+A bot you talk to in Slack. You mention it with a name or a LinkedIn URL, and it replies in the thread with a briefing.
+
+That description undersells the interesting part, which is what happens in between.
+
+**The interface is an @mention.** No dashboard, no new tool to adopt, no separate login. `@dossierbot` plus a name, in whichever channel the conversation is already happening. Adoption of an internal tool is mostly a function of how far it is from where people already are, and Slack is where this team already was.
+
+**An agent decides, rather than a pipeline running.** Behind the mention sits a LangChain agent with a memory buffer and four tools it can reach for:
+
+- fetch an existing dossier from the storage bucket
+- search for a lead by profile URL
+- search for a lead by full name
+- generate a new dossier on demand
+
+The order is not hardcoded. The agent works out what it has been asked and picks. Asked about someone already briefed, it returns the existing PDF and does no generation work at all. Asked for a name it cannot resolve, it says so rather than inventing a lead. Given a URL for someone new, it triggers generation.
+
+The memory buffer matters more than it looks. A follow-up like "what about their last post?" in the same thread resolves against the lead already under discussion, because the conversation has state. Without it, every message is a cold start and the interface stops feeling like a conversation.
+
+**Cache before compute.** The bucket check runs first, deliberately. Generation costs an API call and about a minute; a lookup costs neither. In a shared channel the same lead gets asked about repeatedly — by whoever is taking the call next — and every ask after the first is free.
+
+**The briefing is written from their own words.** Generation pulls the lead's stored profile data and their recent posts, and an agent writes the dossier from both. Posts are the useful half: a headline tells you a job title, and a month of posts tells you what the person is actually thinking about. The output is cleaned, converted to HTML, rendered to PDF through html2pdf, stored in Supabase, and the row is updated with the link.
+
+**It runs ahead of you.** A separate scheduled flow takes the top five leads each night, checks which ones have no dossier yet, and generates them. By the time anyone thinks to ask, the answer usually already exists — which is what turns the cache-first design from an optimisation into the normal path.
+
+## Notes on Building It
+
+**Three workflows, not one.** The Slack bot, the tool-call handler and the scheduled generator are separate n8n workflows. The bot needs to answer in seconds; generation takes about a minute. Fusing them would mean either a bot that hangs or a generator that gets interrupted. Splitting them means the agent's "generate" tool is an async call into another workflow, and the reply can acknowledge before the PDF exists.
+
+**The `is_dossier` flag prevents double work.** Both the scheduled run and the on-demand path set it, so a lead being generated by the nightly job does not get generated again by someone asking at the same moment.
+
+**Answering "I don't know" is a feature.** The two lookup tools can both miss. Early on the agent would fill the gap with a plausible-sounding briefing about the wrong person, which is worse than no answer. Constraining it to report a failed lookup was a bigger quality improvement than anything I did to the generation prompt.

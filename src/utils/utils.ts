@@ -44,8 +44,14 @@ export const getRandom = <T>(array: T[], limit?: number): T[] => {
 };
 
 function getMDXFiles(dir: string) {
+  // A missing content directory means "nothing published yet", not "this page
+  // is a 404". Calling notFound() here broke `next build`, because
+  // generateStaticParams() runs this at build time and cannot throw a 404 —
+  // and git does not track empty directories, so removing the last .mdx file
+  // deletes the folder and takes the build down with it. Callers that need a
+  // 404 for a specific missing post already raise it themselves.
   if (!fs.existsSync(dir)) {
-    notFound();
+    return [];
   }
 
   const result: string[] = [];

@@ -1,0 +1,875 @@
+{
+  "name": "Excelr8 Enrichment Flow Client",
+  "executionOrder": "v1",
+  "nodes": [
+    {
+      "name": "Completion Node",
+      "label": "Completion Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3680,
+        448
+      ]
+    },
+    {
+      "name": "Schedule Trigger",
+      "label": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -5344,
+        640
+      ]
+    },
+    {
+      "name": "Get all leads",
+      "label": "Get all leads",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -5040,
+        656
+      ]
+    },
+    {
+      "name": "Loop over leads",
+      "label": "Loop over leads",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -4048,
+        880
+      ]
+    },
+    {
+      "name": "Url and Identifier Block",
+      "label": "Url and Identifier Block",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4720,
+        672
+      ]
+    },
+    {
+      "name": "Get Lead info",
+      "label": "Get Lead info",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3808,
+        944
+      ]
+    },
+    {
+      "name": "Personality Assesment Agent1",
+      "label": "Personality Assesment Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2752,
+        208
+      ]
+    },
+    {
+      "name": "Structured Output Parser",
+      "label": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -2592,
+        400
+      ]
+    },
+    {
+      "name": "OpenAI Chat Model",
+      "label": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2752,
+        416
+      ]
+    },
+    {
+      "name": "Personality Assesment variabels updated for lead",
+      "label": "Personality Assesment variabels updated for lead",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2320,
+        288
+      ]
+    },
+    {
+      "name": "Get Post Content",
+      "label": "Get Post Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -976,
+        608
+      ]
+    },
+    {
+      "name": "Supabase",
+      "label": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4832,
+        928
+      ]
+    },
+    {
+      "name": "If",
+      "label": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4432,
+        832
+      ]
+    },
+    {
+      "name": "Identifier Switch",
+      "label": "Identifier Switch",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3488,
+        928
+      ]
+    },
+    {
+      "name": "Get Lead info1",
+      "label": "Get Lead info1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2480,
+        1232
+      ]
+    },
+    {
+      "name": "Posts Parser",
+      "label": "Posts Parser",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        592
+      ]
+    },
+    {
+      "name": "AI Agent",
+      "label": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        688
+      ]
+    },
+    {
+      "name": "OpenAI Chat Model1",
+      "label": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        912
+      ]
+    },
+    {
+      "name": "Chekc Empty",
+      "label": "Chekc Empty",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2336,
+        1136
+      ]
+    },
+    {
+      "name": "HTTP Request",
+      "label": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3200,
+        992
+      ]
+    },
+    {
+      "name": "Format Fields",
+      "label": "Format Fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3104,
+        512
+      ]
+    },
+    {
+      "name": "If item doesnt exist",
+      "label": "If item doesnt exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2944,
+        1168
+      ]
+    },
+    {
+      "name": "No posts",
+      "label": "No posts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -768,
+        640
+      ]
+    },
+    {
+      "name": "Test Code Node",
+      "label": "Test Code Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3680,
+        720
+      ]
+    },
+    {
+      "name": "If1",
+      "label": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        624
+      ]
+    },
+    {
+      "name": "When clicking ‘Execute workflow’",
+      "label": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        224
+      ]
+    },
+    {
+      "name": "Clean Output",
+      "label": "Clean Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        720
+      ]
+    },
+    {
+      "name": "Personality Assesment Agent",
+      "label": "Personality Assesment Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1904,
+        1072
+      ]
+    },
+    {
+      "name": "OpenAI Chat Model2",
+      "label": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1760,
+        1312
+      ]
+    },
+    {
+      "name": "Structured Output Parser1",
+      "label": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1264,
+        1232
+      ]
+    },
+    {
+      "name": "Personality Assesment variabels updated for lead1",
+      "label": "Personality Assesment variabels updated for lead1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1328,
+        976
+      ]
+    },
+    {
+      "name": "Get Commentaories",
+      "label": "Get Commentaories",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        608,
+        96
+      ]
+    },
+    {
+      "name": "Get Reactionaries",
+      "label": "Get Reactionaries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1456,
+        80
+      ]
+    },
+    {
+      "name": "Loop Over Items",
+      "label": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        528
+      ]
+    },
+    {
+      "name": "Code in JavaScript",
+      "label": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        640
+      ]
+    },
+    {
+      "name": "Format Comment Json",
+      "label": "Format Comment Json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        80
+      ]
+    },
+    {
+      "name": "Format Reactions Json",
+      "label": "Format Reactions Json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        96
+      ]
+    },
+    {
+      "name": "Get many rows1",
+      "label": "Get many rows1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        400
+      ]
+    },
+    {
+      "name": "Get Previous Posts",
+      "label": "Get Previous Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        416
+      ]
+    },
+    {
+      "name": "Drop Already Existing ones",
+      "label": "Drop Already Existing ones",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        416
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get all leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all leads": {
+      "main": [
+        [
+          {
+            "node": "Url and Identifier Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop over leads": {
+      "main": [
+        [
+          {
+            "node": "Completion Node",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Lead info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Url and Identifier Block": {
+      "main": [
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead info": {
+      "main": [
+        [
+          {
+            "node": "Identifier Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Personality Assesment Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Personality Assesment Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personality Assesment Agent1": {
+      "main": [
+        [
+          {
+            "node": "Personality Assesment variabels updated for lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personality Assesment variabels updated for lead": {
+      "main": [
+        [
+          {
+            "node": "Get Post Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Post Content": {
+      "main": [
+        [
+          {
+            "node": "No posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Identifier Switch": {
+      "main": [
+        [
+          {
+            "node": "Format Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead info1": {
+      "main": [
+        [
+          {
+            "node": "Chekc Empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Posts Parser": {
+      "main": [
+        [
+          {
+            "node": "Get many rows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Clean Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If item doesnt exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chekc Empty": {
+      "main": [
+        [
+          {
+            "node": "Personality Assesment Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Fields": {
+      "main": [
+        [
+          {
+            "node": "Personality Assesment Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If item doesnt exist": {
+      "main": [
+        [
+          {
+            "node": "Get Lead info1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No posts": {
+      "main": [
+        [
+          {
+            "node": "Posts Parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Code Node": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop over leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Output": {
+      "main": [
+        [
+          {
+            "node": "Test Code Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Personality Assesment Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Personality Assesment Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personality Assesment Agent": {
+      "main": [
+        [
+          {
+            "node": "Personality Assesment variabels updated for lead1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personality Assesment variabels updated for lead1": {
+      "main": [
+        [
+          {
+            "node": "Get Post Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Commentaories": {
+      "main": [
+        [
+          {
+            "node": "Format Comment Json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Reactionaries": {
+      "main": [
+        [
+          {
+            "node": "Format Reactions Json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Commentaories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Comment Json": {
+      "main": [
+        [
+          {
+            "node": "Get Reactionaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Reactions Json": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows1": {
+      "main": [
+        [
+          {
+            "node": "Get Previous Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Previous Posts": {
+      "main": [
+        [
+          {
+            "node": "Drop Already Existing ones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drop Already Existing ones": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

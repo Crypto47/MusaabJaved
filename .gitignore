@@ -44,3 +44,6 @@ graphify-out/
 
 # remotion render + QA artifacts (source is tracked)
 /remotion/out/
+
+# Playwright MCP session output
+.playwright-mcp/

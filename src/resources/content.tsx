@@ -641,42 +641,49 @@ export const process: ProcessStep[] = [
   {
     step: "01",
     title: "Discovery",
+    icon: "search",
     description:
       "Map your manual workflows, data sources, and tools to find the highest-ROI automation targets.",
   },
   {
     step: "02",
     title: "Workflow Design",
+    icon: "network",
     description:
       "Blueprint the end-to-end pipeline — triggers, CRM and API integrations, and human-in-the-loop checkpoints.",
   },
   {
     step: "03",
     title: "AI Logic",
+    icon: "chip",
     description:
       "Design the LLM layer: prompt chains, RAG grounding, structured outputs, and model selection tuned for cost and accuracy.",
   },
   {
     step: "04",
     title: "Development",
+    icon: "code",
     description:
       "Build the integration in n8n and custom code — API connections, error handling, retries, and deduplication.",
   },
   {
     step: "05",
     title: "Testing",
+    icon: "testTube",
     description:
       "Validate against real data: edge cases, LLM output QA, and failure-mode drills before anything touches production.",
   },
   {
     step: "06",
     title: "Deployment",
+    icon: "rocket",
     description:
       "Ship to production with monitoring, alerting, and rollback paths — no silent failures.",
   },
   {
     step: "07",
     title: "Optimization",
+    icon: "chartUp",
     description:
       "Track cost, latency, and output quality; iterate prompts and flows as volume grows.",
   },

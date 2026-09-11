@@ -1,46 +1,68 @@
-import { Column, Heading, Row, Text } from "@once-ui-system/core";
-import { getCurrentlyItems, type CurrentlyItem } from "@/utils/utils";
+import { type CurrentlyItem, getCurrentlyItems } from "@/utils/utils";
+import { Column, Flex, Heading, Row, Text } from "@once-ui-system/core";
+import type { CSSProperties } from "react";
+import styles from "./CurrentlySection.module.scss";
 
-function CurrentlyCard({ item }: { item: CurrentlyItem }) {
+type Kind = "games" | "books";
+
+const STATUS: Record<Kind, string> = {
+  games: "Now playing",
+  books: "Now reading",
+};
+
+/**
+ * Poster card for one item. The outer Column floats and reveals on scroll; the
+ * inner one tilts and lifts on hover. All motion lives in the module stylesheet.
+ */
+function CurrentlyCard({ item, kind, index }: { item: CurrentlyItem; kind: Kind; index: number }) {
   return (
-    <div
-      style={{
-        width: "140px",
-        aspectRatio: "2/3",
-        borderRadius: "var(--radius-l)",
-        overflow: "hidden",
-        position: "relative",
-        flexShrink: 0,
-        background: "var(--neutral-alpha-weak)",
-      }}
-    >
-      {item.image && (
-        <img
-          src={item.image}
-          alt={item.title}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-      )}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: "10px 12px",
-          background: "linear-gradient(transparent, rgba(0,0,0,0.85))",
-        }}
+    <Column className={styles.float} style={{ "--i": index } as CSSProperties}>
+      <Column
+        fillWidth
+        radius="l"
+        overflow="hidden"
+        background="neutral-alpha-weak"
+        className={styles.card}
       >
-        <Text variant="label-strong-xs" style={{ color: "#fff", display: "block" }}>
-          {item.title}
-        </Text>
-        {item.category && (
-          <Text variant="label-default-xs" style={{ color: "rgba(255,255,255,0.6)", display: "block" }}>
-            {item.category}
-          </Text>
+        {item.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.image} alt={item.title} className={styles.cover} />
         )}
-      </div>
-    </div>
+        <Row
+          position="absolute"
+          top="8"
+          left="8"
+          vertical="center"
+          gap="4"
+          className={styles.chip}
+          aria-hidden="true"
+        >
+          <Flex className={styles.dot} />
+          <Text variant="label-default-xs" className={styles.chipText}>
+            {STATUS[kind]}
+          </Text>
+        </Row>
+        <Column
+          position="absolute"
+          bottom="0"
+          left="0"
+          right="0"
+          paddingX="12"
+          paddingY="8"
+          gap="4"
+          className={styles.caption}
+        >
+          <Text variant="label-strong-xs" className={styles.title}>
+            {item.title}
+          </Text>
+          {item.category && (
+            <Text variant="label-default-xs" className={styles.category}>
+              {item.category}
+            </Text>
+          )}
+        </Column>
+      </Column>
+    </Column>
   );
 }
 
@@ -66,8 +88,8 @@ export function CurrentlySection({ title }: CurrentlySectionProps) {
             Playing
           </Text>
           <Row gap="12" wrap>
-            {games.map((item) => (
-              <CurrentlyCard key={item.title} item={item} />
+            {games.map((item, index) => (
+              <CurrentlyCard key={item.title} item={item} kind="games" index={index} />
             ))}
           </Row>
         </Column>
@@ -79,8 +101,13 @@ export function CurrentlySection({ title }: CurrentlySectionProps) {
             Reading
           </Text>
           <Row gap="12" wrap>
-            {books.map((item) => (
-              <CurrentlyCard key={item.title} item={item} />
+            {books.map((item, index) => (
+              <CurrentlyCard
+                key={item.title}
+                item={item}
+                kind="books"
+                index={games.length + index}
+              />
             ))}
           </Row>
         </Column>

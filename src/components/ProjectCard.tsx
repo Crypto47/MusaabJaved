@@ -19,7 +19,6 @@ import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {
   href: string;
-  priority?: boolean;
   images: string[];
   title: string;
   content: string;
@@ -153,7 +152,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </Column>
         </Column>
 
-        <Column flex={12} minWidth={0} padding="24" gap="16">
+        <Column flex={7} minWidth={0} padding="24" gap="16">
           {title && (
             <Heading as="h2" wrap="balance" variant="heading-strong-l">
               {title}
@@ -185,7 +184,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                       Problem
                     </Text>
                   </Row>
-                  <Text variant="body-default-xs" onBackground="neutral-medium">
+                  <Text variant="body-default-s" onBackground="neutral-medium">
                     {problem}
                   </Text>
                 </Column>
@@ -208,7 +207,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                       Solution
                     </Text>
                   </Row>
-                  <Text variant="body-default-xs" onBackground="neutral-medium">
+                  <Text variant="body-default-s" onBackground="neutral-medium">
                     {solution}
                   </Text>
                 </Column>

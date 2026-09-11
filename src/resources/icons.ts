@@ -44,6 +44,9 @@ import {
   PiGear,
   PiMaskHappy,
   PiBroom,
+  PiCode,
+  PiTestTube,
+  PiChartLineUp,
 } from 'react-icons/pi';
 
 import {
@@ -157,6 +160,9 @@ export const iconLibrary: Record<string, IconType> = {
   network: PiNetwork,
   chip: PiCpu,
   settings: PiGear,
+  code: PiCode,
+  testTube: PiTestTube,
+  chartUp: PiChartLineUp,
   alert: HiBellAlert,
   globe: HiOutlineGlobeAsiaAustralia,
   person: PiUserCircleDuotone,

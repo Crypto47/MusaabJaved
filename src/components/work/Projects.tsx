@@ -33,10 +33,9 @@ export function Projects({ range, exclude, randomize, limit, featuredOnly }: Pro
       : sortedProjects;
 
   return (
-    <Column fillWidth gap="xl" marginBottom="40" paddingX="l">
+    <Column fillWidth gap="xl" marginBottom="40">
       {displayedProjects.map((post, index) => (
         <ProjectCard
-          priority={index < 2}
           key={post.slug}
           href={`/work/${post.slug}`}
           images={post.metadata.images}

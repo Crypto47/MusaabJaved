@@ -206,9 +206,7 @@ export default async function Home() {
         <TestimonialsCarousel testimonials={testimonials} />
       </RevealFx>
 
-      <RevealFx translateY="12" delay={1.1} fillWidth>
-        <ProcessSection />
-      </RevealFx>
+      <ProcessSection />
 
       <RevealFx translateY="12" delay={1.15} fillWidth>
         <ROICalculator />

@@ -1,0 +1,461 @@
+// ProcessSection — the snake-path "How I Work".
+//
+// Layout: four cards across, an elbow down, three back (right to left), and the
+// spare grid cell carries a dashed "iterate" loop back to step 01. Geometry
+// assumes the seven steps in content.tsx. Each card owns two pseudo-elements
+// sized to the grid gap it connects across: ::after is the connector (track +
+// fill), ::before is the packet that runs along it.
+//
+// Two layers of motion:
+//  1. Draw (scroll-linked, inside @supports): the list's own view timeline
+//     reveals card, connector, card… between cover 15% and cover 48%, so the
+//     path traces itself as the section scrolls into view. Base rules describe
+//     the finished state; browsers without scroll-driven animations (Firefox
+//     until ~158) render the drawn path.
+//  2. Flow (time-based, everywhere): a packet dwells on a card, crosses the
+//     next connector, and so on round to 07; the dashed return then glows and
+//     the cycle restarts. One keyframe per direction, phased with
+//     animation-delay per step, so the timing lives in four numbers below.
+//
+// Two things silently break the draw: `animation-timeline` / `animation-range`
+// must come after the `animation` shorthand (it resets them), and no ancestor
+// may use overflow: hidden (view() would track that box).
+
+@use "sass:math";
+
+// ---- flow timing -----------------------------------------------------------
+$flow-dwell: 0.9s; // packet sits on a card
+$flow-travel: 0.4s; // packet crosses a connector
+$flow-loop: 2s; // dashed return glows
+$flow-rest: 0.5s; // pause before 01 lights again
+$flow-step: $flow-dwell + $flow-travel;
+$flow-cycle: 7 * $flow-step + $flow-loop + $flow-rest;
+
+@function at($t) {
+  @return math.percentage(math.div($t, $flow-cycle));
+}
+
+.root {
+  --snake-col-gap: var(--static-space-16);
+  --snake-row-gap: var(--static-space-40);
+  --snake-line: 2px;
+  --snake-border: 1px; // Once UI card border; connectors start at the border-box edge
+  --snake-track: var(--neutral-alpha-medium);
+  --snake-fill: var(--brand-solid-strong);
+  --snake-packet: var(--brand-on-background-weak);
+  --snake-packet-size: 10px;
+}
+
+// `.root .grid` (two classes) outranks Once UI's single-class display/gap
+// utilities, so the module owns the grid outright.
+.root .grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--snake-row-gap) var(--snake-col-gap);
+  margin: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
+.root .step {
+  position: relative;
+}
+
+// Row two runs right to left; the loop takes the spare cell under 01.
+.root .step:nth-child(5) { grid-area: 2 / 4; }
+.root .step:nth-child(6) { grid-area: 2 / 3; }
+.root .step:nth-child(7) { grid-area: 2 / 2; }
+.root .loop {
+  grid-area: 2 / 1;
+  position: relative;
+}
+
+// ---- connectors -------------------------------------------------------------
+// ::after — track colour underneath, fill painted as a background image so one
+// pseudo-element carries both and the fill can grow via background-size.
+// ::before — the packet: a short gradient dash that slides across the same box.
+.root .step::before,
+.root .step::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  border-radius: 1px;
+}
+
+.root .step::after {
+  background-color: var(--snake-track);
+  background-image: linear-gradient(var(--snake-fill), var(--snake-fill));
+  background-size: 100% 100%;
+}
+
+.root .step::before {
+  z-index: 1;
+  background-image: linear-gradient(90deg, transparent, var(--snake-packet) 50%, transparent);
+  background-size: var(--snake-packet-size) 100%;
+  background-position: calc(-1 * var(--snake-packet-size)) 50%;
+  animation: flow-right $flow-cycle linear infinite;
+}
+
+// 01 → 02 → 03 → 04: rightwards at mid-height, spanning the column gap.
+.root .step:nth-child(-n + 3)::before,
+.root .step:nth-child(-n + 3)::after {
+  top: 50%;
+  left: calc(100% + var(--snake-border));
+  width: var(--snake-col-gap);
+  height: var(--snake-line);
+  margin-top: calc(var(--snake-line) / -2);
+}
+.root .step:nth-child(-n + 3)::after {
+  background-position: left center;
+}
+
+// 04 ↓ 05: the elbow, spanning the row gap.
+.root .step:nth-child(4)::before,
+.root .step:nth-child(4)::after {
+  top: calc(100% + var(--snake-border));
+  left: 50%;
+  width: var(--snake-line);
+  height: var(--snake-row-gap);
+  margin-left: calc(var(--snake-line) / -2);
+}
+.root .step:nth-child(4)::after {
+  background-position: center top;
+}
+.root .step:nth-child(4)::before {
+  background-image: linear-gradient(180deg, transparent, var(--snake-packet) 50%, transparent);
+  background-size: 100% var(--snake-packet-size);
+  background-position: 50% calc(-1 * var(--snake-packet-size));
+  animation-name: flow-down;
+}
+
+// 05 → 06 → 07: leftwards.
+.root .step:nth-child(5)::before,
+.root .step:nth-child(5)::after,
+.root .step:nth-child(6)::before,
+.root .step:nth-child(6)::after {
+  top: 50%;
+  right: calc(100% + var(--snake-border));
+  width: var(--snake-col-gap);
+  height: var(--snake-line);
+  margin-top: calc(var(--snake-line) / -2);
+}
+.root .step:nth-child(5)::after,
+.root .step:nth-child(6)::after {
+  background-position: right center;
+}
+.root .step:nth-child(5)::before,
+.root .step:nth-child(6)::before {
+  background-position: calc(100% + var(--snake-packet-size)) 50%;
+  animation-name: flow-left;
+}
+
+// 07 hands over to the loop cell.
+.root .step:nth-child(7)::before,
+.root .step:nth-child(7)::after {
+  content: none;
+}
+
+// ---- loop cell --------------------------------------------------------------
+// A dashed L from 07's left edge back up into 01, plus an arrowhead. Both glow
+// for the return leg of the flow cycle.
+.root .loop::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  right: calc(-1 * var(--snake-col-gap));
+  top: calc(-1 * var(--snake-row-gap));
+  bottom: 50%;
+  border-left: var(--snake-line) dashed var(--snake-track);
+  border-bottom: var(--snake-line) dashed var(--snake-track);
+  border-bottom-left-radius: var(--static-space-24);
+}
+
+.root .loop::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 3px);
+  top: calc(-1 * var(--snake-row-gap) + 2px);
+  width: 8px;
+  height: 8px;
+  border-top: var(--snake-line) solid var(--snake-track);
+  border-left: var(--snake-line) solid var(--snake-track);
+  transform: rotate(45deg);
+}
+
+.root .loop::before,
+.root .loop::after {
+  animation: flow-loop $flow-cycle linear infinite;
+  animation-delay: 6 * $flow-step + $flow-dwell;
+}
+
+.root .loopLabel {
+  position: absolute;
+  left: calc(50% + var(--static-space-12));
+  bottom: calc(50% + var(--static-space-8));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// ---- icon -------------------------------------------------------------------
+.root .icon {
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--brand-alpha-weak);
+  color: var(--brand-on-background-weak);
+}
+
+// The packet arriving: a ring expands off the icon and the glyph brightens.
+.root .icon::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1.5px solid var(--snake-packet);
+  opacity: 0;
+  pointer-events: none;
+  animation: flow-ring $flow-cycle ease-out infinite;
+}
+
+.root .icon > * {
+  animation: flow-glyph $flow-cycle ease-out infinite;
+}
+
+// ---- flow phasing -----------------------------------------------------------
+// Step k lights at (k-1)·step; its outgoing connector carries the packet dwell
+// seconds later.
+@for $k from 1 through 7 {
+  $lit: ($k - 1) * $flow-step;
+
+  .root .step:nth-child(#{$k}) .icon::after,
+  .root .step:nth-child(#{$k}) .icon > * {
+    animation-delay: $lit;
+  }
+
+  .root .step:nth-child(#{$k})::before {
+    animation-delay: $lit + $flow-dwell;
+  }
+}
+
+// ---- keyframes --------------------------------------------------------------
+
+// draw
+@keyframes snake-card {
+  from { opacity: 0.35; transform: translateY(8px); }
+  to   { opacity: 1;    transform: none; }
+}
+
+@keyframes snake-card-quiet {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+
+@keyframes snake-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// The icon lights as the drawn line reaches it and settles back once it has passed.
+@keyframes snake-icon {
+  0%   { background-color: var(--brand-alpha-weak);   color: var(--brand-on-background-weak); box-shadow: 0 0 0 0 var(--brand-alpha-weak); }
+  35%  { background-color: var(--brand-solid-strong); color: var(--static-white);             box-shadow: 0 0 0 4px var(--brand-alpha-weak); }
+  100% { background-color: var(--brand-alpha-weak);   color: var(--brand-on-background-weak); box-shadow: 0 0 0 0 var(--brand-alpha-weak); }
+}
+
+@keyframes snake-h {
+  from { background-size: 0% 100%; }
+  to   { background-size: 100% 100%; }
+}
+
+@keyframes snake-v {
+  from { background-size: 100% 0%; }
+  to   { background-size: 100% 100%; }
+}
+
+// flow — each keyframe is one cycle long and idle after its active window, so a
+// per-step animation-delay is the only phasing needed.
+@keyframes flow-right {
+  0%                        { background-position: calc(-1 * var(--snake-packet-size)) 50%; }
+  #{at($flow-travel)}, 100% { background-position: calc(100% + var(--snake-packet-size)) 50%; }
+}
+
+@keyframes flow-left {
+  0%                        { background-position: calc(100% + var(--snake-packet-size)) 50%; }
+  #{at($flow-travel)}, 100% { background-position: calc(-1 * var(--snake-packet-size)) 50%; }
+}
+
+@keyframes flow-down {
+  0%                        { background-position: 50% calc(-1 * var(--snake-packet-size)); }
+  #{at($flow-travel)}, 100% { background-position: 50% calc(100% + var(--snake-packet-size)); }
+}
+
+@keyframes flow-ring {
+  0%                       { opacity: 0;   transform: scale(0.85); }
+  #{at(0.15s)}             { opacity: 0.9; transform: scale(1); }
+  #{at($flow-dwell)}, 100% { opacity: 0;   transform: scale(1.5); }
+}
+
+@keyframes flow-glyph {
+  0%                       { filter: brightness(1); }
+  #{at(0.15s)}             { filter: brightness(1.6); }
+  #{at($flow-dwell)}, 100% { filter: brightness(1); }
+}
+
+@keyframes flow-loop {
+  0%                        { border-color: var(--snake-track); }
+  #{at(0.3s)}               { border-color: var(--snake-packet); }
+  #{at($flow-loop - 0.4s)}  { border-color: var(--snake-packet); }
+  #{at($flow-loop)}, 100%   { border-color: var(--snake-track); }
+}
+
+// ---- draw (scroll-linked) ---------------------------------------------------
+
+@supports (animation-timeline: view()) {
+  .root .grid {
+    view-timeline: --snake block;
+  }
+
+  .root .step {
+    animation: snake-card 1ms linear both;
+    animation-timeline: --snake;
+  }
+
+  .root .step .icon {
+    animation: snake-icon 1ms linear both;
+    animation-timeline: --snake;
+  }
+
+  .root .step::after {
+    animation: snake-h 1ms linear both;
+    animation-timeline: --snake;
+  }
+
+  .root .step:nth-child(4)::after {
+    animation-name: snake-v;
+  }
+
+  .root .loop {
+    animation: snake-fade 1ms linear both;
+    animation-timeline: --snake;
+    animation-range: cover 44.4% cover 48%;
+  }
+
+  // Step k owns the window [15% + (k-1)·4.2%, +4.2%): the card reveals in the
+  // first 2.6 points, its outgoing connector fills in the remaining 1.6.
+  @for $k from 1 through 7 {
+    $start: 15% + ($k - 1) * 4.2%;
+
+    .root .step:nth-child(#{$k}) {
+      animation-range: cover #{$start} cover #{$start + 2.6%};
+    }
+
+    .root .step:nth-child(#{$k}) .icon {
+      animation-range: cover #{$start} cover #{$start + 5.2%};
+    }
+
+    .root .step:nth-child(#{$k})::after {
+      animation-range: cover #{$start + 2.6%} cover #{$start + 4.2%};
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .root .step {
+      animation-name: snake-card-quiet;
+    }
+
+    .root .step .icon,
+    .root .step::after,
+    .root .loop {
+      animation: none;
+    }
+  }
+}
+
+// ---- reduced motion: no flow ------------------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+  .root .step::before,
+  .root .icon::after,
+  .root .icon > *,
+  .root .loop::before,
+  .root .loop::after {
+    animation: none;
+  }
+}
+
+// ---- narrow -----------------------------------------------------------------
+// Below 840px the snake straightens into one column: every connector drops from
+// the card's bottom centre, the packet always travels down, the loop cell goes,
+// and each card reveals on its own view timeline as it enters.
+
+@media (max-width: 840px) {
+  .root .grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+    gap: var(--static-space-24);
+  }
+
+  .root .step:nth-child(n) {
+    grid-area: auto;
+  }
+
+  .root .loop {
+    display: none;
+  }
+
+  .root .step:nth-child(n)::before,
+  .root .step:nth-child(n)::after {
+    content: "";
+    top: calc(100% + var(--snake-border));
+    right: auto;
+    left: 50%;
+    width: var(--snake-line);
+    height: var(--static-space-24);
+    margin: 0 0 0 calc(var(--snake-line) / -2);
+  }
+
+  .root .step:nth-child(n)::after {
+    background-position: center top;
+  }
+
+  .root .step:nth-child(n)::before {
+    background-image: linear-gradient(180deg, transparent, var(--snake-packet) 50%, transparent);
+    background-size: 100% var(--snake-packet-size);
+    background-position: 50% calc(-1 * var(--snake-packet-size));
+    animation-name: flow-down;
+  }
+
+  .root .step:nth-child(7)::before,
+  .root .step:nth-child(7)::after {
+    content: none;
+  }
+
+  @supports (animation-timeline: view()) {
+    .root .step:nth-child(n) {
+      animation-name: snake-card;
+      animation-timeline: view();
+      animation-range: entry 15% entry 75%;
+    }
+
+    .root .step:nth-child(n) .icon,
+    .root .step:nth-child(n)::after {
+      animation: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .root .step:nth-child(n) {
+        animation-name: snake-card-quiet;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .root .step:nth-child(n)::before {
+      animation: none;
+    }
+  }
+}

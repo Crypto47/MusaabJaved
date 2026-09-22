@@ -1,0 +1,2 @@
+Introducing Arabic OCR Post-Correction: a 0.5B model that halves the word error rate of scanned Arabic text (41% → 20%), trained in 80 minutes on one laptop GPU and small enough to run on CPU, on-premise.
+Built with Qwen2.5-0.5B, LoRA and 57k synthetic pairs, because no paired Arabic OCR corpus existed.

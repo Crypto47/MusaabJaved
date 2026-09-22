@@ -1,0 +1,13 @@
+# Rendered masters are reproducible from the compositions; the web copies live in public/projects/<slug>/
+*/brag.mp4
+
+# Bundled brag music (ende.app "Happy Beats / Business Moves") is not redistributed here.
+# Copy it from the brag skill before rendering: ~/.claude/skills/brag/assets/music/
+*/composition/assets/music/*.mp3
+
+# Hyperframes working files
+*/composition/snapshots/
+*/composition/renders/
+*/composition/check.json
+*/composition/.hyperframes/
+*/composition/node_modules/

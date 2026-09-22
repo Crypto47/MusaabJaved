@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Arabic OCR Post-Correction</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Noto Naskh Arabic"; font-weight: 400; font-style: normal; src: url("assets/fonts/noto-naskh-arabic-400-normal-arabic.woff2") format("woff2"); }
+      @font-face { font-family: "Noto Naskh Arabic"; font-weight: 600; font-style: normal; src: url("assets/fonts/noto-naskh-arabic-600-normal-arabic.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-sans-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 500; font-style: normal; src: url("assets/fonts/instrument-sans-500-normal-latin.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #07090d; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #dee1e7; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .clip { position: absolute; inset: 0; }
+      .inner { position: absolute; inset: 0; }
+
+      /* ---- persistent background ---- */
+      .bg { position: absolute; inset: 0; pointer-events: none; }
+      #bg-glow { position: absolute; left: -280px; top: -340px; width: 1240px; height: 1240px; border-radius: 50%; background: radial-gradient(circle, rgba(57,118,189,0.6) 0%, rgba(57,118,189,0) 62%); opacity: 0.2; will-change: transform, opacity; }
+      #bg-pulse { position: absolute; left: 560px; top: 60px; width: 1500px; height: 1000px; border-radius: 50%; background: radial-gradient(circle, rgba(121,184,255,0.34) 0%, rgba(121,184,255,0) 58%); opacity: 0.12; }
+      #bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(149,152,158,0.11) 1px, rgba(149,152,158,0) 1px), linear-gradient(90deg, rgba(149,152,158,0.11) 1px, rgba(149,152,158,0) 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 25%, rgba(0,0,0,0) 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 25%, rgba(0,0,0,0) 100%); }
+      #bg-ghost { position: absolute; right: -60px; bottom: -200px; font-family: "Noto Naskh Arabic", serif; font-weight: 600; font-size: 640px; line-height: 1; color: #79b8ff; opacity: 0.06; direction: rtl; white-space: nowrap; will-change: transform; }
+      #bg-rule { position: absolute; left: 120px; right: 120px; top: 150px; height: 2px; background: rgba(121,184,255,0.28); transform-origin: left center; }
+
+      /* ---- type ---- */
+      .label { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 22px; line-height: 1.4; letter-spacing: 0.18em; text-transform: uppercase; color: #79b8ff; }
+      .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; color: #ffffff; letter-spacing: -0.03em; }
+      .ar { font-family: "Noto Naskh Arabic", serif; direction: rtl; text-align: right; color: #dee1e7; unicode-bidi: isolate; }
+      .line { position: absolute; left: 120px; top: 196px; width: 1680px; font-size: 66px; line-height: 1.85; text-wrap: balance; }
+      .w { display: inline-block; will-change: transform, opacity; }
+      .bad { color: #FF9689; text-decoration: underline wavy rgba(255,150,137,0.8); text-decoration-thickness: 2px; text-underline-offset: 12px; }
+      .tok { display: inline-grid; vertical-align: baseline; }
+      .tok > span { grid-area: 1 / 1; white-space: nowrap; }
+      .tok .good { color: #abecff; opacity: 0; }
+      .good2 { color: #abecff; }
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+      /* ---- scene 1 ---- */
+      #s1-label, #s2-label-raw, #s2-label-fix, #s3-label { position: absolute; left: 120px; top: 96px; }
+      #s1-head { position: absolute; left: 116px; bottom: 132px; font-size: 118px; line-height: 1.04; max-width: 1690px; }
+
+      /* ---- scene 2 ---- */
+      #s2-label-fix { opacity: 0; }
+      #s2-model { position: absolute; left: 118px; top: 500px; font-size: 76px; line-height: 1.1; max-width: 1400px; }
+      #s2-ex { position: absolute; left: 120px; top: 660px; width: 1680px; display: flex; flex-direction: column; gap: 14px; }
+      .ex-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 28px; }
+      .ex-row .label { font-size: 18px; letter-spacing: 0.16em; flex: 0 0 auto; }
+      .ex-raw { font-size: 40px; line-height: 1.7; color: #9a9ea6; }
+      .ex-fix { font-size: 54px; line-height: 1.6; color: #dee1e7; }
+      #s2-foot { position: absolute; left: 120px; bottom: 96px; }
+
+      /* ---- scene 3 ---- */
+      #s3-left { position: absolute; left: 120px; top: 232px; width: 960px; }
+      #s3-num { font-size: 300px; line-height: 1; font-variant-numeric: tabular-nums; min-width: 860px; }
+      #s3-bar { position: relative; margin-top: 44px; width: 820px; height: 10px; border-radius: 5px; background: rgba(149,152,158,0.28); overflow: hidden; }
+      #s3-bar-fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 5px; background: #3976bd; transform-origin: left center; }
+      #s3-chip { position: absolute; left: 862px; top: 104px; padding: 12px 22px; border-radius: 10px; background: #3976bd; color: #ffffff; font-family: "IBM Plex Mono", monospace; font-size: 30px; letter-spacing: 0.04em; white-space: nowrap; }
+      #s3-right { position: absolute; left: 1150px; top: 262px; width: 650px; display: flex; flex-direction: column; gap: 34px; }
+      .row { display: flex; flex-direction: column; gap: 8px; padding-bottom: 26px; border-bottom: 1px solid rgba(149,152,158,0.28); }
+      .row-k { font-family: "IBM Plex Mono", monospace; font-size: 19px; letter-spacing: 0.16em; text-transform: uppercase; color: #79b8ff; }
+      .row-v { font-size: 34px; line-height: 1.3; color: #dee1e7; }
+      .row-v b { font-weight: 500; color: #ffffff; }
+      #s3-foot { position: absolute; left: 120px; bottom: 96px; }
+
+      /* ---- scene 4 ---- */
+      .facts { position: absolute; left: 120px; top: 149px; right: 120px; display: flex; gap: 56px; }
+      .fact { flex: 1 1 0; display: flex; flex-direction: column; gap: 12px; padding-top: 26px; border-top: 2px solid rgba(121,184,255,0.45); }
+      .fact-h { font-size: 66px; line-height: 1.05; }
+      .fact-c { font-size: 26px; line-height: 1.4; color: #b1b4ba; max-width: 480px; }
+      #s4-lock { position: absolute; left: 120px; bottom: 116px; display: flex; flex-direction: column; gap: 22px; }
+      .lock-h { font-size: 128px; line-height: 1; }
+      #s4-sub { display: flex; align-items: center; gap: 22px; font-size: 26px; color: #b1b4ba; letter-spacing: 0.02em; }
+      #s4-sub .dot { color: #79b8ff; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20.5" data-width="1920" data-height="1080">
+      <!-- background layer: persistent, untimed -->
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-glow"></div>
+        <div id="bg-pulse"></div>
+        <div id="bg-grid"></div>
+        <div id="bg-ghost">أرشيف</div>
+        <div id="bg-rule"></div>
+      </div>
+
+      <!-- Scene 1: the damaged line, then the headline -->
+      <section id="s1" class="clip" data-start="0" data-duration="5.2" data-track-index="1">
+        <div id="s1-in" class="inner">
+          <div id="s1-label" class="label">Raw OCR · 8.1% of characters wrong</div>
+          <p id="s1-line" class="ar line" dir="rtl">
+            <span class="w bad">وأضا ف</span> <span class="w">أن</span> <span class="w">"<span class="bad">بريطايا</span></span> <span class="w">يمكن</span> <span class="w">أن</span> <span class="w">تؤثر</span> <span class="w">على</span> <span class="w">الاتحاد</span> <span class="w bad">الأوروبى</span> <span class="w">عبر</span> <span class="w bad">الـعمل</span> <span class="w bad">هع</span> <span class="w">شركائها".</span>
+          </p>
+          <h1 id="s1-head" class="serif">Scanned. Indexed. Unsearchable.</h1>
+        </div>
+      </section>
+
+      <!-- Scene 2: the same line repairs in place -->
+      <section id="s2" class="clip" data-start="4.5" data-duration="6.2" data-track-index="1">
+        <div id="s2-in" class="inner">
+          <div id="s2-label-raw" class="label">Raw OCR · 8.1% of characters wrong</div>
+          <div id="s2-label-fix" class="label">Corrected · 0.5B model · greedy decode</div>
+          <p id="s2-line" class="ar line" dir="rtl">
+            <span class="tok" id="s2-t1"><span class="bad">وأضا ف</span><span class="good">وأضاف</span></span> أن "<span class="tok" id="s2-t2"><span class="bad">بريطايا</span><span class="good">بريطانيا</span></span> يمكن أن تؤثر على الاتحاد <span class="tok" id="s2-t3"><span class="bad">الأوروبى</span><span class="good">الأوروبي</span></span> عبر <span class="tok" id="s2-t4"><span class="bad">الـعمل</span><span class="good">العمل</span></span> <span class="tok" id="s2-t5"><span class="bad">هع</span><span class="good">مع</span></span> شركائها".
+          </p>
+          <h2 id="s2-model" class="serif">A 0.5B model that repairs Arabic OCR.</h2>
+          <div id="s2-ex">
+            <div class="ex-row"><span class="ar ex-raw" dir="rtl">وماذا تفعل <span class="bad">لول ايات</span> المتحدة الأمريكية والاتحاد <span class="bad">الأوربي</span>؟</span><span class="label">raw</span></div>
+            <div class="ex-row" id="s2-ex-fixed"><span class="ar ex-fix" dir="rtl">وماذا تفعل <span class="good2">الولايات</span> المتحدة الأمريكية والاتحاد <span class="good2">الأوروبي</span>؟</span><span class="label">fixed</span></div>
+          </div>
+          <div id="s2-foot" class="label">Qwen2.5-0.5B · LoRA r=32 · 57k synthetic pairs</div>
+        </div>
+      </section>
+
+      <!-- Scene 3: the numbers -->
+      <section id="s3" class="clip" data-start="10" data-duration="5.9" data-track-index="1">
+        <div id="s3-in" class="inner">
+          <div id="s3-label" class="label">Word error rate · 200 held-out segments</div>
+          <div id="s3-left">
+            <div id="s3-num" class="serif">41.1%</div>
+            <div id="s3-bar"><div id="s3-bar-fill"></div></div>
+            <div id="s3-chip">−50.3%</div>
+          </div>
+          <div id="s3-right">
+            <div class="row" id="s3-r1"><span class="row-k">Character error rate</span><span class="row-v"><b>8.1% → 6.7%</b> with the guardrail on</span></div>
+            <div class="row" id="s3-r2"><span class="row-k">Untuned base model</span><span class="row-v">CER <b>1.81</b> — worse than doing nothing</span></div>
+            <div class="row" id="s3-r3"><span class="row-k">Drift guardrail ≤ 0.20</span><span class="row-v"><b>180 of 200</b> corrections kept, rewrites rejected</span></div>
+          </div>
+          <div id="s3-foot" class="label">greedy decoding · drift measured against the input, never the reference</div>
+        </div>
+      </section>
+
+      <!-- Scene 4: three facts and the lockup -->
+      <section id="s4" class="clip" data-start="15.2" data-duration="5.3" data-track-index="1">
+        <div id="s4-in" class="inner">
+          <div class="facts">
+            <div class="fact" id="s4-f1"><div class="serif fact-h">80 minutes</div><div class="fact-c">one RTX 5070 Ti laptop GPU, 12 GB, no quantisation</div></div>
+            <div class="fact" id="s4-f2"><div class="serif fact-h">Runs on CPU</div><div class="fact-c">on-premise, for archives that cannot leave the building</div></div>
+            <div class="fact" id="s4-f3"><div class="serif fact-h">No paired corpus</div><div class="fact-c">so the training data was generated from clean text</div></div>
+          </div>
+          <div id="s4-lock">
+            <div class="label">Arabic OCR · post-correction</div>
+            <div class="serif lock-h">Arabic OCR Post-Correction</div>
+            <div id="s4-sub"><span class="mono">Sheeda/arabic-ocr-post-correction-0.5b</span><span class="dot">·</span><span class="mono">musaabjaved.com</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3" data-start="0" data-duration="20.5" data-track-index="10" data-volume="0.28" data-fade-out="1.4" data-timeline-role="music"></audio>
+      <audio id="sfx-drop" src="assets/sfx/interface/drop_001.ogg" data-start="5.4" data-track-index="11" data-volume="0.55"></audio>
+      <audio id="sfx-bong" src="assets/sfx/interface/bong_001.ogg" data-start="13.11" data-track-index="12" data-volume="0.55"></audio>
+      <audio id="sfx-hit" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="17.47" data-track-index="13" data-volume="0.5"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      const XF = 0.7; // crossfade length, matches the clip overlap
+
+      // ---- ambient background (finite, seek-safe) ----
+      tl.fromTo("#bg-glow", { scale: 0.94, opacity: 0.17 }, { scale: 1.06, opacity: 0.25, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0); // 6 × 3.4 = 20.4 ≤ 20.5
+      tl.fromTo("#bg-ghost", { x: 0 }, { x: -90, duration: 20.5, ease: "none" }, 0);
+      tl.fromTo("#bg-rule", { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power2.out" }, 0.1);
+
+      // ---- Scene 1 ----
+      tl.fromTo("#s1-label", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 }, 0.2);
+      tl.fromTo("#s1 .w", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.1 }, 0.55); // RTL: DOM order is reading order
+      tl.fromTo("#s1-head", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.75 }, 2.2);
+
+      // crossfade 1 → 2 at 4.5
+      tl.to("#s1-in", { opacity: 0, duration: XF - 0.02, ease: "power2.inOut" }, 4.5);
+      tl.fromTo("#s2-in", { opacity: 0 }, { opacity: 1, duration: XF, ease: "power2.inOut" }, 4.5);
+
+      // ---- Scene 2: repair, token by token, right to left ----
+      tl.to("#s2-label-raw", { opacity: 0, duration: 0.25 }, 5.25);
+      tl.fromTo("#s2-label-fix", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35 }, 5.4);
+      for (let i = 1; i <= 5; i++) {
+        const t = 5.4 + (i - 1) * 0.35; // first flip carries the drop_001 SFX at 5.4
+        tl.to(`#s2-t${i} .bad`, { opacity: 0, duration: 0.3, ease: "power2.inOut" }, t);
+        tl.fromTo(`#s2-t${i} .good`, { opacity: 0, textShadow: "0 0 0px rgba(171,236,255,0)" }, { opacity: 1, textShadow: "0 0 26px rgba(171,236,255,0.6)", duration: 0.3, ease: "power2.out" }, t);
+        tl.to(`#s2-t${i} .good`, { textShadow: "0 0 0px rgba(171,236,255,0)", duration: 1.0, ease: "power2.out" }, t + 0.35);
+      }
+      tl.fromTo("#s2-model", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 6.1);
+      tl.fromTo("#s2-ex", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, 8.0);
+      tl.fromTo("#s2-ex-fixed", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5 }, 8.55);
+      tl.fromTo("#s2-foot", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 8.3);
+
+      // crossfade 2 → 3 at 10.0
+      tl.to("#s2-in", { opacity: 0, duration: XF - 0.02, ease: "power2.inOut" }, 10.0);
+      tl.fromTo("#s3-in", { opacity: 0 }, { opacity: 1, duration: XF, ease: "power2.inOut" }, 10.0);
+
+      // ---- Scene 3: the counter lands on the 13.11s strong cue ----
+      tl.fromTo("#s3-label", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 }, 10.5);
+      tl.fromTo("#s3-num", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 10.7);
+      tl.fromTo("#s3-bar", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 10.9);
+      const wer = { v: 41.1 };
+      const numEl = document.getElementById("s3-num");
+      tl.to(wer, { v: 20.4, duration: 1.6, ease: "power2.out", onUpdate: () => { numEl.textContent = wer.v.toFixed(1) + "%"; } }, 11.51); // beat-locked: lands 13.11s
+      tl.fromTo("#s3-bar-fill", { scaleX: 1 }, { scaleX: 0.496, duration: 1.6, ease: "power2.out" }, 11.51);
+      tl.fromTo("#s3-chip", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 13.11); // beat-locked: 13.11s
+      tl.fromTo("#s3-r1", { opacity: 0, x: 26 }, { opacity: 1, x: 0, duration: 0.45 }, 13.64); // beat-grid: 13.64 / 14.20 / 14.73
+      tl.fromTo("#s3-r2", { opacity: 0, x: 26 }, { opacity: 1, x: 0, duration: 0.45 }, 14.2);
+      tl.fromTo("#s3-r3", { opacity: 0, x: 26 }, { opacity: 1, x: 0, duration: 0.45 }, 14.73);
+      tl.fromTo("#s3-foot", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 14.9);
+
+      // crossfade 3 → 4 at 15.2
+      tl.to("#s3-in", { opacity: 0, duration: XF - 0.02, ease: "power2.inOut" }, 15.2);
+      tl.fromTo("#s4-in", { opacity: 0 }, { opacity: 1, duration: XF, ease: "power2.inOut" }, 15.2);
+
+      // ---- Scene 4: facts on the beat grid, lockup on the 17.47s strong cue ----
+      tl.fromTo("#s4-f1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55 }, 15.84); // beat-grid: 15.84 / 16.38 / 16.93
+      tl.fromTo("#s4-f2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55 }, 16.38);
+      tl.fromTo("#s4-f3", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55 }, 16.93);
+      tl.fromTo("#s4-lock", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8 }, 17.47); // beat-locked: 17.47s
+      tl.fromTo("#s4-sub", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 17.95);
+      // final scene only: fade to the ground under the music tail
+      tl.to("#s4-in", { opacity: 0, duration: 0.45, ease: "power2.in" }, 20.0);
+
+      // ---- audio-reactive: bass breathes the blue pulse behind the content ----
+      if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+        const pulse = document.getElementById("bg-pulse");
+        const fps = AUDIO_DATA.fps || 30;
+        const draw = (bass) => { pulse.style.opacity = (0.10 + bass * 0.16).toFixed(3); };
+        for (let f = 0; f < AUDIO_DATA.totalFrames; f++) {
+          tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+      }
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

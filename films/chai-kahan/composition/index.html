@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Chai Kahan</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Bungee"; font-weight: 400; font-style: normal; src: url("assets/fonts/bungee-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Geist"; font-weight: 400; font-style: normal; src: url("assets/fonts/geist-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Geist"; font-weight: 500; font-style: normal; src: url("assets/fonts/geist-500-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Geist"; font-weight: 600; font-style: normal; src: url("assets/fonts/geist-600-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Noto Nastaliq Urdu"; font-weight: 400; font-style: normal; src: url("assets/fonts/noto-nastaliq-urdu-400-normal-arabic.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #fff5dc; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #111111; font-family: "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .clip { position: absolute; inset: 0; }
+      .inner { position: absolute; inset: 0; }
+
+      /* ---- persistent background: cream, truck-art stripes, ghost Urdu ---- */
+      .bg { position: absolute; inset: 0; pointer-events: none; }
+      #bg-glow { position: absolute; left: -320px; top: 120px; width: 1100px; height: 1100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,176,0,0.55) 0%, rgba(255,176,0,0) 62%); opacity: 0.22; will-change: transform, opacity; }
+      #bg-pulse { position: absolute; right: -260px; top: -200px; width: 1000px; height: 1000px; border-radius: 50%; background: radial-gradient(circle, rgba(255,46,136,0.45) 0%, rgba(255,46,136,0) 60%); opacity: 0.1; }
+      #bg-ghost { position: absolute; right: 40px; top: -40px; font-family: "Noto Nastaliq Urdu", serif; font-size: 460px; line-height: 1.6; color: #111111; opacity: 0.07; direction: rtl; white-space: nowrap; will-change: transform; }
+      .stripe { position: absolute; left: 0; right: 0; height: 16px; background: repeating-linear-gradient(90deg, #ffb000 0 26px, #111111 26px 32px, #ff2e88 32px 58px, #111111 58px 64px, #1f3fbf 64px 90px, #111111 90px 96px, #19d66b 96px 122px, #111111 122px 128px); }
+      #stripe-top { top: 0; }
+      #stripe-bot { bottom: 0; }
+
+      /* ---- type ---- */
+      .bungee { font-family: "Bungee", sans-serif; font-weight: 400; color: #111111; letter-spacing: 0.005em; }
+      .geist { font-family: "Geist", system-ui, sans-serif; }
+      .urdu { font-family: "Noto Nastaliq Urdu", serif; direction: rtl; unicode-bidi: isolate; }
+      .xl { font-size: 96px; line-height: 1.06; }
+      .pink-t { color: #ff2e88; }
+      .pill { display: inline-flex; align-items: center; gap: 14px; padding: 12px 28px; border: 3px solid #111111; border-radius: 999px; font-family: "Geist", sans-serif; font-weight: 600; font-size: 30px; line-height: 1.1; color: #111111; white-space: nowrap; }
+      .pill .dot { width: 16px; height: 16px; border-radius: 50%; background: #111111; flex: 0 0 auto; }
+      .pill.pink { background: #ff2e88; }
+      .pill.green { background: #19d66b; }
+
+      /* ---- scene 1 ---- */
+      #s1-stack { position: absolute; left: 120px; top: 268px; display: flex; flex-direction: column; align-items: flex-start; gap: 44px; }
+
+      /* ---- scene 2 + 3 merged (the phone persists) ---- */
+      #s2-title { position: absolute; left: 120px; top: 236px; width: 1040px; display: flex; flex-direction: column; gap: 10px; }
+      .title { font-size: 108px; line-height: 1; }
+      .title-ur { font-size: 64px; line-height: 2.1; color: #111111; text-align: left; }
+      .lead { font-size: 38px; line-height: 1.35; color: #3b3428; max-width: 900px; margin-top: 8px; }
+      #s2-call { position: absolute; left: 120px; top: 262px; width: 1040px; display: flex; flex-direction: column; align-items: flex-start; gap: 34px; opacity: 0; }
+      .pillwrap { position: relative; height: 66px; width: 700px; }
+      .pillwrap .pill { position: absolute; left: 0; top: 0; }
+      #s2-pill-off { opacity: 0; }
+      .l { font-size: 74px; line-height: 1.04; }
+      .sub { font-size: 32px; line-height: 1.4; color: #3b3428; max-width: 860px; }
+
+      .phone { position: absolute; width: 430px; height: 820px; padding: 20px; border-radius: 52px; background: #111111; box-shadow: 0 44px 90px -44px rgba(17,17,17,0.6); will-change: transform; }
+      #phone { left: 1260px; top: 130px; }
+      /* 780px tall: crops the captured screen above the Next.js dev badge that sits at the bottom-left */
+      .screen { position: relative; width: 390px; height: 780px; border-radius: 34px; overflow: hidden; background: #fff5dc; }
+      .scr { position: absolute; left: 0; top: 0; width: 390px; height: 844px; display: block; }
+      #scr-cmp { opacity: 0; }
+      .face { position: absolute; left: 58px; top: 175px; width: 274px; height: 274px; border-radius: 50%; background: #fff5dc; border: 10px solid #111111; opacity: 0; }
+      .face .ring { position: absolute; inset: 12px; border-radius: 50%; border: 4px dashed #ffb000; }
+      .face svg { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 55%; }
+      .scr-pill { position: absolute; left: 170px; top: 46px; width: 206px; height: 34px; padding-left: 12px; display: flex; align-items: center; gap: 8px; border-radius: 999px; background: #fff5dc; border: 2px solid #111111; font-family: "Geist", sans-serif; font-weight: 600; font-size: 14px; color: #111111; white-space: nowrap; opacity: 0; }
+      .scr-pill .pdot { width: 8px; height: 8px; border-radius: 50%; background: #ff2e88; }
+      .cursor { position: absolute; left: 300px; top: 640px; width: 30px; height: 40px; opacity: 0; will-change: transform; }
+      .tap { position: absolute; left: 185px; top: 454px; width: 20px; height: 20px; border-radius: 50%; border: 3px solid #111111; opacity: 0; }
+
+      /* ---- scene 4: the numbers ---- */
+      .stats { position: absolute; left: 120px; top: 190px; display: flex; flex-direction: column; gap: 44px; }
+      .stat { display: flex; flex-direction: column; gap: 6px; }
+      .stat-n { font-size: 116px; line-height: 1; }
+      .stat-c { font-size: 34px; line-height: 1.3; color: #3b3428; }
+      #phone-list { left: 1090px; top: 130px; }
+      #phone-packs { left: 1400px; top: 210px; }
+
+      /* ---- scene 5: outro ---- */
+      #s4-stack { position: absolute; left: 120px; top: 232px; display: flex; flex-direction: column; gap: 22px; }
+      #s4-lock { position: absolute; left: 120px; bottom: 120px; display: flex; align-items: center; gap: 32px; }
+      #s4-lock .icon { width: 108px; height: 108px; border-radius: 26px; border: 3px solid #111111; display: block; }
+      .lock { font-size: 72px; line-height: 1; }
+      .lock-ur { font-size: 42px; line-height: 2; color: #111111; text-align: left; }
+      .site { font-size: 30px; font-weight: 500; color: #3b3428; margin-left: 24px; padding-left: 32px; border-left: 3px solid #111111; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-glow"></div>
+        <div id="bg-pulse"></div>
+        <div id="bg-ghost">چائے</div>
+        <div id="stripe-top" class="stripe"></div>
+        <div id="stripe-bot" class="stripe"></div>
+      </div>
+
+      <!-- Scene 1: hook -->
+      <section id="s1" class="clip" data-start="0" data-duration="3.95" data-track-index="1">
+        <div id="s1-in" class="inner">
+          <div id="s1-stack">
+            <div id="s1-l1" class="bungee xl">You want <span class="pink-t">chai.</span></div>
+            <div id="s1-pill" class="pill pink"><span class="dot"></span>No Service</div>
+            <div id="s1-l2" class="bungee xl">Your map wants signal.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scenes 2 + 3: reveal, then the point (one clip, the phone persists) -->
+      <section id="s2" class="clip" data-start="3.5" data-duration="8.45" data-track-index="1">
+        <div id="s2-in" class="inner">
+          <div id="s2-title">
+            <div id="s2-h" class="bungee title">Chai Kahan</div>
+            <div id="s2-ur" class="urdu title-ur">چائے کہاں؟</div>
+            <div id="s2-lead" class="geist lead">An offline-first compass to the nearest dhaba in Lahore. Download the city once with signal.</div>
+          </div>
+          <div id="s2-call">
+            <div class="pillwrap">
+              <div id="s2-pill-on" class="pill green"><span class="dot"></span>Online · Lahore pack v1</div>
+              <div id="s2-pill-off" class="pill pink"><span class="dot"></span>Offline · Lahore pack v1</div>
+            </div>
+            <div id="s2-still" class="bungee l">The needle still points.</div>
+            <div id="s2-how" class="geist sub">GPS + magnetometer → bearing − heading. 454 places in IndexedDB. No tiles, no server.</div>
+          </div>
+          <div id="phone" class="phone">
+            <div class="screen" data-layout-allow-overflow>
+              <img id="scr-onb" class="scr" src="assets/img/onboarding.png" alt="" />
+              <img id="scr-cmp" class="scr" src="assets/img/compass.png" alt="" />
+              <div id="face" class="face">
+                <div class="ring"></div>
+                <svg id="needle" viewBox="0 0 200 200" aria-hidden="true">
+                  <polygon points="100,18 122,110 100,98 78,110" fill="#FF2E88" stroke="#111111" stroke-width="6" stroke-linejoin="round" />
+                  <polygon points="100,182 122,110 100,122 78,110" fill="#1F3FBF" stroke="#111111" stroke-width="6" stroke-linejoin="round" />
+                  <circle cx="100" cy="110" r="12" fill="#FFB000" stroke="#111111" stroke-width="6" />
+                </svg>
+              </div>
+              <div id="scr-pill" class="scr-pill"><span class="pdot"></span>Offline · Lahore pack v1</div>
+              <div id="tap" class="tap"></div>
+              <div id="cursor" class="cursor">
+                <svg viewBox="0 0 30 40" width="30" height="40" aria-hidden="true"><path d="M3 2 L27 20 L16 22 L22 36 L17 38 L11 24 L3 31 Z" fill="#111111" stroke="#fff5dc" stroke-width="2.5" stroke-linejoin="round" /></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scene 4: the numbers -->
+      <section id="s3" class="clip" data-start="11.5" data-duration="4.9" data-track-index="1">
+        <div id="s3-in" class="inner">
+          <div class="stats">
+            <div class="stat" id="s3-1"><div class="bungee stat-n">454</div><div class="geist stat-c">places in the Lahore pack, from OSM, Overture and a curated list</div></div>
+            <div class="stat" id="s3-2"><div class="bungee stat-n"><span class="pink-t">0</span> network</div><div class="geist stat-c">requests after the first install</div></div>
+            <div class="stat" id="s3-3"><div class="bungee stat-n">&lt; 1 ms</div><div class="geist stat-c">to find the nearest dhaba, on the phone</div></div>
+          </div>
+          <div id="phone-list" class="phone"><div class="screen" data-layout-allow-overflow><img class="scr" src="assets/img/list.png" alt="" /></div></div>
+          <div id="phone-packs" class="phone"><div class="screen" data-layout-allow-overflow><img class="scr" src="assets/img/packs.png" alt="" /></div></div>
+        </div>
+      </section>
+
+      <!-- Scene 5: outro -->
+      <section id="s4" class="clip" data-start="16" data-duration="4" data-track-index="1">
+        <div id="s4-in" class="inner">
+          <div id="s4-stack">
+            <div id="s4-l1" class="bungee xl">Download the city once.</div>
+            <div id="s4-l2" class="bungee xl">Then it works with <span class="pink-t">nothing.</span></div>
+          </div>
+          <div id="s4-lock">
+            <img class="icon" src="assets/img/icon.png" alt="" />
+            <div><div class="bungee lock">Chai Kahan</div><div class="urdu lock-ur">چائے کہاں؟</div></div>
+            <div class="geist site">musaabjaved.com</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3" data-start="0" data-duration="20" data-track-index="10" data-volume="0.34" data-fade-out="1.2" data-timeline-role="music"></audio>
+      <audio id="sfx-drop" src="assets/sfx/interface/drop_001.ogg" data-start="1.2" data-track-index="11" data-volume="0.6"></audio>
+      <audio id="sfx-click" src="assets/sfx/interface/click_003.ogg" data-start="5.9" data-track-index="12" data-volume="0.7"></audio>
+      <audio id="sfx-soft" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="6.3" data-track-index="13" data-volume="0.6"></audio>
+      <audio id="sfx-card" src="assets/sfx/casino/card-slide-1.ogg" data-start="12.52" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-bell" src="assets/sfx/impact/impactBell_heavy_000.ogg" data-start="17.02" data-track-index="15" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      const stamp = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 1.16, y: 6 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(1.5)" }, t);
+
+      // ---- ambient (finite, seek-safe) ----
+      tl.fromTo("#bg-glow", { scale: 0.95, opacity: 0.18 }, { scale: 1.06, opacity: 0.27, duration: 3.3, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0); // 6 × 3.3 = 19.8 ≤ 20
+      tl.fromTo("#bg-ghost", { x: 0 }, { x: -70, duration: 20, ease: "none" }, 0);
+      tl.fromTo(".stripe", { backgroundPosition: "0px 0px" }, { backgroundPosition: "256px 0px", duration: 20, ease: "none" }, 0);
+
+      // ---- Scene 1: hook ----
+      stamp("#s1-l1", 0.2);
+      tl.fromTo("#s1-pill", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.45 }, 1.2); // drop_001 at 1.2
+      stamp("#s1-l2", 2.0);
+
+      // push 1 → 2 at 3.5 (outgoing accelerates out, incoming decelerates in)
+      tl.to("#s1-in", { x: -1920, duration: 0.45, ease: "power3.in" }, 3.5);
+      tl.fromTo("#s2-in", { x: 1920 }, { x: 0, duration: 0.45, ease: "power3.out" }, 3.5);
+
+      // ---- Scene 2: reveal (title + the phone) ----
+      tl.fromTo("#phone", { y: 170, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 3.7);
+      tl.fromTo("#s2-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, 3.95);
+      tl.fromTo("#s2-ur", { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.6 }, 4.2);
+      tl.fromTo("#s2-lead", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, 4.5);
+      tl.set("#needle", { rotation: 81 }, 0); // matches the captured screen so the swap is seamless
+      // cursor arrives, taps Allow location, the screen becomes the compass
+      tl.set("#cursor", { x: 0, y: 0, opacity: 0, scale: 1 }, 0); // stable baseline for every seek
+      tl.to("#cursor", { opacity: 1, duration: 0.2 }, 5.0);
+      tl.to("#cursor", { x: -100, y: -172, duration: 0.7, ease: "power2.inOut" }, 5.1);
+      tl.to("#cursor", { scale: 0.88, duration: 0.1, ease: "power2.in" }, 5.9); // click_003 at 5.9
+      tl.to("#cursor", { scale: 1, duration: 0.14, ease: "back.out(2)" }, 6.0);
+      tl.fromTo("#tap", { opacity: 0.9, scale: 0.4 }, { opacity: 0, scale: 2.4, duration: 0.5, ease: "power2.out" }, 5.9);
+      tl.fromTo("#scr-cmp", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.inOut" }, 6.3); // impactSoft at 6.3
+      tl.fromTo("#face", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.inOut" }, 6.3);
+      tl.to("#cursor", { opacity: 0, duration: 0.25 }, 6.35);
+
+      // ---- Scene 3: the point (left column swaps, the phone stays) ----
+      tl.to("#s2-title", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 7.9);
+      tl.fromTo("#s2-call", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 8.05);
+      tl.to("#s2-pill-on", { opacity: 0, duration: 0.25, ease: "power2.inOut" }, 9.1);
+      tl.fromTo("#s2-pill-off", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35 }, 9.1);
+      tl.fromTo("#scr-pill", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 9.1);
+      tl.to("#needle", { rotation: 121, duration: 1.2, ease: "elastic.out(1, 0.45)" }, 9.3);
+      stamp("#s2-still", 9.5);
+      tl.fromTo("#s2-how", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 10.0);
+
+      // push 3 → 4 at 11.5
+      tl.to("#s2-in", { x: -1920, duration: 0.45, ease: "power3.in" }, 11.5);
+      tl.fromTo("#s3-in", { x: 1920 }, { x: 0, duration: 0.45, ease: "power3.out" }, 11.5);
+
+      // ---- Scene 4: the numbers on the 120 BPM grid (every other beat) ----
+      tl.fromTo("#phone-list", { y: 90, opacity: 0, rotation: -4, scale: 0.72 }, { y: 0, opacity: 1, rotation: -4, scale: 0.72, duration: 0.7 }, 11.75);
+      tl.fromTo("#phone-packs", { y: 110, opacity: 0, rotation: 4, scale: 0.72 }, { y: 0, opacity: 1, rotation: 4, scale: 0.72, duration: 0.7 }, 11.95);
+      tl.fromTo("#s3-1", { opacity: 0, x: -44 }, { opacity: 1, x: 0, duration: 0.45 }, 12.52); // beat-grid: 12.52 / 13.51 / 14.52 (card-slide at 12.52)
+      tl.fromTo("#s3-2", { opacity: 0, x: -44 }, { opacity: 1, x: 0, duration: 0.45 }, 13.51);
+      tl.fromTo("#s3-3", { opacity: 0, x: -44 }, { opacity: 1, x: 0, duration: 0.45 }, 14.52);
+
+      // crossfade 4 → 5 at 16.0
+      tl.to("#s3-in", { opacity: 0, duration: 0.38, ease: "power2.inOut" }, 16.0);
+      tl.fromTo("#s4-in", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.inOut" }, 16.0);
+
+      // ---- Scene 5: outro, lockup on the 17.02s strong cue ----
+      stamp("#s4-l1", 16.15);
+      stamp("#s4-l2", 16.65);
+      tl.fromTo("#s4-lock", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 17.02); // beat-locked: 17.02s (bell)
+      tl.to("#s4-in", { opacity: 0, duration: 0.4, ease: "power2.in" }, 19.58); // final scene only
+
+      // ---- audio-reactive: bass breathes the pink pulse top-right ----
+      if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+        const pulse = document.getElementById("bg-pulse");
+        const fps = AUDIO_DATA.fps || 30;
+        const draw = (bass) => { pulse.style.opacity = (0.08 + bass * 0.16).toFixed(3); };
+        for (let f = 0; f < AUDIO_DATA.totalFrames; f++) {
+          tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+      }
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+Made Chai Kahan. It's a compass that points at the nearest chai dhaba in Lahore and keeps working with zero signal once the city pack is on your phone.
+454 dhabas. No map tiles. No server. Just a needle.

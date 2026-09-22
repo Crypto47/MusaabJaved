@@ -1,0 +1,79 @@
+---
+title: "Chai Kahan — An Offline-First Compass to the Nearest Chai Dhaba"
+publishedAt: "2026-09-11"
+summary: "An installable web app that points a truck-art compass at the nearest chai dhaba in Lahore. Open it once with signal to download the city pack; after that GPS, the magnetometer and 454 places in IndexedDB do the rest, with no network at all."
+images:
+  - "/projects/chai-kahan/chai-kahan.png"
+team:
+  - name: "Musaab Javed"
+    role: "AI Engineer"
+    avatar: "/images/avatar.jpg"
+link: ""
+video: ""
+featured: false
+problem: "Finding a dhaba needs a map, and maps need signal."
+solution: "Download the city once. The compass works with nothing."
+techStack:
+  - "Next.js 16"
+  - "TypeScript"
+  - "PWA · Serwist"
+  - "IndexedDB"
+  - "Tailwind v4"
+  - "OpenStreetMap + Overture"
+features:
+  - "Compass needle from fused magnetometer and GPS heading, spring-animated"
+  - "454 dhabas and cafés in one Lahore pack from OSM, Overture and a curated list"
+  - "Five views inside one precached document, so a cold start boots offline"
+  - "Service worker with network-first manifest and runtime-cached packs"
+  - "Pack versioning with atomic swap and an update toast"
+  - "Onboarding grants location and motion, then downloads the pack with progress"
+  - "Arrival state under 25 m: needle spins, phone vibrates, open in Google Maps"
+  - "Vitest unit tests and Playwright end-to-end runs, including offline reload"
+impact:
+  - "454 places in the Lahore pack"
+  - "0 network requests after first install"
+  - "Nearest place found on device in under 1 ms"
+  - "Boots cold in airplane mode"
+architecture:
+  - "OSM + Overture + curated CSV"
+  - "Classify · dedupe · build pack"
+  - "Lahore pack (JSON)"
+  - "IndexedDB on device"
+  - "GPS + magnetometer"
+  - "Bearing − heading"
+  - "Truck-art needle"
+---
+
+## The Problem
+
+You want chai. You are somewhere in Lahore with one bar of signal, or none. Every map app you own needs the network for the map itself, for the search, and for the pins, so the moment the signal drops, so does the answer to a very simple question: which way is the nearest dhaba?
+
+The original idea was a fallback chain, wifi to Bluetooth to an offline map. The brainstorm killed that quickly. Bluetooth is a short-range radio between two devices with no path to the internet, and browsers cannot do phone-to-phone Bluetooth at all. The layer that was actually missing was not a radio. It was the data being on the phone already.
+
+## What I Built
+
+An installable web app, Urdu name چائے کہاں؟, "where's the chai?", with a truck-art compass on the front.
+
+**Pack-first.** Every place the app knows about lives in one JSON pack per city. The Lahore pack merges OpenStreetMap, Overture Places and a hand-curated CSV, classifies each entry as dhaba or café by tags and name patterns (including the Urdu ones), dedupes across sources, and ships as a static file. On first run the app downloads it into IndexedDB. From then on the nearest place is a haversine over a few hundred points, which takes under a millisecond on the phone, so there is no spatial index and no server in the loop.
+
+**The compass is the offline experience.** GPS gives position. The magnetometer, fused with GPS heading and smoothed, gives where the phone is pointing. The needle rotation is simply the bearing to the target minus the heading, run through a spring so it settles rather than twitches, with rotation accumulated so it never spins the long way round. Under 25 metres the needle spins, the phone vibrates and a "chai time" card offers a Google Maps deep link for the last few steps.
+
+**One document, five views.** Compass, map, list, add and packs are tabs inside a single precached page, switched by a search parameter, rather than separate routes. That is not laziness. App Router soft navigations fetch server component payloads that a service worker's offline fallback never sees, so a multi-route app can fail to boot offline on a cold start. One document is the only way to guarantee it opens in airplane mode. Deep links still work.
+
+**Connectivity is measured, not assumed.** `navigator.onLine` is only a hint. A three-second probe against the pack manifest decides whether the app is online, re-run on connectivity events and every thirty seconds while the tab is visible. Online, the app checks the manifest for a newer pack, downloads it in the background and swaps it in atomically with a toast. Offline, it says so in a status pill and carries on.
+
+**Truck-art, deliberately.** Cream face, ink border, dashed saffron ring, a pink and cobalt needle with a saffron hub. The palette is the point of the app, not decoration on top of it.
+
+## Notes on Building It
+
+**Serwist through Turbopack.** The webpack-based `@serwist/next` breaks the default Next 16 build, so the service worker is compiled with `@serwist/turbopack` and served from a route handler. It only runs in the production build, which is why the README tells you to `pnpm build && pnpm start` before testing anything offline.
+
+**Testing offline on a real phone is the hard part.** Installation, geolocation and service workers all need a secure origin, so a LAN IP will not do. The options that work: `adb reverse` over USB, a Vercel deploy, or a temporary tunnel. Then install from Chrome's menu, turn on airplane mode, and reopen from the home screen.
+
+**The end-to-end suite reloads offline on purpose.** Playwright runs against the production build, switches the browser context offline, reloads from the list tab and checks the shell and pack come back from cache. That test caught the tab URLs resolving to a non-precached path and the packs not being cached at runtime, both fixed before anyone else saw them.
+
+**Data licences are part of the pack.** Place data is © OpenStreetMap contributors under ODbL, plus Overture Places under CDLA-Permissive with Foursquare-derived rows under Apache 2.0, and the attribution ships inside the pack file itself.
+
+## Status
+
+Plan 1 and 2 are done: the geo maths and data pipeline, the first Lahore pack, the installable shell, compass, list, packs screen, onboarding and service worker. Plan 3 is next: the online map with pins, "add a dhaba" submissions through an offline outbox, a nightly pack rebuild, and more truck-art polish.

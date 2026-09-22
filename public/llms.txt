@@ -1,7 +1,7 @@
-# Musaab Javed — AI Integrations Engineer
+# Musaab Javed — AI Engineer
 
 ## About
-Musaab Javed is an AI Integrations Engineer based in Lahore, Pakistan with 3+ years of production experience building AI automation systems, RAG pipelines, and GTM infrastructure for clients and startups.
+Musaab Javed is an AI Engineer based in Lahore, Pakistan with 3+ years of production experience building LLM applications, RAG systems and agentic automation. He works independently with EU and US clients and previously led a small AI team at Tkrupt.
 
 - Email: musabjaved47@gmail.com
 - GitHub: https://github.com/Crypto47

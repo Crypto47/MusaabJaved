@@ -7,8 +7,8 @@ Built on **Magic Portfolio** + **Once UI** design system.
 ---
 
 ## Who this is for
-**Musaab Javed** — AI Integrations Engineer, ~3 years experience (Tkrupt, WhisperFrames, Zaltech AI, Developers Den).
-- Role: AI Integrations Engineer @ **Tkrupt**, Lahore, Pakistan
+**Musaab Javed** — AI Engineer, ~3 years experience (independent since 2026; previously led a small AI team at Tkrupt; WhisperFrames, Zaltech AI, Developers Den).
+- Role: AI Engineer, independent — EU/US clients; LLM applications, RAG systems, agentic automation. Lahore, Pakistan
 - Education: BSCS — PIEAS Islamabad
 - GitHub: github.com/Crypto47
 - LinkedIn: linkedin.com/in/musabjaved

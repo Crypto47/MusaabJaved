@@ -1,6 +1,6 @@
 # Musaab Javed — Portfolio v2
 
-Personal portfolio for **Musaab Javed**, AI Integrations Engineer. Built on [Magic Portfolio](https://github.com/once-ui-system/magic-portfolio) + [Once UI](https://once-ui.com).
+Personal portfolio for **Musaab Javed**, AI Engineer. Built on [Magic Portfolio](https://github.com/once-ui-system/magic-portfolio) + [Once UI](https://once-ui.com).
 
 🌐 [musaabjaved.com](https://musaabjaved.com)
 

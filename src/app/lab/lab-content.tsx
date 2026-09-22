@@ -29,7 +29,7 @@ const COMMANDS: Record<string, () => string[]> = {
     "",
   ],
   whoami: () => [
-    "Musaab Javed — AI Integrations Engineer",
+    "Musaab Javed — AI Engineer",
     "~3 years building production AI systems for startups.",
     "LLMs, RAG pipelines, GTM automation, workflow integrations.",
     "Based in Lahore, Pakistan. Open to global remote.",

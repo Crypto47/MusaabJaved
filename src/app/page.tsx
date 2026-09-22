@@ -82,10 +82,6 @@ export default async function Home() {
               "Pinecone",
               "LlamaIndex",
             ],
-            worksFor: {
-              "@type": "Organization",
-              name: "Tkrupt",
-            },
             alumniOf: {
               "@type": "EducationalOrganization",
               name: "PIEAS Islamabad",

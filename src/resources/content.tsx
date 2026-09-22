@@ -19,7 +19,7 @@ const person: Person = {
   firstName: "Musaab",
   lastName: "Javed",
   name: "Musaab Javed",
-  role: "AI Integrations Engineer",
+  role: "AI Engineer",
   avatar: "/images/avatar.jpg",
   email: "musabjaved47@gmail.com",
   location: "Asia/Karachi",
@@ -90,7 +90,7 @@ const home: Home = {
     href: "/work",
   },
   subline: (
-    <>AI Integrations Engineer · 3+ years building production AI systems · Lahore, Pakistan</>
+    <>AI Engineer · LLM applications, RAG systems and agentic automation · Lahore, Pakistan</>
   ),
 };
 
@@ -115,18 +115,19 @@ const about: About = {
     title: "Introduction",
     description: [
       <>
-        I'm Musaab Javed, an AI Integrations Engineer with ~3 years of experience building
-        production AI systems for startups and growth-stage companies. I design and ship
-        integrations that connect LLMs, APIs, and business workflows — turning manual operations
-        into automated pipelines.
+        I'm Musaab Javed, an AI Engineer. I build AI systems that run in production, not in
+        notebooks: LLM applications, RAG systems and agentic automation, and the FastAPI services
+        that hold them together.
       </>,
       <>
-        I've worked with clients across GTM automation, content operations, lead intelligence,
-        and internal tooling — helping teams cut manual work by 60–70% and reclaim hundreds of
-        hours per month. I hold a Bachelor's in Computer Science from PIEAS Islamabad.
+        I currently work independently with EU and US clients on retrieval pipelines and
+        multi-agent automation. Previously I led a small AI team at Tkrupt. Along the way I have
+        cut the cost per output of a live LLM pipeline 10–20x, put 5,000+ document corpora behind
+        production RAG, and served 1,000+ users at sub-5-second responses. I hold a Bachelor's in
+        Computer Science from PIEAS Islamabad and the ISC2 Certified in Cybersecurity credential.
       </>,
       <>
-        I'm drawn to the practical side of AI — not just building models, but making them work
+        I'm drawn to the practical side of AI: not just building models, but making them work
         reliably inside products that real businesses depend on every day.
       </>,
     ],
@@ -136,10 +137,34 @@ const about: About = {
     title: "Work Experience",
     experiences: [
       {
+        company: "Independent",
+        timeframe: "2026 – Present",
+        role: "AI Engineer",
+        achievements: [
+          <>
+            Working with EU and US clients on retrieval pipelines, multi-agent automation and the
+            FastAPI services that hold them together, from architecture through production.
+          </>,
+          <>
+            Cut the cost per output of a live LLM content pipeline 10–20x (roughly $1K/mo to
+            $50–100/mo) while raising daily output to two bilingual articles a day.
+          </>,
+          <>
+            Shipped agentic tooling in Slack and n8n: on-demand lead briefings, portfolio
+            intelligence reports and GTM automation, each with human-in-the-loop checkpoints.
+          </>,
+        ],
+        images: [],
+      },
+      {
         company: "Tkrupt",
         timeframe: "2025 – 2026",
-        role: "AI Integrations Engineer",
+        role: "AI Integrations Engineer · Team Lead",
         achievements: [
+          <>
+            Led a team of three engineers building LLM integrations, and cut production pipeline
+            failure rates by 60% with retries, deduplication and monitoring.
+          </>,
           <>
             Architected and shipped LLM-powered integrations connecting OpenAI and Anthropic APIs
             to internal business workflows, significantly reducing manual processing time.
@@ -214,9 +239,22 @@ const about: About = {
     ],
   },
   certifications: {
-    display: false,
+    display: true,
     title: "Certifications",
-    certificates: [],
+    certificates: [
+      {
+        title: "ISC2 Certified in Cybersecurity (CC)",
+        description: (
+          <>
+            Foundational security certification from ISC2: security principles, access control,
+            network security, incident response and secure operations. It shows up in how I design
+            APIs and handle client data.
+          </>
+        ),
+        images: [],
+        link: "https://www.isc2.org/certifications/cc",
+      },
+    ],
   },
   technical: {
     display: true,
@@ -357,7 +395,7 @@ const about: About = {
   },
   specialist: {
     display: true,
-    title: "AI Integrations Specialist",
+    title: "AI Engineer",
     description: (
       <>
         I connect LLMs to the systems businesses actually run on — CRMs, content pipelines,
@@ -605,9 +643,9 @@ const seeker: Seeker = {
 
 export const metrics = [
   { value: "3+", label: "Years production AI" },
-  { value: "60–70%", label: "Manual workflow reduction" },
-  { value: "100–300 hrs", label: "Saved per client / month" },
-  { value: "15+", label: "Clients served" },
+  { value: "10–20x", label: "Cost-per-output cut on a live LLM pipeline" },
+  { value: "5,000+", label: "Documents behind production RAG" },
+  { value: "60%", label: "Fewer production pipeline failures" },
 ];
 
 export const services = [

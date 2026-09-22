@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+  Cover source for public/projects/chai-kahan/chai-kahan.png (1200x630).
+
+  Rendered by a real browser so the Nastaliq Urdu shapes correctly. To regenerate:
+
+    npx playwright screenshot --viewport-size=1200,630 --wait-for-timeout=1500 \
+      scripts/covers/chai-kahan.html public/projects/chai-kahan/chai-kahan.png
+
+  Fonts load from Google Fonts, so the machine needs network access. The app
+  icon is read from public/projects/chai-kahan/icon.png.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Instrument+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=DotGothic16&display=swap">
+<style>
+  html, body { margin: 0; background: #07090d; }
+  .cover { position: relative; width: 1200px; height: 630px; overflow: hidden; background: #07090d; color: #dee1e7; font-family: "Instrument Sans", system-ui, sans-serif; }
+  .glow { position: absolute; border-radius: 50%; }
+  .g1 { left: -200px; top: -220px; width: 760px; height: 760px; background: radial-gradient(circle, rgba(255,46,136,0.22) 0%, transparent 66%); }
+  .g2 { right: -120px; bottom: -280px; width: 820px; height: 820px; background: radial-gradient(circle, rgba(31,63,191,0.34) 0%, transparent 66%); }
+  .g3 { right: 120px; top: -260px; width: 620px; height: 620px; background: radial-gradient(circle, rgba(255,176,0,0.16) 0%, transparent 66%); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(149,152,158,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(149,152,158,0.06) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%); }
+
+  .label { font-family: "DotGothic16", monospace; letter-spacing: 0.08em; text-transform: uppercase; font-size: 15px; color: #ffb000; display: flex; align-items: center; gap: 12px; }
+  .label img { width: 28px; height: 28px; border-radius: 7px; }
+  .label .ur { font-family: "Noto Nastaliq Urdu", serif; text-transform: none; letter-spacing: 0; font-size: 22px; line-height: 1; color: #fff5dc; direction: rtl; padding-bottom: 6px; }
+
+  .copy { position: absolute; left: 64px; top: 64px; width: 620px; display: flex; flex-direction: column; gap: 18px; }
+  .copy h1 { margin: 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 76px; line-height: 0.98; letter-spacing: -0.035em; color: #fff; }
+  .copy h1 em { font-style: normal; color: #ff2e88; }
+  .copy p { margin: 0; font-size: 22px; line-height: 1.4; color: #b1b4ba; max-width: 560px; }
+
+  .stats { position: absolute; left: 64px; bottom: 132px; display: flex; gap: 40px; }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat .big { font-family: "Instrument Serif", Georgia, serif; font-size: 44px; line-height: 1; letter-spacing: -0.03em; color: #fff; }
+  .stat .big em { font-style: normal; color: #19d66b; }
+  .stat .sub { font-size: 15px; color: #b1b4ba; }
+
+  .compass { position: absolute; right: 88px; top: 118px; width: 400px; height: 400px; }
+  .compass .face { position: absolute; inset: 0; border-radius: 50%; background: #fff5dc; border: 14px solid #111; box-shadow: 0 30px 80px -30px rgba(0,0,0,0.9), 0 0 0 10px rgba(255,245,220,0.06); }
+  .compass .ring { position: absolute; inset: 26px; border-radius: 50%; border: 5px dashed #ffb000; }
+  .compass .ticks { position: absolute; inset: 0; }
+  .compass svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .compass .card { position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%); background: #111; color: #fff5dc; border: 3px solid #fff5dc; border-radius: 14px; padding: 10px 18px; display: flex; align-items: center; gap: 14px; white-space: nowrap; box-shadow: 0 16px 40px -20px rgba(0,0,0,0.9); }
+  .compass .card b { font-family: "Instrument Sans", sans-serif; font-weight: 600; font-size: 18px; }
+  .compass .card span { font-family: "DotGothic16", monospace; font-size: 14px; color: #ffb000; letter-spacing: 0.06em; }
+  .compass .card .dot { width: 8px; height: 8px; border-radius: 50%; background: #19d66b; box-shadow: 0 0 0 4px rgba(25,214,107,0.25); }
+
+  .foot { position: absolute; left: 64px; right: 64px; bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+  .chips { display: flex; gap: 10px; }
+  .chip { font-family: "DotGothic16", monospace; letter-spacing: 0.08em; font-size: 14px; color: #dee1e7; border: 1px solid rgba(149,152,158,0.30); border-radius: 6px; padding: 6px 12px; }
+  .wm { font-size: 15px; color: rgba(255,255,255,0.22); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div><div class="grid"></div>
+
+  <div class="copy">
+    <div class="label"><img src="../../public/projects/chai-kahan/icon.png" alt=""> Chai Kahan <span class="ur">چائے کہاں؟</span></div>
+    <h1>Where's the <em>chai?</em></h1>
+    <p>An offline-first web app that points a truck-art compass at the nearest dhaba in Lahore. Download the city once. Then it works with nothing.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="big">454</span><span class="sub">places in the Lahore pack</span></div>
+    <div class="stat"><span class="big"><em>0</em> network</span><span class="sub">requests after install</span></div>
+    <div class="stat"><span class="big">&lt; 1 ms</span><span class="sub">nearest place, on device</span></div>
+  </div>
+
+  <div class="compass" aria-hidden="true">
+    <div class="face"></div>
+    <div class="ring"></div>
+    <svg viewBox="0 0 200 200">
+      <g fill="#111" font-family="DotGothic16, monospace" font-size="11" text-anchor="middle">
+        <text x="100" y="34">N</text><text x="170" y="114">E</text><text x="100" y="178">S</text><text x="30" y="114">W</text>
+      </g>
+      <g transform="rotate(38 100 110)">
+        <polygon points="100,26 124,110 100,96 76,110" fill="#ff2e88" stroke="#111" stroke-width="6" stroke-linejoin="round"/>
+        <polygon points="100,194 124,110 100,124 76,110" fill="#1f3fbf" stroke="#111" stroke-width="6" stroke-linejoin="round"/>
+        <circle cx="100" cy="110" r="13" fill="#ffb000" stroke="#111" stroke-width="6"/>
+      </g>
+    </svg>
+    <div class="card"><span class="dot"></span><b>Chaaye Khana</b><span>340 M · GULBERG III</span></div>
+  </div>
+
+  <div class="foot">
+    <div class="chips"><span class="chip">Next.js 16</span><span class="chip">PWA · Serwist</span><span class="chip">IndexedDB</span><span class="chip">OSM + Overture</span><span class="chip">Playwright</span></div>
+    <span class="wm">musaabjaved.com</span>
+  </div>
+</div>
+</body>
+</html>

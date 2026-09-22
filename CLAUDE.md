@@ -123,6 +123,19 @@ To disable without Supabase: set `"/guestbook": false` and `"/goals": false` in 
 
 ---
 
+## Analytics (PostHog + Vercel)
+
+- **Vercel Web Analytics** — `<Analytics />` in `src/app/layout.tsx`; page views only. Must be enabled in the Vercel project dashboard (Analytics tab).
+- **PostHog** — `src/components/PostHogAnalytics.tsx`. Off unless `NEXT_PUBLIC_POSTHOG_KEY` is set; requests are proxied through `/ingest` (rewrites in `next.config.mjs`) so ad blockers do not drop them. Cookieless, so no consent banner.
+- Events are derived from link targets by one delegated click listener (`contact_click`, `book_call_click`, `resume_download`, `case_study_open`, `social_click`, `outbound_click`), plus `film_toggle` and `project_details_open` from `ProjectCard`. Track something new with `track("event_name", { ... })` from `src/lib/analytics.ts`.
+
+```env
+NEXT_PUBLIC_POSTHOG_KEY=phc_...
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com   # or https://eu.i.posthog.com
+```
+
+---
+
 ## Once UI Rules
 
 Never use raw `<div>`, Tailwind classes, or hex colors. Always use Once UI primitives.

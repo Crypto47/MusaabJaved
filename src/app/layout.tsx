@@ -1,21 +1,21 @@
 import "@once-ui-system/core/css/styles.css";
 import "@once-ui-system/core/css/tokens.css";
 import "@/resources/custom.css";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
 import classNames from "classnames";
 
+import { Footer, Header, PostHogAnalytics, Providers, RouteGuard } from "@/components";
+import { baseURL, dataStyle, effects, fonts, home, style } from "@/resources";
 import {
   Background,
   Column,
   Flex,
   Meta,
-  type opacity,
   RevealFx,
   type SpacingToken,
+  type opacity,
 } from "@once-ui-system/core";
-import { Footer, Header, RouteGuard, Providers } from "@/components";
-import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -109,9 +109,10 @@ export default async function RootLayout({
             __html: `
               (function() {
                 var frames = ${JSON.stringify(
-                  Array.from({ length: 21 }, (_, i) =>
-                    `/images/cat/frames/frame_${String(i).padStart(2, "0")}.png`
-                  )
+                  Array.from(
+                    { length: 21 },
+                    (_, i) => `/images/cat/frames/frame_${String(i).padStart(2, "0")}.png`,
+                  ),
                 )};
                 var idx = 0;
                 setInterval(function() {
@@ -187,7 +188,8 @@ export default async function RootLayout({
           <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1}>
             <Flex horizontal="center" fillWidth minHeight="0">
               <RouteGuard>{children}</RouteGuard>
-              <Analytics/>
+              <Analytics />
+              <PostHogAnalytics />
             </Flex>
           </Flex>
           <Footer />

@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+  Cover source for public/projects/arabic-ocr/arabic-ocr.png (1200x630).
+
+  scripts/generate-cover.tsx (satori) cannot shape Arabic text, so this cover is
+  a plain HTML page rendered by a real browser. To regenerate after editing:
+
+    npx playwright screenshot --viewport-size=1200,630 --wait-for-timeout=1500       scripts/covers/arabic-ocr.html public/projects/arabic-ocr/arabic-ocr.png
+
+  Fonts load from Google Fonts, so the machine needs network access.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Instrument+Sans:wght@400;500;600&family=Noto+Naskh+Arabic:wght@400;500;600&family=DotGothic16&display=swap">
+<style>
+  html, body { margin: 0; background: #07090d; }
+  .cover { position: relative; width: 1200px; height: 630px; overflow: hidden; background: #07090d; color: #dee1e7; font-family: "Instrument Sans", system-ui, sans-serif; }
+  .glow { position: absolute; border-radius: 50%; filter: blur(2px); }
+  .g1 { left: -140px; top: -180px; width: 720px; height: 720px; background: radial-gradient(circle, rgba(57,118,189,0.30) 0%, transparent 68%); }
+  .g2 { right: -200px; bottom: -260px; width: 820px; height: 820px; background: radial-gradient(circle, rgba(121,184,255,0.16) 0%, transparent 68%); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(149,152,158,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(149,152,158,0.06) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%); }
+
+  .label { font-family: "DotGothic16", monospace; letter-spacing: 0.08em; text-transform: uppercase; font-size: 15px; color: #79b8ff; }
+  .title { position: absolute; left: 64px; top: 56px; display: flex; flex-direction: column; gap: 10px; }
+  .title h1 { margin: 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 54px; line-height: 1; letter-spacing: -0.03em; color: #fff; }
+  .title p { margin: 0; font-size: 20px; color: #b1b4ba; }
+
+  .stat { position: absolute; right: 64px; top: 56px; text-align: right; display: flex; flex-direction: column; gap: 6px; }
+  .stat .big { font-family: "Instrument Serif", Georgia, serif; font-size: 64px; line-height: 1; letter-spacing: -0.04em; color: #fff; }
+  .stat .big em { font-style: normal; color: #79b8ff; }
+  .stat .sub { font-size: 16px; color: #b1b4ba; }
+
+  .sample { position: absolute; left: 64px; right: 64px; top: 236px; display: flex; flex-direction: column; gap: 22px; }
+  .row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 24px; padding: 20px 28px; border-radius: 12px; border: 1px solid rgba(149,152,158,0.15); background: rgba(0,0,0,0.30); }
+  .row.fixed { border-color: rgba(90,152,225,0.35); box-shadow: 0 0 0 1px rgba(90,152,225,0.10), 0 24px 60px -30px rgba(57,118,189,0.6); }
+  .ar { font-family: "Noto Naskh Arabic", serif; font-size: 29px; line-height: 1.7; direction: rtl; text-align: right; color: #dee1e7; white-space: nowrap; }
+  .row.raw .ar { color: #9a9ea6; }
+  .row.raw .ar mark { background: transparent; color: #FF9689; text-decoration: underline wavy rgba(255,150,137,0.7); text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+  .row.fixed .ar mark { background: transparent; color: #abecff; }
+  .tag { font-family: "DotGothic16", monospace; letter-spacing: 0.08em; text-transform: uppercase; font-size: 14px; color: #b1b4ba; }
+  .row.fixed .tag { color: #79b8ff; }
+
+  .foot { position: absolute; left: 64px; right: 64px; bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+  .chips { display: flex; gap: 10px; }
+  .chip { font-family: "DotGothic16", monospace; letter-spacing: 0.08em; font-size: 14px; color: #dee1e7; border: 1px solid rgba(149,152,158,0.30); border-radius: 6px; padding: 6px 12px; }
+  .wm { font-size: 15px; color: rgba(255,255,255,0.22); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="glow g1"></div><div class="glow g2"></div><div class="grid"></div>
+
+  <div class="title">
+    <span class="label">Arabic OCR · post-correction</span>
+    <h1>Scanned. Indexed. Unsearchable.</h1>
+    <p>A 0.5B model that repairs OCR output so the archive can be searched.</p>
+  </div>
+
+  <div class="stat">
+    <span class="label">word error rate</span>
+    <span class="big">41% <em>→</em> 20%</span>
+    <span class="sub">200 held-out segments · greedy decoding</span>
+  </div>
+
+  <div class="sample">
+    <div class="row raw">
+      <span class="tag">raw OCR</span>
+      <div class="ar">وأضا<mark> ف</mark> أن "بريطا<mark>يا</mark> يمكن أن تؤثر على الاتحاد الأوروب<mark>ى</mark> عبر الـ<mark>عمل هع</mark> شركائها".</div>
+    </div>
+    <div class="row fixed">
+      <span class="tag">corrected</span>
+      <div class="ar">وأضا<mark>ف</mark> أن "بريطا<mark>نيا</mark> يمكن أن تؤثر على الاتحاد الأوروب<mark>ي</mark> عبر ال<mark>عمل مع</mark> شركائها".</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="chips"><span class="chip">Qwen2.5-0.5B</span><span class="chip">LoRA</span><span class="chip">57k synthetic pairs</span><span class="chip">80 min · 1 laptop GPU</span><span class="chip">runs on CPU</span></div>
+    <span class="wm">musaabjaved.com</span>
+  </div>
+</div>
+</body>
+</html>

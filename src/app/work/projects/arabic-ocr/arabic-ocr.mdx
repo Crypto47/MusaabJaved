@@ -1,0 +1,106 @@
+---
+title: "Arabic OCR Post-Correction — A 0.5B Model That Makes Scanned Archives Searchable"
+publishedAt: "2026-09-13"
+summary: "A 0.5B language model, fine-tuned with LoRA on 57k synthetic pairs, that repairs Arabic OCR output. Word error rate falls from 41% to 20% on held-out text. Trained in 80 minutes on a laptop GPU, and it runs on CPU, on-premise."
+images:
+  - "/projects/arabic-ocr/arabic-ocr.png"
+team:
+  - name: "Musaab Javed"
+    role: "AI Engineer"
+    avatar: "/images/avatar.jpg"
+link: "https://github.com/Crypto47/arabic-ocr-post-correction"
+video: ""
+featured: true
+problem: "Scanned Arabic archives are indexed and still unsearchable."
+solution: "A 0.5B model repairs the OCR. Word errors halved."
+techStack:
+  - "Qwen2.5-0.5B"
+  - "LoRA / PEFT"
+  - "PyTorch"
+  - "Hugging Face"
+  - "Python"
+features:
+  - "Confusion model weighted by how Arabic script actually fails"
+  - "Dot and skeleton confusion, word splits and merges, dropped and spurious characters"
+  - "Severity sampled 4–18% per example, so one model covers clean and degraded pages"
+  - "LoRA r=32 on all attention and MLP projections, bf16, no quantisation"
+  - "Greedy decoding: one right answer, no sampling"
+  - "Guardrail rejects wholesale rewrites and keeps the original"
+  - "CER / WER evaluation by severity band against the raw-OCR baseline"
+  - "Trains on a free Colab T4 with an automatic fp16 fallback"
+impact:
+  - "Word error 41.1% → 20.4%"
+  - "Character error 8.1% → 6.7%"
+  - "80 minutes on one laptop GPU"
+  - "Runs on CPU, on-premise"
+architecture:
+  - "Clean Arabic news corpus"
+  - "Script-aware corruption model"
+  - "57k noisy → clean pairs"
+  - "LoRA finetune of Qwen2.5-0.5B"
+  - "Greedy decode"
+  - "Drift guardrail"
+  - "CER / WER scoring"
+---
+
+## The Problem
+
+Arabic OCR fails differently from Latin OCR, and the reason is structural.
+
+Many Arabic letters share one skeleton and are told apart only by dots. **ب ت ث ن are the same stroke.** A scanner that loses a dot to a faded patch, or invents one from a speck of dust, has changed the letter. The same holds across the alphabet: ج ح خ, د ذ, ر ز, س ش, ص ض, ط ظ, ع غ, ف ق. Arabic is also cursive, so the gaps between words are narrow and the scanner routinely splits one word in two or fuses two into one.
+
+Measured on this project's data, raw OCR gets 8.1% of characters wrong. That sounds small until you remember that a word is only correct if every character in it is, so 8% character damage breaks **41% of words**. Search, indexing and extraction all operate on words. An archive at 41% word error has been scanned, stored and indexed, and is still unsearchable.
+
+That gap is what this closes.
+
+## What I Built
+
+A small language model that sits between the OCR engine and the index and repairs the text.
+
+**No paired Arabic OCR corpus exists**, on Kaggle or on the Hugging Face Hub, so the supervision is generated. Take clean Arabic text, break it the way a scanner breaks it, and train the model to undo the damage. The corruption is not random noise. It is a confusion model weighted toward how the script actually fails:
+
+| corruption | weight |
+|---|---|
+| dot / skeleton confusion (ب↔ت↔ث, ف↔ق, …) | 42% |
+| word splitting and merging | 22% |
+| dropped or spurious character | 16% |
+| kashida, hallucinated diacritics, transposition | 20% |
+
+Severity is sampled per example between 4% and 18%, so a single model handles clean prints and degraded historical pages.
+
+**Why 0.5B.** The output is a near-copy of the input with local repairs. That is a narrow task, and it does not need a large model. It also means the whole thing runs on CPU, on-premise, which is the deployment mode that matters for archives that cannot leave the building.
+
+**Greedy decoding, always.** There is exactly one correct answer. Sampling only invents text that was never on the page.
+
+**A guardrail against rewriting.** A generative model can rewrite rather than repair. Any correction that drifts from its input by more than a CER threshold is rejected and the original kept. Drift is measured against the input, never the reference, so the check runs in production. The threshold is an operating dial: tighten it where nothing may be made worse, loosen it where findability outweighs character fidelity.
+
+## Results
+
+200 held-out segments, greedy decoding.
+
+| | CER | WER |
+|---|---|---|
+| Raw OCR (do nothing) | 0.0808 | 0.4112 |
+| Untuned Qwen2.5-0.5B | 1.8123 | 2.2680 |
+| **Fine-tuned (57k pairs)** | **0.0724** | **0.1765** |
+| **Fine-tuned + guardrail** | **0.0671** | **0.2042** |
+
+Word error rate falls from 41.1% to 20.4%, a 50% reduction, while character accuracy improves at the same time.
+
+The untuned base model scores a CER above 1.0, which means its output is not a damaged version of the truth but unrelated text: it answers the instruction conversationally instead of restoring. Every gain is therefore attributable to the fine-tune, not to Qwen already knowing Arabic.
+
+**Training scale was the dominant variable.** At 2,000 pairs the model made 170 of 200 segments worse. At 20,000, 115. At 57,000, 70. The same trajectory reproduced on a second corpus, so the behaviour is a property of scale, not of one dataset. It also improves every severity band, light, medium and heavy.
+
+The adapter is published on Hugging Face as [Sheeda/arabic-ocr-post-correction-0.5b](https://huggingface.co/Sheeda/arabic-ocr-post-correction-0.5b).
+
+## Notes on Building It
+
+**One laptop GPU, 80 minutes.** The full run of 56,931 pairs for two epochs trained on a single RTX 5070 Ti laptop GPU with 12 GB of VRAM, at 21.6 samples a second. Two settings were chosen by measurement rather than convention. Gradient checkpointing was switched off, because a 0.5B model with LoRA does not need the memory and it cost 30% of throughput. Batch size stayed at 8, because at 16 the activations exceed VRAM and Windows silently spills to system RAM instead of raising an error, and throughput collapses eight-fold.
+
+**The guardrail threshold is a product decision, not a tuning detail.** Accept everything and WER is lowest but 70 segments get worse. Reject anything drifting more than 15% and almost nothing gets worse, but a third of the corrections are thrown away. The default of 20% is near-best on both metrics at once, and the right setting depends on whether the archive owner fears wrong text or unfindable text more.
+
+**It trains on a free Colab T4.** The training script detects that Turing hardware has no bf16 and falls back to fp16 on its own, so the whole pipeline is reproducible without a local GPU.
+
+## Limitations
+
+The corruption is synthetic. It models Arabic OCR failure from the structure of the script, not from a recording of a real engine's output. Calibrating against real Tesseract or PaddleOCR output on scanned pages is the honest next step, and until then these numbers describe performance on synthetic corruption. The model is trained on Modern Standard Arabic news text, so dialectal and heavily classical text are out of distribution. And the guardrail catches wholesale rewrites, not small confident wrong edits; those need token-level confidence or a lexicon check.

@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/utils/analytics";
 import {
   Accordion,
   AvatarGroup,
@@ -79,9 +80,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   // it, so any new project without a rendered video would silently present
   // someone else's footage as its own.
   const hasVideo = Boolean(videoSrc);
-  const [activeMedia, setActiveMedia] = useState<"image" | "video">(
-    hasVideo ? "video" : "image",
-  );
+  const [activeMedia, setActiveMedia] = useState<"image" | "video">(hasVideo ? "video" : "image");
   const [detailsOpen, setDetailsOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -92,6 +91,17 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   }, [activeMedia]);
 
   const hasDetails = features.length > 0 || impact.length > 0 || architecture.length > 0;
+  const slug = href.split("/").filter(Boolean).pop() ?? href;
+
+  const showMedia = (media: "image" | "video") => {
+    if (media !== activeMedia) track("film_toggle", { slug, to: media });
+    setActiveMedia(media);
+  };
+
+  const toggleDetails = () => {
+    if (!detailsOpen) track("project_details_open", { slug });
+    setDetailsOpen((open) => !open);
+  };
 
   return (
     <Column fillWidth background="surface" border="neutral-alpha-weak" radius="l" overflow="hidden">
@@ -137,14 +147,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   icon="photo"
                   size="s"
                   variant={activeMedia === "image" ? "primary" : "secondary"}
-                  onClick={() => setActiveMedia("image")}
+                  onClick={() => showMedia("image")}
                   aria-label="Show image"
                 />
                 <IconButton
                   icon="playCircle"
                   size="s"
                   variant={activeMedia === "video" ? "primary" : "secondary"}
-                  onClick={() => setActiveMedia("video")}
+                  onClick={() => showMedia("video")}
                   aria-label="Show video"
                 />
               </Row>
@@ -260,7 +270,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             title={<Text variant="label-strong-s">View Workflow Details</Text>}
             icon="chevronDown"
             open={detailsOpen}
-            onToggle={() => setDetailsOpen((open) => !open)}
+            onToggle={toggleDetails}
           >
             <Column gap="20" paddingBottom="8">
               {features.length > 0 && <ChipGroup label="Workflow Features" items={features} />}

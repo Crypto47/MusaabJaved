@@ -13,6 +13,7 @@ export { ServicesGrid } from "@/components/ServicesGrid";
 export { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 export { ROICalculator } from "@/components/ROICalculator";
 export { CurrentlySection } from "@/components/CurrentlySection";
+export { PostHogAnalytics } from "@/components/PostHogAnalytics";
 export { HeroBackground } from "@/components/HeroBackground";
 export { ProcessSection } from "@/components/ProcessSection";
 export { ContactSection } from "@/components/ContactSection";

@@ -1,6 +1,6 @@
 ---
 title: "llms.txt does nothing for Google Search. Google's own tools disagree."
-summary: "Search Central says llms.txt is not used at all. Chrome Lighthouse now audits for it. Both are right, because they are answering different questions — and neither is the reason you get cited."
+summary: "Search Central says llms.txt is not used at all. Chrome Lighthouse now audits for it. Both are right, because they are answering different questions, and neither is the reason you get cited."
 publishedAt: "2026-09-04"
 tag: "seo"
 ---
@@ -9,7 +9,7 @@ I ship an `llms.txt` on this site. I also do not think it is why anything cites 
 
 ## What Google actually said
 
-Google's guidance on optimising for generative AI features, updated in June 2026, addresses this directly in a mythbusting section: you do not need to create machine-readable files like `llms.txt` to appear in Google Search, and that includes AI Overviews and AI Mode. Search Central is unambiguous — Google Search does not consume the file. Not for ranking, not for AI Overviews, not at all.
+Google's guidance on optimising for generative AI features, updated in June 2026, addresses this directly in a mythbusting section: you do not need to create machine-readable files like `llms.txt` to appear in Google Search, and that includes AI Overviews and AI Mode. Search Central is unambiguous, Google Search does not consume the file. Not for ranking, not for AI Overviews, not at all.
 
 Then, less than a week later, Chrome's Lighthouse added an "Agentic Browsing" audit category that checks whether your site has one.
 
@@ -21,7 +21,7 @@ I keep mine because it costs nothing, it is a genuinely convenient summary of wh
 
 ## The thing that actually matters, which I got wrong on my own site
 
-While writing this I went to check my own `robots.txt`, because the interesting question is not whether an AI system can read a summary file — it is whether it is allowed to read anything at all.
+While writing this I went to check my own `robots.txt`, because the interesting question is not whether an AI system can read a summary file, it is whether it is allowed to read anything at all.
 
 Mine had six blocks that looked like this:
 
@@ -35,7 +35,7 @@ User-Agent: PerplexityBot
 
 Empty. No `Allow`, no `Disallow`, nothing.
 
-I had written them intending to explicitly welcome AI crawlers. What I had actually produced was six groups with no directives in them. And because robots.txt resolution picks the **most specific matching group** and ignores the rest, each of those crawlers was matching its own empty block and disregarding my `*` rules entirely — including the `Disallow: /api/` I did want applied.
+I had written them intending to explicitly welcome AI crawlers. What I had actually produced was six groups with no directives in them. And because robots.txt resolution picks the **most specific matching group** and ignores the rest, each of those crawlers was matching its own empty block and disregarding my `*` rules entirely, including the `Disallow: /api/` I did want applied.
 
 It happened to be permissive, so nothing was blocked. But it was permissive by accident. The intent was not stated anywhere a parser could act on, and a stricter interpretation of an empty group could have gone the other way.
 
@@ -55,7 +55,7 @@ rules: [
 ]
 ```
 
-Worth knowing that several of these agents do different jobs. `GPTBot` gathers training data; `OAI-SearchBot` and `ChatGPT-User` handle search and live retrieval. `Google-Extended` governs Gemini training and grounding but has no effect on Search indexing — it is a separate decision from whether Googlebot crawls you. If you block the training agents and allow the retrieval ones, you have made a coherent choice. If you block everything, you have opted out of being cited.
+Worth knowing that several of these agents do different jobs. `GPTBot` gathers training data; `OAI-SearchBot` and `ChatGPT-User` handle search and live retrieval. `Google-Extended` governs Gemini training and grounding but has no effect on Search indexing, it is a separate decision from whether Googlebot crawls you. If you block the training agents and allow the retrieval ones, you have made a coherent choice. If you block everything, you have opted out of being cited.
 
 ## What citation actually rewards
 
@@ -63,13 +63,13 @@ Nothing in this section is a file you add. It is how the page is built.
 
 **One passage, one complete answer.** AI systems quote spans, not documents. A paragraph that answers a specific question without requiring the three paragraphs above it is quotable. A paragraph that begins "as mentioned earlier" is not. This is the single highest-leverage change and it is a writing change, not a technical one.
 
-**Be the most specific source available.** Broad summaries are exactly what the model already produces without you. The pages that get cited are the ones holding a detail that is not otherwise on the web — a real number, a named trade-off, a specific failure. My own most-cited-by-AI page is a narrow technical decision about bilingual publishing on Shopify, not anything general about SEO.
+**Be the most specific source available.** Broad summaries are exactly what the model already produces without you. The pages that get cited are the ones holding a detail that is not otherwise on the web, a real number, a named trade-off, a specific failure. My own most-cited-by-AI page is a narrow technical decision about bilingual publishing on Shopify, not anything general about SEO.
 
 **Say when it happened.** Retrieval systems are heavily biased toward recency for anything that changes. An undated page about a fast-moving topic is a page that is assumed stale.
 
 **Do not gate it.** Content behind a signup, behind heavy client-side rendering, or behind an interstitial cannot be retrieved. This is where a lot of otherwise good technical writing quietly disappears.
 
-**Structured data still earns its place** — but for making the page machine-legible in general, not as a citation lever. `Article`, `Person`, and `FAQPage` where it genuinely applies. Not as decoration.
+**Structured data still earns its place**, but for making the page machine-legible in general, not as a citation lever. `Article`, `Person`, and `FAQPage` where it genuinely applies. Not as decoration.
 
 ## The uncomfortable version
 

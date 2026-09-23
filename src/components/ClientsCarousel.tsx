@@ -2,6 +2,7 @@
 
 import { AutoScroll, Column, Text } from "@once-ui-system/core";
 import Image from "next/image";
+import styles from "./ClientsCarousel.module.scss";
 
 interface Client {
   name: string;
@@ -11,6 +12,23 @@ interface Client {
 interface ClientsCarouselProps {
   clients: Client[];
 }
+
+/**
+ * The logos arrive in whatever colour the client shipped. Dark marks vanish on
+ * the dark theme and white marks vanish on the light one, so each is tagged by
+ * file name with the theme it needs inverting on. Excelr8 is a black tile with
+ * white glyphs and Zippit is a full-colour badge; both read on either theme, so
+ * they are left alone.
+ */
+const INVERT_ON_DARK = new Set(["bluonx"]);
+const INVERT_ON_LIGHT = new Set(["like-a-human"]);
+
+const logoClass = (logo: string) => {
+  const slug = logo.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "";
+  if (INVERT_ON_DARK.has(slug)) return `${styles.logo} ${styles.invertOnDark}`;
+  if (INVERT_ON_LIGHT.has(slug)) return `${styles.logo} ${styles.invertOnLight}`;
+  return styles.logo;
+};
 
 export function ClientsCarousel({ clients }: ClientsCarouselProps) {
   return (
@@ -31,7 +49,7 @@ export function ClientsCarousel({ clients }: ClientsCarouselProps) {
               alt={client.name}
               width={140}
               height={56}
-              style={{ objectFit: "contain", opacity: 0.7 }}
+              className={logoClass(client.logo)}
             />
           </Column>
         ))}

@@ -5,8 +5,8 @@ import styles from "./HeroBackground.module.scss";
 
 interface HeroBackgroundProps {
   /**
-   * "beams" — tool nodes with animated beams converging behind the headline.
-   * "constellation" — reserved for the Ivan-style labeled-dot fallback; renders beams until implemented.
+   * "beams", tool nodes with animated beams converging behind the headline.
+   * "constellation", reserved for the Ivan-style labeled-dot fallback; renders beams until implemented.
    */
   variant?: "beams" | "constellation";
 }

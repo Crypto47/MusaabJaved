@@ -1,0 +1,14 @@
+/* Logos keep their own colours; only the ones that disappear on a theme get
+   inverted there (hue-rotate keeps any brand colour roughly where it was). */
+.logo {
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+:root[data-theme="dark"] .invertOnDark {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+:root:not([data-theme="dark"]) .invertOnLight {
+  filter: invert(1) hue-rotate(180deg);
+}

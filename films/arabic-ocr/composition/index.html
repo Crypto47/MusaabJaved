@@ -43,11 +43,16 @@
       /* ---- scene 1 ---- */
       #s1-label, #s2-label-raw, #s2-label-fix, #s3-label { position: absolute; left: 120px; top: 96px; }
       #s1-head { position: absolute; left: 116px; bottom: 132px; font-size: 118px; line-height: 1.04; max-width: 1690px; }
+      .gloss { position: absolute; left: 120px; top: 468px; width: 1500px; display: flex; flex-direction: column; gap: 10px; }
+      .gloss-q { font-size: 32px; line-height: 1.35; color: #dee1e7; font-style: italic; }
+      .gloss-n { font-size: 24px; line-height: 1.4; color: #b1b4ba; }
+      .gloss-n b { font-weight: 500; color: #FF9689; }
 
       /* ---- scene 2 ---- */
       #s2-label-fix { opacity: 0; }
-      #s2-model { position: absolute; left: 118px; top: 500px; font-size: 76px; line-height: 1.1; max-width: 1400px; }
-      #s2-ex { position: absolute; left: 120px; top: 660px; width: 1680px; display: flex; flex-direction: column; gap: 14px; }
+      #s2-model { position: absolute; left: 118px; top: 566px; font-size: 72px; line-height: 1.1; max-width: 1400px; }
+      #s2-ex { position: absolute; left: 120px; top: 700px; width: 1680px; display: flex; flex-direction: column; gap: 10px; }
+      .ex-en { font-size: 26px; line-height: 1.4; color: #b1b4ba; text-align: right; font-style: italic; }
       .ex-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 28px; }
       .ex-row .label { font-size: 18px; letter-spacing: 0.16em; flex: 0 0 auto; }
       .ex-raw { font-size: 40px; line-height: 1.7; color: #9a9ea6; }
@@ -96,6 +101,10 @@
           <p id="s1-line" class="ar line" dir="rtl">
             <span class="w bad">وأضا ف</span> <span class="w">أن</span> <span class="w">"<span class="bad">بريطايا</span></span> <span class="w">يمكن</span> <span class="w">أن</span> <span class="w">تؤثر</span> <span class="w">على</span> <span class="w">الاتحاد</span> <span class="w bad">الأوروبى</span> <span class="w">عبر</span> <span class="w bad">الـعمل</span> <span class="w bad">هع</span> <span class="w">شركائها".</span>
           </p>
+          <div id="s1-gloss" class="gloss">
+            <div class="gloss-q">“He added that Britain can influence the European Union by working with its partners.”</div>
+            <div class="gloss-n">Five words came out of the scanner broken: <b>a word split in two</b>, <b>a missing letter</b>, <b>a wrong final letter</b>, <b>a stray stretch mark</b>, <b>a swapped letter</b>.</div>
+          </div>
           <h1 id="s1-head" class="serif">Scanned. Indexed. Unsearchable.</h1>
         </div>
       </section>
@@ -108,10 +117,15 @@
           <p id="s2-line" class="ar line" dir="rtl">
             <span class="tok" id="s2-t1"><span class="bad">وأضا ف</span><span class="good">وأضاف</span></span> أن "<span class="tok" id="s2-t2"><span class="bad">بريطايا</span><span class="good">بريطانيا</span></span> يمكن أن تؤثر على الاتحاد <span class="tok" id="s2-t3"><span class="bad">الأوروبى</span><span class="good">الأوروبي</span></span> عبر <span class="tok" id="s2-t4"><span class="bad">الـعمل</span><span class="good">العمل</span></span> <span class="tok" id="s2-t5"><span class="bad">هع</span><span class="good">مع</span></span> شركائها".
           </p>
+          <div id="s2-gloss" class="gloss">
+            <div class="gloss-q">“He added that Britain can influence the European Union by working with its partners.”</div>
+            <div class="gloss-n">Same sentence. All five words restored, nothing else touched.</div>
+          </div>
           <h2 id="s2-model" class="serif">A 0.5B model that repairs Arabic OCR.</h2>
           <div id="s2-ex">
             <div class="ex-row"><span class="ar ex-raw" dir="rtl">وماذا تفعل <span class="bad">لول ايات</span> المتحدة الأمريكية والاتحاد <span class="bad">الأوربي</span>؟</span><span class="label">raw</span></div>
             <div class="ex-row" id="s2-ex-fixed"><span class="ar ex-fix" dir="rtl">وماذا تفعل <span class="good2">الولايات</span> المتحدة الأمريكية والاتحاد <span class="good2">الأوروبي</span>؟</span><span class="label">fixed</span></div>
+            <div class="ex-row" id="s2-ex-en"><span class="ex-en">“What are the United States and the European Union doing?”</span><span class="label">meaning</span></div>
           </div>
           <div id="s2-foot" class="label">Qwen2.5-0.5B · LoRA r=32 · 57k synthetic pairs</div>
         </div>
@@ -128,7 +142,7 @@
           </div>
           <div id="s3-right">
             <div class="row" id="s3-r1"><span class="row-k">Character error rate</span><span class="row-v"><b>8.1% → 6.7%</b> with the guardrail on</span></div>
-            <div class="row" id="s3-r2"><span class="row-k">Untuned base model</span><span class="row-v">CER <b>1.81</b> — worse than doing nothing</span></div>
+            <div class="row" id="s3-r2"><span class="row-k">Untuned base model</span><span class="row-v">CER <b>1.81</b>, worse than doing nothing</span></div>
             <div class="row" id="s3-r3"><span class="row-k">Drift guardrail ≤ 0.20</span><span class="row-v"><b>180 of 200</b> corrections kept, rewrites rejected</span></div>
           </div>
           <div id="s3-foot" class="label">greedy decoding · drift measured against the input, never the reference</div>
@@ -170,6 +184,7 @@
       // ---- Scene 1 ----
       tl.fromTo("#s1-label", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 }, 0.2);
       tl.fromTo("#s1 .w", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.1 }, 0.55); // RTL: DOM order is reading order
+      tl.fromTo("#s1-gloss", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 1.9);
       tl.fromTo("#s1-head", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.75 }, 2.2);
 
       // crossfade 1 → 2 at 4.5
@@ -185,9 +200,11 @@
         tl.fromTo(`#s2-t${i} .good`, { opacity: 0, textShadow: "0 0 0px rgba(171,236,255,0)" }, { opacity: 1, textShadow: "0 0 26px rgba(171,236,255,0.6)", duration: 0.3, ease: "power2.out" }, t);
         tl.to(`#s2-t${i} .good`, { textShadow: "0 0 0px rgba(171,236,255,0)", duration: 1.0, ease: "power2.out" }, t + 0.35);
       }
+      tl.fromTo("#s2-gloss", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 7.0);
       tl.fromTo("#s2-model", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7 }, 6.1);
       tl.fromTo("#s2-ex", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, 8.0);
       tl.fromTo("#s2-ex-fixed", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5 }, 8.55);
+      tl.fromTo("#s2-ex-en", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 9.0);
       tl.fromTo("#s2-foot", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 8.3);
 
       // crossfade 2 → 3 at 10.0

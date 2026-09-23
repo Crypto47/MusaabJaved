@@ -1,9 +1,9 @@
 ---
-title: "Dossier Bot — On-Demand Lead Briefings in Slack"
+title: "Dossier Bot: On-Demand Lead Briefings in Slack"
 publishedAt: "2026-06-15"
 summary: "A Slack bot that turns a name or a LinkedIn URL into a PDF lead briefing. An agent with memory and four tools decides whether to fetch an existing dossier or build a new one, and a nightly run briefs the top five leads before anyone asks."
 images:
-  - "/projects/dossier-bot/dossier-bot.png"
+  - "/projects/dossier-bot/dossier-bot.webp"
 team:
   - name: "Musaab Javed"
     role: "AI Engineer"
@@ -32,7 +32,7 @@ features:
 impact:
   - "Briefing on demand, without leaving Slack"
   - "Top 5 leads pre-briefed nightly"
-  - "Cached before generated — no duplicate work"
+  - "Cached before generated, no duplicate work"
   - "One shared PDF instead of scattered notes"
 architecture:
   - "Slack @mention trigger"
@@ -49,7 +49,7 @@ architecture:
 
 Every sales call has the same twenty minutes in front of it. Open the profile. Read the last handful of posts. Work out what this person actually cares about right now, as opposed to what their headline says. Write it down somewhere the rest of the team can find it later.
 
-It is not hard work. It is just work that has to happen for every lead, every time, and it competes with the calls themselves. So in practice it gets done thoroughly for the two or three leads that seem most promising and skipped for everyone else — which is exactly backwards, because the whole point of research is finding out which ones are promising.
+It is not hard work. It is just work that has to happen for every lead, every time, and it competes with the calls themselves. So in practice it gets done thoroughly for the two or three leads that seem most promising and skipped for everyone else, which is exactly backwards, because the whole point of research is finding out which ones are promising.
 
 The failure mode is not "nobody researches." It is that research quality is inversely correlated with how busy the week is.
 
@@ -72,11 +72,11 @@ The order is not hardcoded. The agent works out what it has been asked and picks
 
 The memory buffer matters more than it looks. A follow-up like "what about their last post?" in the same thread resolves against the lead already under discussion, because the conversation has state. Without it, every message is a cold start and the interface stops feeling like a conversation.
 
-**Cache before compute.** The bucket check runs first, deliberately. Generation costs an API call and about a minute; a lookup costs neither. In a shared channel the same lead gets asked about repeatedly — by whoever is taking the call next — and every ask after the first is free.
+**Cache before compute.** The bucket check runs first, deliberately. Generation costs an API call and about a minute; a lookup costs neither. In a shared channel the same lead gets asked about repeatedly, by whoever is taking the call next, and every ask after the first is free.
 
 **The briefing is written from their own words.** Generation pulls the lead's stored profile data and their recent posts, and an agent writes the dossier from both. Posts are the useful half: a headline tells you a job title, and a month of posts tells you what the person is actually thinking about. The output is cleaned, converted to HTML, rendered to PDF through html2pdf, stored in Supabase, and the row is updated with the link.
 
-**It runs ahead of you.** A separate scheduled flow takes the top five leads each night, checks which ones have no dossier yet, and generates them. By the time anyone thinks to ask, the answer usually already exists — which is what turns the cache-first design from an optimisation into the normal path.
+**It runs ahead of you.** A separate scheduled flow takes the top five leads each night, checks which ones have no dossier yet, and generates them. By the time anyone thinks to ask, the answer usually already exists, which is what turns the cache-first design from an optimisation into the normal path.
 
 ## Notes on Building It
 

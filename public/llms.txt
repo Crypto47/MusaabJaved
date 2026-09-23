@@ -1,4 +1,4 @@
-# Musaab Javed — AI Engineer
+# Musaab Javed, AI Engineer
 
 ## About
 Musaab Javed is an AI Engineer based in Lahore, Pakistan with 3+ years of production experience building LLM applications, RAG systems and agentic automation. He works independently with EU and US clients and previously led a small AI team at Tkrupt.
@@ -6,7 +6,7 @@ Musaab Javed is an AI Engineer based in Lahore, Pakistan with 3+ years of produc
 - Email: musabjaved47@gmail.com
 - GitHub: https://github.com/Crypto47
 - LinkedIn: https://www.linkedin.com/in/musabjaved
-- Education: BSCS — PIEAS Islamabad
+- Education: BSCS, PIEAS Islamabad
 
 ## What He Builds
 
@@ -24,7 +24,7 @@ AI content factories producing SEO articles, newsletters, and reports end-to-end
 
 ## Key Projects
 
-### Excelr8 — AI-Powered GTM Automation Platform
+### Excelr8, AI-Powered GTM Automation Platform
 Built the full GTM automation dashboard covering lead import, enrichment, campaign setup, CRM sync, and KPI reporting. Cut campaign launch time from hours to minutes. Built LinkedIn Post Radar for real-time intent tracking, HubSpot 2-way sync, and AI newsletter pipeline.
 
 ### Zippit AI Content Engine

@@ -1,13 +1,13 @@
 ---
 title: "What an E-E-A-T layer actually looks like in a content pipeline"
-summary: "You cannot add Experience to an article after the fact. Here is what I built instead — Perplexity citations plus a Pinecone grounding store — and what it does and does not fix."
+summary: "You cannot add Experience to an article after the fact. Here is what I built instead, Perplexity citations plus a Pinecone grounding store, and what it does and does not fix."
 publishedAt: "2026-09-09"
 tag: "engineering"
 ---
 
 Most writing about E-E-A-T treats it as a checklist you apply to a finished draft. Add an author bio. Link a few sources. Mention your years of experience. That framing is wrong, and if you are building an automated content pipeline it will actively mislead you.
 
-E-E-A-T — Experience, Expertise, Authoritativeness, Trustworthiness — comes from Google's Search Quality Rater Guidelines. It is not a ranking factor with a score attached. It is a description of what human raters are asked to look for when they judge whether a page deserves to rank. The systems that actually do the ranking are trained to approximate that judgement.
+E-E-A-T, Experience, Expertise, Authoritativeness, Trustworthiness, comes from Google's Search Quality Rater Guidelines. It is not a ranking factor with a score attached. It is a description of what human raters are asked to look for when they judge whether a page deserves to rank. The systems that actually do the ranking are trained to approximate that judgement.
 
 Which means the useful question is not "how do I add E-E-A-T" but "what would make a reader, or a rater, able to check that this page is telling the truth?"
 
@@ -36,7 +36,7 @@ The dynamic search over published articles does something else useful: it preven
 
 ## Layer two: external citations
 
-Every article is then enriched with citations pulled through Perplexity. Two separate calls — one for the Dutch track, one for the English — because the sources worth citing differ by language, and translating an English citation set into Dutch produces references a Dutch reader cannot follow.
+Every article is then enriched with citations pulled through Perplexity. Two separate calls, one for the Dutch track, one for the English, because the sources worth citing differ by language, and translating an English citation set into Dutch produces references a Dutch reader cannot follow.
 
 The point is not decoration. It is that a claim with a source attached is checkable, and a claim without one is not. That is the whole of Trustworthiness, mechanically.
 
@@ -44,7 +44,7 @@ The point is not decoration. It is that a claim with a source attached is checka
 
 It does not manufacture Experience.
 
-This is the honest limit, and I have not found a way around it. Experience — the first E, added to the framework in December 2022 — means first-hand involvement. Having used the product. Having been the patient. Having run the test. That cannot be retrieved, because it is not information; it is provenance.
+This is the honest limit, and I have not found a way around it. Experience, the first E, added to the framework in December 2022, means first-hand involvement. Having used the product. Having been the patient. Having run the test. That cannot be retrieved, because it is not information; it is provenance.
 
 A grounded pipeline can be expert, authoritative and trustworthy. It cannot be experienced. If your content strategy depends on first-hand experience being visible, part of your pipeline has to be a human who actually has it, and the honest move is to name them.
 
@@ -54,7 +54,7 @@ For the brand in question, that split worked out cleanly. Informational articles
 
 The pipeline runs at $50–100/month in API costs, replacing $1,000/month of agency retainer. Thirty-plus articles a month, in two languages, with a single human review checkpoint before publishing. The brand reported 15–30% month-over-month organic traffic growth.
 
-I want to be careful about that last number. Organic growth on a site publishing thirty new articles a month is over-determined — more indexed pages will move traffic regardless of whether the grounding layers are doing anything. I do not have a clean counterfactual, and I would not claim the citation layer caused the growth. What I can say is that the review checkpoint stopped catching factual problems, which is what the grounding was built to do.
+I want to be careful about that last number. Organic growth on a site publishing thirty new articles a month is over-determined, more indexed pages will move traffic regardless of whether the grounding layers are doing anything. I do not have a clean counterfactual, and I would not claim the citation layer caused the growth. What I can say is that the review checkpoint stopped catching factual problems, which is what the grounding was built to do.
 
 ## If you are building one of these
 

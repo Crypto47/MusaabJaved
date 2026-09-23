@@ -115,7 +115,9 @@ export default async function RootLayout({
                   ),
                 )};
                 var idx = 0;
-                setInterval(function() {
+                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                function step() {
+                  if (document.hidden) return;
                   var link = document.querySelector("link[rel~='icon']");
                   if (!link) {
                     link = document.createElement('link');
@@ -125,7 +127,8 @@ export default async function RootLayout({
                   link.type = 'image/png';
                   link.href = frames[idx];
                   idx = (idx + 1) % frames.length;
-                }, 70);
+                }
+                setInterval(step, 160);
               })();
             `,
           }}
@@ -141,7 +144,7 @@ export default async function RootLayout({
           padding="0"
           horizontal="center"
         >
-          <RevealFx fill position="absolute">
+          <RevealFx speed="fast" fill position="absolute">
             <Background
               mask={{
                 x: effects.mask.x,

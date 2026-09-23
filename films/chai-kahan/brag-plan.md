@@ -12,7 +12,6 @@ Cream canvas, ink type. **You want chai.** stamps in. A pink status pill reading
 ## Key moments (the middle)
 - The real phone UI arrives: onboarding card `Where are you? · The compass needs your location. It never leaves your phone.` A cursor taps **Allow location**, and the screen becomes the real compass: `Chaaye Khana · dhaba · 840 m`, needle pointing, status pill `Online · Lahore pack v1`.
 - The pill flips to `Offline · Lahore pack v1` and nothing else changes. The needle still points. That is the demo.
-- Three stats arrive on the beat beside the list and packs screens: `454 places in the Lahore pack`, `0 network requests after install`, `< 1 ms to find the nearest, on device`.
 
 ## Outro / punchline
 **Download the city once.** / **Then it works with nothing.** Then the lockup: app icon, **Chai Kahan**, `چائے کہاں؟`, `musaabjaved.com`.
@@ -74,8 +73,8 @@ Audio-coupled idea: none.
 Transition mood: push (0.45s) → Scene 4
 
 ### Scene 4 — The numbers — 4s
-Two phones slightly rotated, list screen and packs screen, on the right. Left: three stat rows arriving on 12.52 / 13.51 / 14.52, each Bungee number + Geist caption: **454** `places in the Lahore pack`, **0** `network requests after install`, **< 1 ms** `to find the nearest, on device`. Each holds.
-Sequential/interaction: yes, three rows, every other beat.
+Two phones slightly rotated, list screen and packs screen, on the right. Left: two stat rows arriving on 12.52 / 13.51 / 14.52, each Bungee number + Geist caption: **454** `places in the Lahore pack`, **0** `network requests after install`, **< 1 ms** `to find the nearest, on device`. Each holds.
+Sequential/interaction: yes, two rows, every other beat.
 Audio intent: one card slide on the first row only.
 Audio-coupled idea: `card-slide-1` on row 1.
 Transition mood: crossfade (0.4s) → Scene 5

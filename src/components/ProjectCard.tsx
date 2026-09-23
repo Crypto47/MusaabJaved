@@ -83,12 +83,37 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const [activeMedia, setActiveMedia] = useState<"image" | "video">(hasVideo ? "video" : "image");
   const [detailsOpen, setDetailsOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Six cards each autoplaying a film is what made /work feel laggy: every
+  // video downloaded and decoded at once. Load and play only near the viewport.
+  const [inView, setInView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (inView) setLoaded(true);
+  }, [inView]);
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      rootMargin: "240px 0px",
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (activeMedia === "video" && videoRef.current) {
-      videoRef.current.play().catch(() => {});
+    const video = videoRef.current;
+    if (!video) return;
+    if (inView && activeMedia === "video") {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
     }
-  }, [activeMedia]);
+  }, [inView, activeMedia]);
 
   const hasDetails = features.length > 0 || impact.length > 0 || architecture.length > 0;
   const slug = href.split("/").filter(Boolean).pop() ?? href;
@@ -104,7 +129,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   };
 
   return (
-    <Column fillWidth background="surface" border="neutral-alpha-weak" radius="l" overflow="hidden">
+    <Column
+      ref={cardRef}
+      fillWidth
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      overflow="hidden"
+    >
       <Row fillWidth s={{ direction: "column" }}>
         <Column flex={10} minWidth={0} vertical="center">
           <Column fillWidth position="relative">
@@ -114,6 +146,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 <img
                   src={images[0]}
                   alt={title}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     display: "block",
                     width: "100%",
@@ -125,7 +159,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             ) : (
               <video
                 ref={videoRef}
-                src={videoSrc}
+                src={loaded ? videoSrc : undefined}
+                preload="none"
                 autoPlay
                 muted
                 loop

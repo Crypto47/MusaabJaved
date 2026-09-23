@@ -16,7 +16,7 @@ export const ProcessSection = () => {
         How I Work
       </Heading>
       <Text align="center" variant="body-default-m" onBackground="neutral-weak" wrap="balance">
-        From discovery to a monitored production system — the same 7 steps every time.
+        From discovery to a monitored production system, the same 7 steps every time.
       </Text>
       <Column as="ol" fillWidth paddingTop="16" className={styles.grid}>
         {process.map((item) => (

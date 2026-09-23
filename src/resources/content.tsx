@@ -114,22 +114,12 @@ const about: About = {
     display: true,
     title: "Introduction",
     description: [
-      <>
-        I'm Musaab Javed, an AI Engineer. I build AI systems that run in production, not in
-        notebooks: LLM applications, RAG systems and agentic automation, and the FastAPI services
-        that hold them together.
-      </>,
-      <>
-        I currently work independently with EU and US clients on retrieval pipelines and
-        multi-agent automation. Previously I led a small AI team at Tkrupt. Along the way I have
-        cut the cost per output of a live LLM pipeline 10–20x, put 5,000+ document corpora behind
-        production RAG, and served 1,000+ users at sub-5-second responses. I hold a Bachelor's in
-        Computer Science from PIEAS Islamabad and the ISC2 Certified in Cybersecurity credential.
-      </>,
-      <>
-        I'm drawn to the practical side of AI: not just building models, but making them work
-        reliably inside products that real businesses depend on every day.
-      </>,
+      <>AI Engineer. I build LLM applications, RAG systems and agentic automation that run in production, not in notebooks.</>,
+      <>Independent since 2026, working with EU and US clients on retrieval pipelines, multi-agent automation and the FastAPI services that hold them together.</>,
+      <>Previously led a small AI team at Tkrupt.</>,
+      <>Cut the cost per output of a live LLM pipeline 10 to 20x. Put 5,000+ documents behind production RAG. Served 1,000+ users at sub-5-second responses.</>,
+      <>BSCS from PIEAS Islamabad. ISC2 Certified in Cybersecurity.</>,
+      <>Drawn to the practical side of AI: making models work reliably inside products real businesses depend on every day.</>,
     ],
   },
   work: {
@@ -398,8 +388,8 @@ const about: About = {
     title: "AI Engineer",
     description: (
       <>
-        I connect LLMs to the systems businesses actually run on — CRMs, content pipelines,
-        lead databases, and messaging tools — with n8n and custom Python as the backbone.
+        I connect LLMs to the systems businesses actually run on, CRMs, content pipelines,
+        lead databases, and messaging tools, with n8n and custom Python as the backbone.
         Every build ships with monitoring, human-in-the-loop checkpoints, and a clear ROI story.
       </>
     ),
@@ -670,7 +660,7 @@ export const services = [
   {
     title: "Content Automation",
     description:
-      "AI content factories — SEO articles, newsletters, and reports generated end-to-end at scale.",
+      "AI content factories, SEO articles, newsletters, and reports generated end-to-end at scale.",
     icon: "edit",
   },
 ];
@@ -688,7 +678,7 @@ export const process: ProcessStep[] = [
     title: "Workflow Design",
     icon: "network",
     description:
-      "Blueprint the end-to-end pipeline — triggers, CRM and API integrations, and human-in-the-loop checkpoints.",
+      "Blueprint the end-to-end pipeline, triggers, CRM and API integrations, and human-in-the-loop checkpoints.",
   },
   {
     step: "03",
@@ -702,7 +692,7 @@ export const process: ProcessStep[] = [
     title: "Development",
     icon: "code",
     description:
-      "Build the integration in n8n and custom code — API connections, error handling, retries, and deduplication.",
+      "Build the integration in n8n and custom code, API connections, error handling, retries, and deduplication.",
   },
   {
     step: "05",
@@ -716,7 +706,7 @@ export const process: ProcessStep[] = [
     title: "Deployment",
     icon: "rocket",
     description:
-      "Ship to production with monitoring, alerting, and rollback paths — no silent failures.",
+      "Ship to production with monitoring, alerting, and rollback paths, no silent failures.",
   },
   {
     step: "07",
@@ -734,7 +724,7 @@ export const contact: Contact = {
   display: true,
   title: "Let's Build Your Next Integration",
   description:
-    "Have a workflow that eats hours every week? Tell me about it — I usually reply within a day.",
+    "Have a workflow that eats hours every week? Tell me about it, I usually reply within a day.",
   channels: [
     {
       name: "Email",

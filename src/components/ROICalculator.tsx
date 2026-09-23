@@ -84,7 +84,7 @@ export function ROICalculator() {
       </Column>
 
       <Grid columns="2" s={{ columns: "1" }} fillWidth gap="16">
-        {/* Left panel — Time Savings */}
+        {/* Left panel, Time Savings */}
         <Column
           background="surface"
           border="neutral-alpha-weak"
@@ -119,7 +119,7 @@ export function ROICalculator() {
           </Row>
         </Column>
 
-        {/* Right panel — Cost Savings */}
+        {/* Right panel, Cost Savings */}
         <Column
           background="surface"
           border="neutral-alpha-weak"

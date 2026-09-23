@@ -19,7 +19,6 @@ Create a short launch-style brag video for Chai Kahan, the card film for `/work/
   - `You want chai.` / `Your map wants signal.`
   - `Where are you?` · `The compass needs your location. It never leaves your phone.` · `Allow location`
   - `Chaaye Khana` · `840 m` · `Online · Lahore pack v1` / `Offline · Lahore pack v1`
-  - `454`, `0 network requests after install`, `< 1 ms`
   - `Download the city once.` / `Then it works with nothing.`
   - `Chai Kahan`, `چائے کہاں؟`, `musaabjaved.com`
 

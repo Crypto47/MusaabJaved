@@ -1,30 +1,28 @@
 import {
-  Heading,
-  Text,
-  Button,
-  Avatar,
-  RevealFx,
-  Column,
-  Badge,
-  Row,
-  Schema,
-  Meta,
-} from "@once-ui-system/core";
-import { home, about, person, baseURL, routes, metrics } from "@/resources";
-import {
-  Mailchimp,
   ClientsCarousel,
+  ContactSection,
+  HeroBackground,
+  Mailchimp,
+  ProcessSection,
+  ROICalculator,
   ServicesGrid,
   TestimonialsCarousel,
-  ROICalculator,
-  HeroBackground,
-  ProcessSection,
-  ContactSection,
 } from "@/components";
-import { getClientLogos, getTestimonials } from "@/utils/utils";
 import { Projects } from "@/components/work/Projects";
-
-export const dynamic = 'force-dynamic';
+import { about, baseURL, home, metrics, person, routes } from "@/resources";
+import { getClientLogos, getTestimonials } from "@/utils/utils";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Column,
+  Heading,
+  Meta,
+  RevealFx,
+  Row,
+  Schema,
+  Text,
+} from "@once-ui-system/core";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -65,10 +63,7 @@ export default async function Home() {
             url: baseURL,
             email: person.email,
             image: `${baseURL}${person.avatar}`,
-            sameAs: [
-              "https://github.com/Crypto47",
-              "https://www.linkedin.com/in/musabjaved",
-            ],
+            sameAs: ["https://github.com/Crypto47", "https://www.linkedin.com/in/musabjaved"],
             knowsAbout: [
               "AI Automation",
               "RAG Pipelines",
@@ -93,12 +88,7 @@ export default async function Home() {
         <HeroBackground />
         <Column maxWidth="s" horizontal="center" align="center" position="relative" zIndex={1}>
           {home.featured.display && (
-            <RevealFx
-              fillWidth
-              horizontal="center"
-              paddingBottom="32"
-              delay={1.2}
-            >
+            <RevealFx speed="fast" fillWidth horizontal="center" paddingBottom="32" delay={0.35}>
               <Badge
                 background="brand-alpha-weak"
                 paddingX="8"
@@ -113,17 +103,26 @@ export default async function Home() {
               </Badge>
             </RevealFx>
           )}
-          <RevealFx translateY="4" fillWidth horizontal="center" paddingBottom="16">
+          <RevealFx speed="fast" translateY="4" fillWidth horizontal="center" paddingBottom="16">
             <Heading wrap="balance" variant="display-strong-l">
               {home.headline}
             </Heading>
           </RevealFx>
-          <RevealFx translateY="8" delay={0.2} fillWidth horizontal="center" paddingTop="8" paddingBottom="32" style={{ overflow: "visible" }}>
+          <RevealFx
+            speed="fast"
+            translateY="8"
+            delay={0.1}
+            fillWidth
+            horizontal="center"
+            paddingTop="8"
+            paddingBottom="32"
+            style={{ overflow: "visible" }}
+          >
             <Text wrap="balance" onBackground="neutral-weak" variant="heading-default-xl">
               {home.subline}
             </Text>
           </RevealFx>
-          <RevealFx paddingTop="4" delay={0.4} horizontal="center" paddingLeft="12">
+          <RevealFx speed="fast" paddingTop="4" delay={0.15} horizontal="center" paddingLeft="12">
             <Row gap="12" wrap horizontal="center">
               <Button
                 id="about"
@@ -155,7 +154,14 @@ export default async function Home() {
               />
             </Row>
           </RevealFx>
-          <RevealFx translateY="8" delay={0.6} fillWidth horizontal="center" paddingTop="48">
+          <RevealFx
+            speed="fast"
+            translateY="8"
+            delay={0.2}
+            fillWidth
+            horizontal="center"
+            paddingTop="48"
+          >
             <Row gap="40" wrap horizontal="center">
               {metrics.map((m) => (
                 <Column key={m.value} horizontal="center" gap="4">
@@ -172,43 +178,37 @@ export default async function Home() {
         </Column>
       </Column>
 
-      <RevealFx translateY="12" delay={0.8} fillWidth>
+      <RevealFx speed="fast" translateY="12" delay={0.1} fillWidth>
         <ServicesGrid />
       </RevealFx>
 
-      <RevealFx translateY="12" delay={0.9} fillWidth>
+      <RevealFx speed="fast" translateY="12" delay={0.15} fillWidth>
         <ClientsCarousel clients={clients} />
       </RevealFx>
 
       {routes["/work"] && (
-        <RevealFx translateY="12" delay={1.0} fillWidth>
+        <RevealFx speed="fast" translateY="12" delay={0.2} fillWidth>
           <Column fillWidth horizontal="center" gap="32" marginTop="24">
             <Heading as="h2" variant="display-strong-xs" wrap="balance" align="center">
               Selected Projects
             </Heading>
             <Projects featuredOnly />
-            <Button
-              href="/work"
-              variant="secondary"
-              size="m"
-              arrowIcon
-              label="View all projects"
-            />
+            <Button href="/work" variant="secondary" size="m" arrowIcon label="View all projects" />
           </Column>
         </RevealFx>
       )}
 
-      <RevealFx translateY="12" delay={1.05} fillWidth>
+      <RevealFx speed="fast" translateY="12" delay={0.25} fillWidth>
         <TestimonialsCarousel testimonials={testimonials} />
       </RevealFx>
 
       <ProcessSection />
 
-      <RevealFx translateY="12" delay={1.15} fillWidth>
+      <RevealFx speed="fast" translateY="12" delay={0.3} fillWidth>
         <ROICalculator />
       </RevealFx>
 
-      <RevealFx translateY="12" delay={1.2} fillWidth>
+      <RevealFx speed="fast" translateY="12" delay={0.35} fillWidth>
         <ContactSection />
       </RevealFx>
 

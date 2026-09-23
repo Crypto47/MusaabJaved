@@ -1,3 +1,7 @@
+import { CurrentlySection, SpecialistSection } from "@/components";
+import TableOfContents from "@/components/about/TableOfContents";
+import styles from "@/components/about/about.module.scss";
+import { about, baseURL, person, social } from "@/resources";
 import {
   Avatar,
   Button,
@@ -5,20 +9,16 @@ import {
   Heading,
   Icon,
   IconButton,
-  Media,
-  Tag,
-  Text,
-  Meta,
-  Schema,
-  Row,
   List,
   ListItem,
+  Media,
+  Meta,
+  Row,
+  Schema,
   SmartLink,
+  Tag,
+  Text,
 } from "@once-ui-system/core";
-import { baseURL, about, person, social } from "@/resources";
-import TableOfContents from "@/components/about/TableOfContents";
-import styles from "@/components/about/about.module.scss";
-import { CurrentlySection, SpecialistSection } from "@/components";
 import React from "react";
 
 export async function generateMetadata() {
@@ -124,12 +124,7 @@ export default function About() {
           </Column>
         )}
         <Column className={styles.blockAlign} flex={9} maxWidth={40}>
-          <Column
-            id={about.intro.title}
-            fillWidth
-            minHeight="160"
-            marginBottom="24"
-          >
+          <Column id={about.intro.title} fillWidth minHeight="160" marginBottom="24">
             {about.calendar.display && (
               <Row
                 fitWidth
@@ -146,11 +141,7 @@ export default function About() {
                   backdropFilter: "blur(var(--static-space-1))",
                 }}
               >
-                <Icon
-                  paddingLeft="12"
-                  name="calendar"
-                  onBackground="brand-weak"
-                />
+                <Icon paddingLeft="12" name="calendar" onBackground="brand-weak" />
                 <Row paddingX="8">Schedule a call</Row>
                 <IconButton
                   href={about.calendar.link}
@@ -172,9 +163,17 @@ export default function About() {
             </Text>
             <Row gap="8" paddingTop="8" className={styles.blockAlign} fitWidth>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/knight.gif" alt="Knight" style={{ width: 36, height: 36, imageRendering: "pixelated" }} />
+              <img
+                src="/images/knight.gif"
+                alt="Knight"
+                style={{ width: 36, height: 36, imageRendering: "pixelated" }}
+              />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/pikachu.gif" alt="Pikachu" style={{ width: 36, height: 36, imageRendering: "pixelated" }} />
+              <img
+                src="/images/pikachu.gif"
+                alt="Pikachu"
+                style={{ width: 36, height: 36, imageRendering: "pixelated" }}
+              />
             </Row>
             {social.length > 0 && (
               <Row
@@ -221,16 +220,17 @@ export default function About() {
           </Column>
 
           {about.intro.display && (
-            <Column
-              textVariant="body-default-m"
-              fillWidth
-              gap="8"
-              marginBottom="40"
-            >
-              {about.intro.description.map((paragraph, index) => (
-                <Text key={`intro-${index}`}>
-                  {paragraph}
-                </Text>
+            <Column textVariant="body-default-m" fillWidth gap="8" marginBottom="40">
+              {about.intro.description.map((line, index) => (
+                <Row key={`intro-${index}`} gap="12" vertical="start">
+                  <Icon
+                    name="arrowRight"
+                    size="s"
+                    onBackground="brand-weak"
+                    style={{ marginTop: "0.2rem", flexShrink: 0 }}
+                  />
+                  <Text>{line}</Text>
+                </Row>
               ))}
             </Column>
           )}
@@ -253,60 +253,32 @@ export default function About() {
 
           {about.work.display && (
             <>
-              <Heading
-                as="h2"
-                id={about.work.title}
-                variant="display-strong-s"
-                marginBottom="m"
-              >
+              <Heading as="h2" id={about.work.title} variant="display-strong-s" marginBottom="m">
                 {about.work.title}
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
                 {about.work.experiences.map((experience, index) => (
-                  <Column
-                    key={`${experience.company}-${experience.role}-${index}`}
-                    fillWidth
-                  >
-                    <Row
-                      fillWidth
-                      horizontal="between"
-                      vertical="start"
-                      marginBottom="4"
-                    >
+                  <Column key={`${experience.company}-${experience.role}-${index}`} fillWidth>
+                    <Row fillWidth horizontal="between" vertical="start" marginBottom="4">
                       <Text id={experience.company} variant="heading-strong-l">
                         {experience.company}
                       </Text>
-                      <Text
-                        variant="heading-default-xs"
-                        onBackground="neutral-weak"
-                      >
+                      <Text variant="heading-default-xs" onBackground="neutral-weak">
                         {experience.timeframe}
                       </Text>
                     </Row>
-                    <Text
-                      variant="body-default-s"
-                      onBackground="brand-weak"
-                      marginBottom="s"
-                    >
+                    <Text variant="body-default-s" onBackground="brand-weak" marginBottom="s">
                       {experience.role}
                     </Text>
                     <List as="ul" textVariant="body-default-m" gap="8">
                       {experience.achievements.map(
                         (achievement: React.ReactNode, index: number) => (
-                          <ListItem key={`${experience.company}-${index}`}>
-                            {achievement}
-                          </ListItem>
+                          <ListItem key={`${experience.company}-${index}`}>{achievement}</ListItem>
                         ),
                       )}
                     </List>
                     {experience.images && experience.images.length > 0 && (
-                      <Row
-                        fillWidth
-                        paddingTop="m"
-                        paddingLeft="40"
-                        gap="12"
-                        wrap
-                      >
+                      <Row fillWidth paddingTop="m" paddingLeft="40" gap="12" wrap>
                         {experience.images.map((image, index) => (
                           <Row
                             key={`${experience.company}-${index}`}
@@ -334,21 +306,12 @@ export default function About() {
 
           {about.studies.display && (
             <>
-              <Heading
-                as="h2"
-                id={about.studies.title}
-                variant="display-strong-s"
-                marginBottom="m"
-              >
+              <Heading as="h2" id={about.studies.title} variant="display-strong-s" marginBottom="m">
                 {about.studies.title}
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
                 {about.studies.institutions.map((institution, index) => (
-                  <Column
-                    key={`${institution.name}-${index}`}
-                    fillWidth
-                    gap="4"
-                  >
+                  <Column key={`${institution.name}-${index}`} fillWidth gap="4">
                     <Row fillWidth horizontal="between" vertical="start">
                       <Text id={institution.name} variant="heading-strong-l">
                         {institution.name}
@@ -361,21 +324,16 @@ export default function About() {
                         {institution.timeframe}
                       </Text>
                     </Row>
-                    <Text
-                      variant="body-default-s"
-                      onBackground="brand-weak"
-                      marginBottom="s"
-                    >
+                    <Text variant="body-default-s" onBackground="brand-weak" marginBottom="s">
                       {institution.description}
                     </Text>
-                    {institution?.achievements &&
-                      institution.achievements?.length > 0 && (
-                        <List as="ul" gap="8" textVariant="body-default-m">
-                          {institution.achievements?.map((item, idx) => (
-                            <ListItem key={`${institution.name}-${idx}`}>{item}</ListItem>
-                          ))}
-                        </List>
-                      )}
+                    {institution?.achievements && institution.achievements?.length > 0 && (
+                      <List as="ul" gap="8" textVariant="body-default-m">
+                        {institution.achievements?.map((item, idx) => (
+                          <ListItem key={`${institution.name}-${idx}`}>{item}</ListItem>
+                        ))}
+                      </List>
+                    )}
                   </Column>
                 ))}
               </Column>
@@ -400,10 +358,7 @@ export default function About() {
                         <Text id={certificate.title} variant="heading-strong-l">
                           {certificate.title}
                         </Text>
-                        <Text
-                          variant="body-default-m"
-                          onBackground="neutral-weak"
-                        >
+                        <Text variant="body-default-m" onBackground="neutral-weak">
                           {certificate.description}
                         </Text>
                       </Column>
@@ -469,11 +424,7 @@ export default function About() {
                     {skill.tags && skill.tags.length > 0 && (
                       <Row wrap gap="8" paddingTop="8">
                         {skill.tags.map((tag, tagIndex) => (
-                          <Tag
-                            key={`${skill.title}-${tagIndex}`}
-                            size="l"
-                            prefixIcon={tag.icon}
-                          >
+                          <Tag key={`${skill.title}-${tagIndex}`} size="l" prefixIcon={tag.icon}>
                             {tag.name}
                           </Tag>
                         ))}
@@ -508,40 +459,24 @@ export default function About() {
 
           {about.goals.display && (
             <>
-              <Heading
-                as="h2"
-                id={about.goals.title}
-                variant="display-strong-s"
-                marginBottom="m"
-              >
+              <Heading as="h2" id={about.goals.title} variant="display-strong-s" marginBottom="m">
                 {about.goals.title}
               </Heading>
               <Column fillWidth marginBottom="40">
                 <Text variant="body-default-m" onBackground="neutral-weak">
                   {about.goals.description}
-                  <SmartLink
-                    href={about.goals.link}
-                  >
-                    {about.goals.label}
-                  </SmartLink>
+                  <SmartLink href={about.goals.link}>{about.goals.label}</SmartLink>
                 </Text>
               </Column>
             </>
           )}
 
-          {about.currently.display && (
-            <CurrentlySection title={about.currently.title} />
-          )}
+          {about.currently.display && <CurrentlySection title={about.currently.title} />}
 
           {about.gif.display && about.gif.items.length > 0 && (
             <>
               {about.gif.title && (
-                <Heading
-                  as="h2"
-                  id={about.gif.title}
-                  variant="display-strong-s"
-                  marginBottom="m"
-                >
+                <Heading as="h2" id={about.gif.title} variant="display-strong-s" marginBottom="m">
                   {about.gif.title}
                 </Heading>
               )}

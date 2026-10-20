@@ -4,7 +4,7 @@ Built on the shape of `../dossier-bot/concept.md` and `VIDEOS/references/onetake
 table, one camera, music maths), for the portfolio card at `portfolio-v2/public/projects/zippit/zippit.mp4`.
 Rendered with HyperFrames. Build lives in `portfolio-v2/films/zippit/composition/`.
 
-Format: 1920×1080, 30 fps, 25.00 s = 750 frames. Silent-safe: every beat reads with the sound off.
+Format: 1920×1080, 30 fps, 32.68 s = 981 frames. Silent-safe: every beat reads with the sound off.
 
 ---
 
@@ -20,8 +20,13 @@ product's name.
 
 Why this works for Zippit: the old card film only animated the n8n graph. A reader never sees the graph; they see
 an article in their language, and the client sees a calendar that fills itself. This film shows those first and
-keeps the graph for a short "under the hood" beat. The workflow frame happens to show the two language lanes, so
-the last beat rhymes with the split.
+keeps the graph for an "under the hood" beat that plays in full: a reveal clip rendered with the old Remotion flow
+engine builds the graph node by node, glides through both language lanes, then pulls out to the whole graph, so the
+last beat rhymes with the split.
+
+v1.1 (after the owner said the flow "shows for a second and then is gone"): the still workflow frame became the
+8.76 s reveal clip, and everything after it moved four bars (7.68 s) later, so the lockup still lands on a strong
+beat (29.28, intensity 0.91).
 
 Tone: polished, respectful to the client. The cadence is framed as something per-article pricing could not reach,
 never as something the client could not do. Article topics are plausible breathing and sleep topics; titles are
@@ -32,9 +37,10 @@ invented and nothing claims a medical outcome. Sources are fictional (`.example`
 Music: `zippit.mp3` (Pixabay, AlexGuz, "funk amp breakbeat"). Measured beat grid ~125 BPM, beat 0.48 s,
 bar 1.92 s (CREDITS lists 83 BPM; the onset grid says 0.48 s beats). The track opens with 0.5 s of silence, so the
 bed starts at `data-media-start="0.52"`, which puts a downbeat on film 0.00. Film downbeats then fall on
-0.00 / 1.92 / 3.84 / 5.76 / 7.68 / 9.60 / 11.52 / 13.44 / 15.36 / 17.28 / 19.20 / 21.12 / 23.04.
+0.00 / 1.92 / 3.84 / 5.76 / 7.68 / 9.60 / 11.52 / 13.44 / 15.36 / 17.28 / 19.20 / 21.12 / 23.04 / 24.96 /
+26.88 / 28.80 / 30.72 / 32.64.
 Strong cues used (film time): 3.84 pull out, 5.76 brand source, 7.68 quality checks, 9.60 split,
-15.36 calendar, 19.20 under the hood.
+15.36 calendar, 19.20 under the hood, 29.28 lockup.
 
 ```
  t              beat                                    camera                              carries into the next beat
@@ -60,11 +66,17 @@ Strong cues used (film time): 3.84 pull out, 5.76 brand source, 7.68 quality che
  16.00–17.20    days 1 to 20 fill with two posts each   dead still                          ·
  17.28          today's cell lights up: our article     ·                                   ·
  19.20          pan down to the workflow (strong)       s 1.0                               the workflow
- 19.40–21.40    "Under the hood" + one line             dead still                          ·
- 21.60          the headline field returns alone,       screen space                        end
-                types the name
- 22.56–23.30    sub in English, then Dutch; URL         ·                                   ·
- 23.30–25.00    hold; music fades                       ·                                   ·
+ 19.90–28.66    the reveal clip plays in full           the clip's own camera: glides        ·
+                (flow-reveal.mp4, 8.76 s): nodes build   behind the newest node through
+                left to right with names, both lanes     both lanes, pulls out at
+                                                         clip 5.8–7.2 (film 25.7–27.1)
+ 25.80–28.98    "Under the hood" + one line, above      dead still once the pull-out lands   ·
+                the graph as the pull-out lands
+ 28.60–28.98    the clip's last frame holds as a still  ·                                   ·
+ 29.28          the headline field returns alone,       screen space                        end
+                types the name (strong)
+ 30.24–31.08    sub in English, then Dutch; URL         ·                                   ·
+ 31.08–32.68    hold; music fades                       ·                                   ·
 ```
 
 ## COPY (verbatim)
@@ -108,7 +120,7 @@ UI Instrument Sans, chips and URLs IBM Plex Mono.
 
 Bed at 0.32 from 0.52 s into the track, fade out over the last 1.5 s. SFX (Kenney, CC0): soft drop on the first
 source 4.80, click on Approve 9.12, soft drop as the Dutch card lands 10.05, click on the language switch 13.92,
-soft drop as today's cell lights 17.28, soft impact on the lockup sub 22.56. Bass breathes the green glow.
+soft drop as today's cell lights 17.28, soft impact on the lockup sub 30.24. The reveal clip is muted. Bass breathes the green glow.
 
 ## ACCEPTANCE
 
@@ -116,5 +128,7 @@ soft drop as today's cell lights 17.28, soft impact on the lockup sub 22.56. Bas
 - Every line on screen holds at least 0.3 s per word after it settles; body text ≥ 24 px at the scale it is read.
 - The headline is readable in macro before the pull out.
 - Dutch reads as natural Dutch.
+- The reveal clip plays start to finish; its edges are masked into the ground so no rectangle shows, and the
+  caption never overlaps the graph.
 - No em dashes anywhere. No invented metrics.
 - Web copy at 1280×720, poster baked as frame 0 (poster: 11.5 s, the English and Dutch cards under "Written once, in two languages.").

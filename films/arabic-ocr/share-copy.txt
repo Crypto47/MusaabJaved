@@ -1,2 +1,5 @@
-Introducing Arabic OCR Post-Correction: a 0.5B model that halves the word error rate of scanned Arabic text (41% → 20%), trained in 80 minutes on one laptop GPU and small enough to run on CPU, on-premise.
+Scanned Arabic archives are indexed and still unsearchable: one lost dot changes a letter, and a scanner that splits a word in two hides it from every search.
+
+I built a 0.5B model that repairs the OCR before it reaches the index. Word error rate falls from 41.1% to 20.4% on 200 held-out segments, it trained in 80 minutes on one laptop GPU, and it runs on CPU, on-premise.
+
 Built with Qwen2.5-0.5B, LoRA and 57k synthetic pairs, because no paired Arabic OCR corpus existed.

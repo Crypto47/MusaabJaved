@@ -54,7 +54,7 @@ ffmpeg -y -i brag.mp4 -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -c:a aa
   ../../public/projects/<slug>/<slug>.mp4
 ```
 
-Poster timestamps used: Arabic OCR 14.6s (the word-error counter, settled), Chai Kahan 12.2s (airplane mode on, the needle still points), Dossier Bot 8.0s (the agent's tool calls in the thread), Equity Pulse 11.55s (every verdict in the table), Excelr8 11.0s (enriched table with the warm-lead card), Zippit 11.5s (the English and Dutch drafts side by side). Web copies of the workflow films use `scale=1280:-2` at crf 27, audio 96k.
+Poster timestamps used: Arabic OCR 13.5s (line one repaired, the search finds it), Chai Kahan 12.2s (airplane mode on, the needle still points), Dossier Bot 8.0s (the agent's tool calls in the thread), Equity Pulse 11.55s (every verdict in the table), Excelr8 11.0s (enriched table with the warm-lead card), Zippit 11.5s (the English and Dutch drafts side by side). Web copies of the workflow films use `scale=1280:-2` at crf 27, audio 96k.
 
 Authoring rule learned on Dossier Bot: the renderer seeks frames out of order across workers, so every exit tween is a `fromTo` with `immediateRender: false`, never a bare `tl.to`.
 

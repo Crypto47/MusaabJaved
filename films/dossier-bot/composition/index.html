@@ -90,19 +90,59 @@
 
       #preview { position: absolute; inset: 0; opacity: 0; }
       #preview .back { position: absolute; inset: 0; background: rgba(8,5,16,0.86); }
-      .page { position: absolute; left: 580px; top: 70px; width: 760px; height: 1250px; border-radius: 10px; background: #fbfaff; color: #1b1530; padding: 60px 72px; box-shadow: 0 60px 120px -30px rgba(0,0,0,0.8); }
-      .peye { font-family: "IBM Plex Mono", monospace; font-size: 15px; letter-spacing: 0.14em; color: #5b3fb0; }
-      .page h1 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 82px; line-height: 1; letter-spacing: -0.02em; color: #120d24; margin-top: 18px; }
-      .psub { font-size: 21px; color: #463d5e; margin-top: 10px; }
-      .page hr { border: 0; height: 2px; background: #e4def4; margin: 28px 0 8px; }
-      .page h2 { position: relative; display: inline-block; font-size: 26px; font-weight: 900; color: #120d24; margin-top: 26px; }
-      .page h2 .hl { position: absolute; left: -6px; right: -6px; bottom: 3px; height: 13px; background: rgba(167,139,250,0.42); z-index: 0; transform-origin: left center; }
-      .page h2 .ht { position: relative; z-index: 1; }
-      .page ul, .page ol { margin: 12px 0 0 26px; font-size: 21px; line-height: 1.5; color: #2b2442; }
-      .page li { margin-top: 6px; }
-      .quote { font-family: "Instrument Serif", Georgia, serif; font-size: 34px; line-height: 1.2; color: #2a1f4d; margin-top: 12px; }
-      .qmeta { font-size: 16px; color: #5a5270; margin-top: 6px; }
-      .pfoot { font-family: "IBM Plex Mono", monospace; font-size: 14px; color: #5a5270; margin-top: 40px; }
+      /* the briefing, recreated from the real Dossier Bot template (all content fictional) */
+      .page { position: absolute; left: 530px; top: 60px; width: 860px; border-radius: 12px; overflow: hidden; background: #f5f7fa; color: #2c3e50; font-family: "Lato", system-ui, sans-serif; box-shadow: 0 60px 120px -30px rgba(0,0,0,0.85); }
+      .dz-head { position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #1a252f 100%); color: #ffffff; text-align: center; padding: 46px 40px 40px; }
+      .dz-tier { position: absolute; top: 22px; right: 26px; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #3a2410; padding: 8px 18px; border-radius: 50px; font-weight: 900; font-size: 15px; box-shadow: 0 8px 20px rgba(253,160,133,0.4); }
+      .dz-photo { width: 140px; height: 140px; border-radius: 50%; border: 5px solid #f6d365; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: block; margin: 0 auto 18px; object-fit: cover; }
+      .dz-name { font-size: 58px; line-height: 1.05; font-weight: 400; color: #f6c86b; }
+      .dz-title { font-size: 30px; color: #f6d365; margin-top: 8px; }
+      .dz-co { font-size: 22px; font-weight: 700; color: #ecf0f1; margin-top: 6px; }
+      .dz-line { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 18px; color: #c3c9cf; margin-top: 8px; }
+      .dz-line.mail { color: #7cc0ff; }
+      .dz-line svg { width: 18px; height: 18px; flex: 0 0 auto; }
+      .dz-body { padding: 8px 32px 32px; }
+      .dz-h { font-size: 34px; font-weight: 400; text-align: center; color: #2c3e50; margin: 34px 0 20px; }
+      .dz-h::after { content: ""; display: block; width: 90px; height: 4px; border-radius: 2px; margin: 12px auto 0; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+      .dz-card { background: #ffffff; border-radius: 18px; padding: 28px 32px; box-shadow: 0 15px 50px rgba(0,0,0,0.1); border: 2px solid #f3c27c; font-size: 19px; line-height: 1.75; color: #34495e; }
+      .dz-adv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 26px; }
+      .dz-a { background: #ffffff; border-radius: 18px; padding: 24px 18px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); text-align: center; border-left: 5px solid #3498db; }
+      .dz-a:nth-child(2) { border-left-color: #9b59b6; }
+      .dz-a:nth-child(3) { border-left-color: #f39c12; }
+      .dz-ico { width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; background: #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+      .dz-ico svg { width: 26px; height: 26px; }
+      .dz-a b { display: block; font-size: 22px; color: #2c3e50; margin-bottom: 8px; }
+      .dz-a span { font-size: 16px; line-height: 1.55; color: #4a4f55; }
+      .dz-met { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 26px; }
+      .dz-m { border-radius: 16px; padding: 22px 10px; text-align: center; color: #ffffff; box-shadow: 0 12px 35px rgba(0,0,0,0.2); }
+      .dz-m b { display: block; font-size: 44px; font-weight: 900; line-height: 1; letter-spacing: -1px; text-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+      .dz-m span { display: block; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.35); }
+      .g-purple { background: linear-gradient(135deg, #5a6fd8 0%, #6a3f98 100%); }
+      .g-pink { background: linear-gradient(135deg, #b14fc2 0%, #c8334a 100%); }
+      .g-cyan { background: linear-gradient(135deg, #2f76c6 0%, #007f9a 100%); }
+      .g-green { background: linear-gradient(135deg, #1a8a4f 0%, #10796a 100%); }
+      .dz-skills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+      .dz-s { color: #ffffff; font-size: 15px; font-weight: 700; padding: 9px 20px; border-radius: 50px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+      .dz-s:nth-child(4n+1) { background: linear-gradient(135deg, #5a6fd8 0%, #6a3f98 100%); }
+      .dz-s:nth-child(4n+2) { background: linear-gradient(135deg, #b14fc2 0%, #c8334a 100%); }
+      .dz-s:nth-child(4n+3) { background: linear-gradient(135deg, #2f76c6 0%, #007f9a 100%); }
+      .dz-s:nth-child(4n+4) { background: linear-gradient(135deg, #1a8a4f 0%, #10796a 100%); }
+      .dz-posts { display: flex; flex-direction: column; gap: 18px; }
+      .dz-post { background: #ffffff; border-radius: 16px; padding: 24px 28px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-left: 6px solid #3498db; }
+      .dz-post:nth-child(2) { border-left-color: #9b59b6; }
+      .dz-post:nth-child(3) { border-left-color: #f39c12; }
+      .dz-ph { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 2px solid #ecf0f1; }
+      .dz-date { font-size: 15px; color: #5f6b72; font-weight: 700; }
+      .dz-type { background: #b8641f; color: #ffffff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+      .dz-pc { font-size: 18px; line-height: 1.6; color: #2c3e50; margin: 14px 0; }
+      .dz-eng { display: flex; gap: 22px; padding: 10px 14px; background: #f1f3f5; border-radius: 10px; font-size: 15px; color: #444a50; font-weight: 700; }
+      .dz-eng span { display: inline-flex; align-items: center; gap: 6px; }
+      .dz-eng svg { width: 16px; height: 16px; }
+      .dz-btns { display: flex; gap: 10px; margin-top: 14px; }
+      .dz-btn { background: #2b6fab; color: #ffffff; padding: 9px 18px; border-radius: 8px; font-size: 15px; font-weight: 700; }
+      .dz-foot { background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #1a252f 100%); color: #ffffff; padding: 30px 32px; margin-top: 34px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; font-size: 15px; text-align: center; }
+      .dz-foot div { padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.06); }
+      .dz-foot em { grid-column: 1 / -1; color: #b8c1c8; font-size: 14px; }
 
       #under { position: absolute; inset: 0; }
       #under img { position: absolute; left: 0; top: 400px; width: 1920px; height: 620px; display: block; }
@@ -220,26 +260,59 @@
       <div id="preview" data-layout-allow-overflow data-layout-allow-occlusion>
         <div class="back"></div>
         <div class="page" id="page">
-          <div class="peye">LEAD BRIEFING · NORTHWIND · FOR THE 10:00 CALL</div>
-          <h1>Sarah Chen</h1>
-          <div class="psub">Head of Operations at Northwind. Four months in the role.</div>
-          <hr />
-          <h2><span class="hl" id="hl1"></span><span class="ht">What she cares about right now</span></h2>
-          <ul>
-            <li>Cutting new-customer onboarding from six weeks to three</li>
-            <li>Hiring two operations leads before Q1</li>
-            <li>Wary of tools that need a rollout team</li>
-          </ul>
-          <h2><span class="hl" id="hl2"></span><span class="ht">From her recent posts</span></h2>
-          <div class="quote">“Every hand-off in onboarding is a place a customer waits.”</div>
-          <div class="qmeta">Posted 2 days ago</div>
-          <h2><span class="hl" id="hl3"></span><span class="ht">Openers for the call</span></h2>
-          <ol>
-            <li>Ask how the three-week onboarding target is tracking.</li>
-            <li>Bring up the hand-off post: where do customers wait longest?</li>
-            <li>Keep the demo to setup time. Skip the rollout plan.</li>
-          </ol>
-          <div class="pfoot">Page 1 of 3 · Generated by Dossier Bot</div>
+          <div class="dz-head">
+            <div class="dz-tier">Tier A &#183; Score: 88</div>
+            <img class="dz-photo" src="assets/img/sarah-chen.jpg" alt="" />
+            <div class="dz-name">Sarah Chen</div>
+            <div class="dz-title">Head of Operations</div>
+            <div class="dz-co">Northwind</div>
+            <div class="dz-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>Austin, Texas, United States</div>
+            <div class="dz-line mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>sarah.chen@northwind.example</div>
+          </div>
+          <div class="dz-body">
+            <div class="dz-h">Executive Profile</div>
+            <div class="dz-card">Operations leader four months into the Head of Operations role at Northwind, after eight years scaling customer onboarding at B2B software companies. Focused on cutting time to value for new customers and building a small, senior operations team. Writes openly about hand-offs, process debt and the cost of waiting.</div>
+            <div class="dz-adv">
+              <div class="dz-a"><div class="dz-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#f6d365" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" fill="#f6d365" /></svg></div><b>Expertise</b><span>Onboarding and process design. Took onboarding from nine weeks to four at her last company.</span></div>
+              <div class="dz-a"><div class="dz-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#f6d365" stroke-width="2" aria-hidden="true"><path d="M3 18h18l-2-10-4.5 4L12 5l-2.5 7L5 8z" /></svg></div><b>Leadership</b><span>Builds small senior teams. Hiring two operations leads before Q1.</span></div>
+              <div class="dz-a"><div class="dz-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#f6d365" stroke-width="2" aria-hidden="true"><path d="M6 3h12l3 6-9 12L3 9z" /><path d="M3 9h18M9 3l3 18M15 3l-3 18" /></svg></div><b>Value</b><span>A practical buyer: wants proof in the first week, not a rollout plan.</span></div>
+            </div>
+            <div class="dz-met">
+              <div class="dz-m g-purple"><b>4,812</b><span>Followers</span></div>
+              <div class="dz-m g-pink"><b>2,960</b><span>Connections</span></div>
+              <div class="dz-m g-cyan"><b>A</b><span>Tier</span></div>
+              <div class="dz-m g-green"><b>88</b><span>Score</span></div>
+            </div>
+            <div class="dz-h">Core Competencies</div>
+            <div class="dz-skills"><span class="dz-s">Customer Onboarding</span><span class="dz-s">Process Design</span><span class="dz-s">SaaS Operations</span><span class="dz-s">Team Building</span><span class="dz-s">Change Management</span><span class="dz-s">HubSpot</span><span class="dz-s">Salesforce</span><span class="dz-s">Data Analysis</span></div>
+            <div class="dz-h">Recent Activity</div>
+            <div class="dz-posts">
+              <div class="dz-post">
+                <div class="dz-ph"><span class="dz-date">October 18, 2026</span><span class="dz-type">Text Post</span></div>
+                <div class="dz-pc">Every hand-off in onboarding is a place a customer waits. We mapped ours last week: 14 hand-offs between a signed contract and first value. The goal for Q4 is seven.</div>
+                <div class="dz-eng"><span><svg viewBox="0 0 24 24" fill="#e0475b" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" /></svg>642 Likes</span><span><svg viewBox="0 0 24 24" fill="none" stroke="#2b6fab" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>58 Comments</span></div>
+                <div class="dz-btns"><span class="dz-btn">Read More &#8594;</span><span class="dz-btn">View Original Post &#8594;</span></div>
+              </div>
+              <div class="dz-post">
+                <div class="dz-ph"><span class="dz-date">October 9, 2026</span><span class="dz-type">Hiring</span></div>
+                <div class="dz-pc">Hiring: two operations leads for Northwind. Small team, real ownership, no 40-page playbooks. If you have shortened an onboarding before, my DMs are open.</div>
+                <div class="dz-eng"><span><svg viewBox="0 0 24 24" fill="#e0475b" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" /></svg>318 Likes</span><span><svg viewBox="0 0 24 24" fill="none" stroke="#2b6fab" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>41 Comments</span></div>
+                <div class="dz-btns"><span class="dz-btn">Read More &#8594;</span><span class="dz-btn">View Original Post &#8594;</span></div>
+              </div>
+              <div class="dz-post">
+                <div class="dz-ph"><span class="dz-date">September 30, 2026</span><span class="dz-type">Text Post</span></div>
+                <div class="dz-pc">Unpopular opinion: if a tool needs a rollout team, it is not saving you time yet. Show me value in the first week and I will find the budget.</div>
+                <div class="dz-eng"><span><svg viewBox="0 0 24 24" fill="#e0475b" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" /></svg>1,204 Likes</span><span><svg viewBox="0 0 24 24" fill="none" stroke="#2b6fab" stroke-width="2.2" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>167 Comments</span></div>
+                <div class="dz-btns"><span class="dz-btn">Read More &#8594;</span><span class="dz-btn">View Original Post &#8594;</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dz-foot">
+            <div><b>LinkedIn</b><br />linkedin.com/in/sarah-chen-ops</div>
+            <div><b>Email</b><br />sarah.chen@northwind.example</div>
+            <div><b>Company</b><br />Northwind &#183; Head of Operations</div>
+            <em>Generated on 2026-10-20 by Dossier Bot</em>
+          </div>
         </div>
       </div>
 
@@ -357,15 +430,14 @@
 
         // ---- the PDF opens out of the card, reads, folds back ----
         const cardScreen = { x: cardC.x * K3.scale + K3.x, y: cardC.y * K3.scale + K3.y };
-        const pageC = { x: 580 + 380, y: 70 + 625 };
+        const pg = box("#page");
+        const pageC = { x: pg.x + pg.w / 2, y: pg.y + pg.h / 2 };
+        const panY = -Math.max(0, pg.h + pg.y - 1020);
         const fold = { x: cardScreen.x - pageC.x, y: cardScreen.y - pageC.y, scale: 0.22, opacity: 0 };
         tl.fromTo("#preview", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 11.3);
         tl.fromTo("#page", { ...fold }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.55, ease: "power3.out" }, 11.3);
-        tl.fromTo("#page", { y: 0 }, { y: -290, duration: 2.6, ease: "sine.inOut", immediateRender: false }, 12.2);
-        [["#hl1", 12.65], ["#hl2", 13.7], ["#hl3", 14.76]].forEach(([id, t]) => { // beat-grid headings
-          tl.fromTo(id, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.out" }, t);
-        });
-        tl.fromTo("#page", { x: 0, y: -290, scale: 1, opacity: 1 }, { ...fold, duration: 0.4, ease: "power3.in", immediateRender: false }, 15.15);
+        tl.fromTo("#page", { y: 0 }, { y: panY, duration: 3.05, ease: "sine.inOut", immediateRender: false }, 11.95);
+        tl.fromTo("#page", { x: 0, y: panY, scale: 1, opacity: 1 }, { ...fold, duration: 0.4, ease: "power3.in", immediateRender: false }, 15.15);
         tl.fromTo("#preview", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 15.3);
         // the window sits out while the page is open, so nothing reads through the backdrop
         tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 11.62);

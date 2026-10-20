@@ -45,8 +45,8 @@ bar 2.09 s. Downbeats used: 1.60, 3.70, 5.80, 9.50, 12.65, 17.91, 22.65 (strong 
  9.50           briefing card drops (downbeat)         push to the card, s 1.75            the card
  10.30–11.06    cursor travels, clicks                 —                                   the card opens
  11.30–15.20    PDF preview: name, what she cares       screen-space, slow pan down page    it folds back into the card
-                about, openers; headings sweep on
-                12.65 / 13.70 / 14.76
+                about, posts; the real dossier
+                template, scrolled top to bottom
  15.81–17.40    Omar asks again; instant reply          back to s 1.5                       —
                 "Already briefed. Same file."
  17.91          DROP: pan down below the window        world rises out, workflow rises in  the workflow
@@ -69,6 +69,11 @@ bar 2.09 s. Downbeats used: 1.60, 3.70, 5.80, 9.50, 12.65, 17.91, 22.65 (strong 
 - Lockup: `Dossier Bot` / `Lead briefings in Slack, ready before the call.` / `musaabjaved.com`
 
 No metrics: there are no measured outcome numbers yet, so the film states what the product does, not what it saved.
+
+The PDF preview recreates the real Dossier Bot output template (dark header, tier badge, round portrait, executive
+profile, three advantage cards, four metric tiles, competencies, recent posts, footer). Every value in it is invented:
+Sarah Chen of Northwind, Austin, `sarah.chen@northwind.example`, three made-up posts. The portrait is an AI-generated
+face from thispersondoesnotexist.com, so it shows no real person.
 
 ## DESIGN TOKENS
 

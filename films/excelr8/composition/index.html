@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Excelr8: the spreadsheet row</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-sans-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 500; font-style: normal; src: url("assets/fonts/instrument-sans-500-normal-latin.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #06050f; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #ecfeff; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+      /* ---------- background ---------- */
+      .bg { position: absolute; inset: 0; pointer-events: none; }
+      #bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(34,211,238,0.05) 1px, rgba(34,211,238,0) 1px), linear-gradient(90deg, rgba(34,211,238,0.05) 1px, rgba(34,211,238,0) 1px); background-size: 64px 64px; }
+      #bg-glow { position: absolute; left: 260px; top: -260px; width: 1400px; height: 1400px; border-radius: 50%; background: radial-gradient(circle, rgba(34,211,238,0.42) 0%, rgba(34,211,238,0) 60%); opacity: 0.2; }
+
+      /* ---------- the world ---------- */
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; will-change: transform; }
+
+      /* the app */
+      #win { position: absolute; left: 160px; top: 90px; width: 1600px; height: 900px; border-radius: 16px; overflow: hidden; background: #0c1120; border: 1px solid rgba(103,232,249,0.16); box-shadow: 0 70px 140px -50px rgba(0,0,0,0.85), 0 0 0 1px rgba(34,211,238,0.08); }
+      .side { position: absolute; left: 0; top: 0; bottom: 0; width: 240px; background: #080c18; border-right: 1px solid rgba(103,232,249,0.12); padding: 26px 0 0; }
+      .logo { font-family: "Instrument Serif", Georgia, serif; font-size: 40px; line-height: 1; color: #ecfeff; padding: 0 24px; }
+      .logo i { font-style: normal; color: #22d3ee; }
+      .wsn { font-size: 15px; color: #94a3b8; padding: 8px 24px 22px; border-bottom: 1px solid rgba(103,232,249,0.1); }
+      .nav { font-size: 19px; color: #c3d0dc; padding: 10px 24px; display: flex; align-items: center; gap: 12px; }
+      .nav .nd { width: 8px; height: 8px; border-radius: 2px; background: rgba(103,232,249,0.4); }
+      .nav.on { background: rgba(34,211,238,0.12); color: #ecfeff; font-weight: 500; box-shadow: inset 3px 0 0 #22d3ee; }
+      .nav.on .nd { background: #22d3ee; }
+      .navsec { font-family: "IBM Plex Mono", monospace; font-size: 13px; letter-spacing: 0.12em; color: #7f93a8; padding: 22px 24px 8px; }
+
+      .main { position: absolute; left: 240px; top: 0; right: 0; bottom: 0; padding: 0 32px; }
+      .mhead { position: absolute; left: 32px; right: 32px; top: 0; height: 80px; display: flex; align-items: center; gap: 18px; border-bottom: 1px solid rgba(103,232,249,0.1); }
+      .mhead h1 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 40px; color: #ecfeff; }
+      .mhead .msub { font-size: 17px; color: #94a3b8; }
+      .mhead .grow { flex: 1 1 auto; }
+      .src { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: #a5f3fc; border: 1px solid rgba(103,232,249,0.3); border-radius: 6px; padding: 5px 10px; }
+      #toast { font-size: 17px; font-weight: 500; color: #04121a; background: #22d3ee; border-radius: 999px; padding: 7px 16px; }
+
+      .kpis { position: absolute; left: 32px; right: 32px; top: 94px; height: 136px; }
+      .khead { display: flex; align-items: center; height: 30px; }
+      .khead b { font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.14em; color: #7f93a8; flex: 1 1 auto; }
+      .live { display: flex; align-items: center; gap: 8px; font-size: 17px; color: #a5f3fc; }
+      .live .ld { width: 10px; height: 10px; border-radius: 50%; background: #22d3ee; box-shadow: 0 0 10px #22d3ee; }
+      #zero { color: #f5d0fe; }
+      .ktiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 6px; }
+      .kt { height: 100px; border-radius: 12px; background: #101729; border: 1px solid rgba(103,232,249,0.12); padding: 12px 18px; }
+      .kt span { display: block; font-size: 17px; color: #a3b4c6; }
+      .kt b { display: block; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 52px; line-height: 1.05; color: #ecfeff; }
+      .kt.warm b { color: #f0abfc; }
+
+      .stages { position: absolute; left: 32px; right: 32px; top: 246px; height: 48px; display: flex; align-items: center; gap: 12px; }
+      .stages > b { font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.14em; color: #7f93a8; margin-right: 6px; }
+      .sg { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid rgba(103,232,249,0.2); background: #0f1626; font-size: 18px; color: #c3d0dc; }
+      .sg .ico, .st .ico { position: relative; width: 20px; height: 20px; flex: 0 0 auto; }
+      .spin { position: absolute; inset: 1px; border-radius: 50%; border: 2px solid rgba(103,232,249,0.25); border-top-color: #67e8f9; }
+      .chk { position: absolute; inset: 0; border-radius: 50%; background: #22d3ee; display: flex; align-items: center; justify-content: center; opacity: 0; }
+
+      .table { position: absolute; left: 32px; right: 32px; top: 308px; }
+      .tr { display: grid; grid-template-columns: 240px 300px 300px 300px minmax(0, 1fr); align-items: center; column-gap: 0; }
+      .th { height: 44px; font-family: "IBM Plex Mono", monospace; font-size: 14px; letter-spacing: 0.1em; color: #7f93a8; border-bottom: 1px solid rgba(103,232,249,0.14); }
+      .row { position: relative; height: 70px; border-bottom: 1px solid rgba(103,232,249,0.08); font-size: 21px; }
+      .row.spine { background: rgba(34,211,238,0.07); box-shadow: inset 3px 0 0 #22d3ee; }
+      .c { position: relative; padding-left: 14px; }
+      .nm { color: #ecfeff; font-weight: 500; }
+      .sw { position: relative; height: 28px; }
+      .sw .raw, .sw .cln { position: absolute; left: 0; top: 0; white-space: nowrap; }
+      .sw .raw { color: #8a98a8; font-family: "IBM Plex Mono", monospace; font-size: 18px; top: 2px; }
+      .sw .cln { color: #e2edf5; opacity: 0; }
+      .sub { font-size: 16px; color: #94a3b8; margin-top: 2px; white-space: nowrap; }
+      .sig { font-size: 18px; color: #c3d0dc; white-space: nowrap; }
+      .sig.none { color: #7f93a8; }
+      .sig.hot { color: #f5d0fe; }
+      .score { display: flex; align-items: center; gap: 10px; }
+      .sc { min-width: 50px; text-align: center; font-family: "IBM Plex Mono", monospace; font-size: 19px; font-weight: 500; color: #ecfeff; border-radius: 6px; padding: 3px 8px; background: rgba(148,163,184,0.18); }
+      .sc.hi { background: rgba(34,211,238,0.2); color: #a5f3fc; }
+      .wt { font-size: 16px; font-weight: 500; color: #fae8ff; background: rgba(232,121,249,0.28); border: 1px solid rgba(232,121,249,0.6); border-radius: 999px; padding: 3px 12px; }
+
+      #radar { position: absolute; left: 6px; top: 58px; width: 290px; padding: 16px 20px; border-radius: 14px; background: #161a33; border: 1px solid rgba(232,121,249,0.55); box-shadow: 0 30px 60px -20px rgba(0,0,0,0.9), 0 0 40px -10px rgba(232,121,249,0.45); z-index: 5; }
+      #radar .re { font-family: "IBM Plex Mono", monospace; font-size: 13px; letter-spacing: 0.14em; color: #f0abfc; }
+      #radar .rh { font-family: "Instrument Serif", Georgia, serif; font-size: 34px; line-height: 1.1; color: #ffffff; margin-top: 4px; }
+      #radar .rs { font-size: 18px; line-height: 1.35; color: #e2d6ee; margin-top: 4px; }
+
+      #drop { position: absolute; left: 32px; right: 32px; top: 246px; height: 520px; border-radius: 16px; border: 2px dashed rgba(103,232,249,0.35); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+      #drop .di { width: 64px; height: 64px; border-radius: 16px; background: rgba(34,211,238,0.12); display: flex; align-items: center; justify-content: center; }
+      #drop .dt { font-size: 24px; color: #c3d0dc; }
+      #drop-lit { position: absolute; inset: -2px; border-radius: 16px; border: 2px solid #22d3ee; box-shadow: 0 0 60px rgba(34,211,238,0.35), inset 0 0 60px rgba(34,211,238,0.12); opacity: 0; }
+
+      /* campaign panel */
+      #panel { position: absolute; right: 0; top: 0; bottom: 0; width: 560px; background: #101729; border-left: 1px solid rgba(103,232,249,0.2); box-shadow: -40px 0 80px -30px rgba(0,0,0,0.8); padding: 0 32px; z-index: 6; }
+      .ph { height: 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(103,232,249,0.1); }
+      .ph b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 38px; color: #ecfeff; }
+      .ph span { font-size: 26px; color: #7f93a8; }
+      #auto { display: inline-flex; margin-top: 20px; font-family: "IBM Plex Mono", monospace; font-size: 14px; color: #f5d0fe; background: rgba(232,121,249,0.16); border: 1px solid rgba(232,121,249,0.4); border-radius: 6px; padding: 4px 10px; }
+      .fld { margin-top: 18px; }
+      .fld label { display: block; font-family: "IBM Plex Mono", monospace; font-size: 14px; letter-spacing: 0.12em; color: #7f93a8; }
+      .fv { margin-top: 6px; height: 50px; border-radius: 10px; border: 1px solid rgba(103,232,249,0.2); background: #0b111f; display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+      .fv .v { font-size: 21px; color: #ecfeff; flex: 1 1 auto; white-space: nowrap; }
+      .fv .pill { font-size: 15px; font-weight: 500; color: #fae8ff; background: rgba(232,121,249,0.28); border-radius: 999px; padding: 2px 10px; }
+      .tog { width: 46px; height: 26px; border-radius: 999px; background: #22d3ee; position: relative; flex: 0 0 auto; }
+      .tog::after { content: ""; position: absolute; right: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: #04121a; }
+      #launch { position: relative; margin-top: 26px; height: 60px; border-radius: 12px; background: #22d3ee; display: flex; align-items: center; justify-content: center; }
+      #launch .l1, #launch .l2 { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 22px; font-weight: 500; color: #04121a; }
+      #launch .l2 { opacity: 0; }
+      #launch-live { position: absolute; inset: 0; border-radius: 12px; background: #34d399; opacity: 0; }
+      .sts { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+      .st { display: flex; align-items: center; gap: 12px; font-size: 20px; color: #e2edf5; }
+      .st .txt { flex: 1 1 auto; }
+      .chip { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: #a5f3fc; background: rgba(34,211,238,0.12); border: 1px solid rgba(103,232,249,0.3); border-radius: 5px; padding: 2px 7px; white-space: nowrap; }
+
+      /* the messy sheet */
+      #sheet { position: absolute; left: 340px; top: 220px; width: 1240px; border-radius: 10px; overflow: hidden; background: #ffffff; color: #2b2f36; font-family: "Lato", system-ui, sans-serif; box-shadow: 0 50px 120px -30px rgba(0,0,0,0.9); transform-origin: 50% 50%; z-index: 10; }
+      .shbar { height: 44px; background: #e9ecef; border-bottom: 1px solid #d3d8de; display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+      .shbar .dt { width: 12px; height: 12px; border-radius: 50%; background: #c4c9cf; }
+      .shbar .fn { margin-left: 14px; font-size: 18px; color: #3d434c; }
+      .shbar .fn b { font-weight: 700; }
+      .sgrid { display: grid; grid-template-columns: 44px 180px 170px 170px 230px 150px minmax(0, 1fr); }
+      .sgrid > div { height: 46px; border-right: 1px solid #dfe3e8; border-bottom: 1px solid #dfe3e8; font-size: 18px; display: flex; align-items: center; padding: 0 10px; white-space: nowrap; overflow: hidden; }
+      .sgrid .hd { height: 34px; background: #f1f3f5; color: #5c636c; font-size: 15px; justify-content: center; }
+      .sgrid .rn { background: #f1f3f5; color: #5c636c; font-size: 15px; justify-content: center; padding: 0; }
+      .sgrid .fh { font-weight: 700; color: #3d434c; background: #f8f9fa; }
+      .sgrid .bad { background: #fde2e2; color: #b42318; }
+      .sgrid .dup { background: #fff4d6; }
+      .sgrid .note { color: #5c636c; font-style: italic; }
+      #sel { position: absolute; border: 3px solid #3b82f6; background: rgba(59,130,246,0.06); pointer-events: none; }
+      #sticky { position: absolute; right: 22px; bottom: 6px; width: 260px; padding: 10px 16px; background: #fde68a; color: #3f3200; font-size: 20px; line-height: 1.25; box-shadow: 0 14px 30px -10px rgba(0,0,0,0.35); }
+      #r2 { z-index: 3; }
+
+      #cursor { position: absolute; left: 0; top: 0; width: 26px; height: 34px; opacity: 0; z-index: 20; }
+      #tap { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; border: 3px solid #a5f3fc; opacity: 0; z-index: 19; }
+
+      /* ---------- screen-space layers ---------- */
+      #cap { position: absolute; left: 0; right: 0; top: 820px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+      #cap div { font-family: "Instrument Serif", Georgia, serif; font-size: 72px; line-height: 1.04; letter-spacing: -0.015em; color: #ffffff; }
+      #cap #cap2 { color: #f0abfc; }
+
+      #under { position: absolute; inset: 0; }
+      #under img { position: absolute; left: 0; top: 380px; width: 1920px; height: 620px; display: block; }
+      .ucap { position: absolute; left: 160px; top: 150px; width: 1600px; display: flex; flex-direction: column; gap: 16px; }
+      .ueye { font-family: "IBM Plex Mono", monospace; font-size: 22px; letter-spacing: 0.18em; color: #67e8f9; }
+      .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 84px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
+
+      #end { position: absolute; inset: 0; }
+      .lock { position: absolute; left: 0; right: 0; top: 340px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+      #cell { position: relative; padding: 18px 56px 26px; border: 4px solid #22d3ee; background: rgba(34,211,238,0.06); opacity: 0; }
+      #cell .hdl { position: absolute; right: -9px; bottom: -9px; width: 14px; height: 14px; background: #22d3ee; border: 2px solid #06050f; }
+      .lh { font-family: "Instrument Serif", Georgia, serif; font-size: 168px; line-height: 1; letter-spacing: -0.03em; color: #ffffff; }
+      .ls { font-family: "Instrument Serif", Georgia, serif; font-size: 52px; color: #f0abfc; opacity: 0; }
+      .lu { font-family: "IBM Plex Mono", monospace; font-size: 24px; letter-spacing: 0.06em; color: #67e8f9; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24.5" data-width="1920" data-height="1080">
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-grid"></div>
+        <div id="bg-glow"></div>
+      </div>
+
+      <!-- ===== the world ===== -->
+      <div id="world" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div id="win">
+          <div class="side">
+            <div class="logo">Excel<i>r8</i></div>
+            <div class="wsn">Woodgrove GTM</div>
+            <div class="navsec">WORKSPACE</div>
+            <div class="nav on"><span class="nd"></span>Leads</div>
+            <div class="nav"><span class="nd"></span>Signals</div>
+            <div class="nav"><span class="nd"></span>Campaigns</div>
+            <div class="nav"><span class="nd"></span>CRM sync</div>
+            <div class="nav"><span class="nd"></span>Newsletters</div>
+            <div class="nav"><span class="nd"></span>Reports</div>
+          </div>
+
+          <div class="main">
+            <div class="mhead" data-layout-allow-overlap data-layout-allow-occlusion>
+              <h1>Leads</h1><span class="msub">Q4 outbound</span>
+              <span class="grow"></span>
+              <span id="toast">6 leads imported · 1 duplicate merged</span>
+              <span class="src">Apollo · Clay · CSV</span>
+            </div>
+
+            <div class="kpis" id="kpis" data-layout-allow-overlap data-layout-allow-occlusion>
+              <div class="khead"><b>CAMPAIGN KPIS</b><span class="live"><span class="ld"></span><span>Live<span id="zero">, zero manual reporting</span></span></span></div>
+              <div class="ktiles">
+                <div class="kt"><span>Leads imported</span><b id="k1">0</b></div>
+                <div class="kt"><span>Enriched</span><b id="k2">0</b></div>
+                <div class="kt warm"><span>Warm</span><b id="k3">0</b></div>
+                <div class="kt"><span>In sequence</span><b id="k4">0</b></div>
+                <div class="kt"><span>Synced to HubSpot</span><b id="k5">0</b></div>
+              </div>
+            </div>
+
+            <div id="drop" data-layout-allow-overlap data-layout-allow-occlusion>
+              <div class="di"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#67e8f9" stroke-width="2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5" /><path d="M4 18v2h16v-2" /></svg></div>
+              <div class="dt">Drop a CSV, or pull from Apollo and Clay</div>
+              <div id="drop-lit"></div>
+            </div>
+
+            <div class="stages" id="stages" data-layout-allow-overlap data-layout-allow-occlusion>
+              <b>ENRICHMENT</b>
+              <div class="sg" id="sg1"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span>Company data</div>
+              <div class="sg" id="sg2"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span>Titles cleaned</div>
+              <div class="sg" id="sg3"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span>LinkedIn signals</div>
+              <div class="sg" id="sg4"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span>Qualification score</div>
+            </div>
+
+            <div class="table" id="table" data-layout-allow-overlap data-layout-allow-occlusion>
+              <div class="tr th"><div class="c">LEAD</div><div class="c">COMPANY</div><div class="c">TITLE</div><div class="c">LINKEDIN SIGNAL</div><div class="c">SCORE</div></div>
+
+              <div class="tr row" id="r1">
+                <div class="c nm">Tomas Berg</div>
+                <div class="c"><div class="sw"><span class="raw">contoso ltd</span><span class="cln">Contoso</span></div><div class="sub">Retail tech · 1,100 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">VP sales</span><span class="cln">VP of Sales</span></div></div>
+                <div class="c"><div class="sig none">No recent activity</div></div>
+                <div class="c score"><span class="sc">58</span></div>
+              </div>
+              <div class="tr row spine" id="r2">
+                <div class="c nm">Ines Moreau</div>
+                <div class="c"><div class="sw"><span class="raw">fabrikam</span><span class="cln">Fabrikam</span></div><div class="sub">Logistics software · 240 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">head revops??</span><span class="cln">Head of Revenue Ops</span></div></div>
+                <div class="c"><div class="sig hot">Commented on a post</div>
+                  <div id="radar" data-layout-allow-overlap data-layout-allow-occlusion><div class="re">LINKEDIN POST RADAR</div><div class="rh">Warm lead found</div><div class="rs">Commented on an outbound post, 2h ago</div></div>
+                </div>
+                <div class="c score"><span class="sc hi">91</span><span class="wt">Warm</span></div>
+              </div>
+              <div class="tr row" id="r3">
+                <div class="c nm">Priya Nair</div>
+                <div class="c"><div class="sw"><span class="raw">TAILSPIN</span><span class="cln">Tailspin</span></div><div class="sub">Travel platform · 85 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">growth lead</span><span class="cln">Head of Growth</span></div></div>
+                <div class="c"><div class="sig hot">Liked a cold email post</div></div>
+                <div class="c score"><span class="sc hi">84</span><span class="wt">Warm</span></div>
+              </div>
+              <div class="tr row" id="r4">
+                <div class="c nm">Daniel Okafor</div>
+                <div class="c"><div class="sw"><span class="raw">adatum corp</span><span class="cln">Adatum</span></div><div class="sub">Security · 410 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">cmo / founder</span><span class="cln">Co-founder and CMO</span></div></div>
+                <div class="c"><div class="sig hot">Shared a hiring post</div></div>
+                <div class="c score"><span class="sc hi">82</span><span class="wt">Warm</span></div>
+              </div>
+              <div class="tr row" id="r5">
+                <div class="c nm">Leah Park</div>
+                <div class="c"><div class="sw"><span class="raw">Litware</span><span class="cln">Litware</span></div><div class="sub">HR software · 60 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">ops</span><span class="cln">Operations Manager</span></div></div>
+                <div class="c"><div class="sig none">No recent activity</div></div>
+                <div class="c score"><span class="sc">41</span></div>
+              </div>
+              <div class="tr row" id="r6">
+                <div class="c nm">Marco Ruiz</div>
+                <div class="c"><div class="sw"><span class="raw">proseware inc</span><span class="cln">Proseware</span></div><div class="sub">Fintech · 520 staff</div></div>
+                <div class="c"><div class="sw"><span class="raw">Dir. Mktg</span><span class="cln">Director of Marketing</span></div></div>
+                <div class="c"><div class="sig none">No recent activity</div></div>
+                <div class="c score"><span class="sc">47</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel" data-layout-allow-overlap data-layout-allow-occlusion>
+            <div class="ph"><b>New campaign</b><span>&#215;</span></div>
+            <span id="auto">Filled from enrichment and signals</span>
+            <div class="fld" id="f1"><label>NAME</label><div class="fv"><span class="v">Q4 warm leads</span></div></div>
+            <div class="fld" id="f2"><label>AUDIENCE</label><div class="fv"><span class="v">Warm leads, score 80+</span><span class="pill">3 leads</span></div></div>
+            <div class="fld" id="f3"><label>SEQUENCE</label><div class="fv"><span class="v">Warm intro, 3 emails</span></div></div>
+            <div class="fld" id="f4"><label>CRM</label><div class="fv"><span class="v">Two-way HubSpot sync</span><span class="tog"></span></div></div>
+            <div id="launch"><div id="launch-live"></div><div class="l1">Launch campaign</div><div class="l2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>Campaign live</div></div>
+            <div class="sts">
+              <div class="st" id="st1"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Duplicates merged</span><span class="chip">dedup</span></div>
+              <div class="st" id="st2"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Synced to HubSpot</span><span class="chip">hubspot_sync</span></div>
+              <div class="st" id="st3"><span class="ico"><span class="spin"></span><span class="chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04121a" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">3 leads in sequence</span><span class="chip">sequence</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- the "before": a messy sheet, the spine row selected -->
+        <div id="sheet" data-layout-allow-overlap data-layout-allow-occlusion>
+          <div class="shbar"><span class="dt"></span><span class="dt"></span><span class="dt"></span><span class="fn"><b>leads_final_v3 (2).csv</b></span></div>
+          <div class="sgrid" id="sgrid">
+            <div class="hd"></div><div class="hd">A</div><div class="hd">B</div><div class="hd">C</div><div class="hd">D</div><div class="hd">E</div><div class="hd">F</div>
+            <div class="rn">1</div><div class="fh">name</div><div class="fh">company</div><div class="fh">title</div><div class="fh">email</div><div class="fh">linkedin</div><div class="fh">notes</div>
+            <div class="rn">2</div><div>tomas berg</div><div>contoso ltd</div><div>VP sales</div><div>t.berg@contoso.example</div><div class="bad">missing</div><div class="note">called? no answer</div>
+            <div class="rn">3</div><div id="s-spine">Ines Moreau</div><div>fabrikam</div><div>head revops??</div><div class="bad">missing</div><div class="bad">missing</div><div class="note">warm?? check LI</div>
+            <div class="rn">4</div><div class="dup">priya nair</div><div class="dup">TAILSPIN</div><div class="dup">growth lead</div><div class="dup">priya@tailspin.example</div><div class="dup">/in/priyanair</div><div class="dup note">duplicate?</div>
+            <div class="rn">5</div><div class="dup">Priya Nair</div><div class="dup">Tailspin</div><div class="dup">Growth Lead</div><div class="dup">priya@tailspin.example</div><div class="dup">/in/priyanair</div><div class="dup note">duplicate?</div>
+            <div class="rn">6</div><div>daniel okafor</div><div>adatum corp</div><div>cmo / founder</div><div class="bad">missing</div><div>/in/dokafor</div><div class="note">send seq 2 by hand</div>
+            <div class="rn">7</div><div>Leah Park</div><div>Litware</div><div>ops</div><div>leah@litware.example</div><div class="bad">missing</div><div class="note"></div>
+            <div class="rn">8</div><div>marco ruiz</div><div>proseware inc</div><div>Dir. Mktg</div><div class="bad">missing</div><div class="bad">missing</div><div class="note"></div>
+          </div>
+          <div id="sel"></div>
+          <div id="sticky">Who is adding these to HubSpot?</div>
+        </div>
+
+        <div id="tap"></div>
+        <div id="cursor"><svg viewBox="0 0 26 34" width="26" height="34" aria-hidden="true"><path d="M2 2 L23 18 L13 20 L18 31 L13.5 33 L8.5 22 L2 28 Z" fill="#ffffff" stroke="#06050f" stroke-width="2" stroke-linejoin="round" /></svg></div>
+      </div>
+
+      <!-- ===== screen-space layers ===== -->
+      <div id="cap">
+        <div id="cap1">Leads live in spreadsheets.</div>
+        <div id="cap2">Campaigns launch by hand.</div>
+      </div>
+
+      <div id="under" data-layout-allow-overflow>
+        <img src="assets/img/flow.png" alt="" />
+        <div class="ucap">
+          <div class="ueye" id="u-eye">UNDER THE HOOD</div>
+          <div class="uh" id="u-h">n8n workflows, Apollo and Clay to HubSpot.</div>
+        </div>
+      </div>
+
+      <div id="end">
+        <div class="lock">
+          <div id="cell"><div class="lh">Excelr8</div><span class="hdl"></span></div>
+          <div class="ls" id="l-s">Campaign setup, hours down to minutes.</div>
+          <div class="lu" id="l-u">musaabjaved.com</div>
+        </div>
+      </div>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/excelr8.mp3" data-start="0" data-duration="24.5" data-media-start="4.23" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="sfx-drop" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="4.65" data-track-index="11" data-volume="0.55"></audio>
+      <audio id="sfx-warm" src="assets/sfx/interface/drop_001.ogg" data-start="9.9" data-track-index="12" data-volume="0.6"></audio>
+      <audio id="sfx-click" src="assets/sfx/interface/click_003.ogg" data-start="13.56" data-track-index="13" data-volume="0.7"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="21.38" data-track-index="14" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      document.fonts.ready.then(() => {
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        const $ = (s) => document.querySelector(s);
+
+        // the campaign panel, the radar popover and the flying sheet deliberately cover the table and KPIs
+        document.querySelectorAll(".main *, #sgrid *").forEach((el) => el.setAttribute("data-layout-allow-occlusion", ""));
+
+        // ---- measure in world coordinates (before any transform is applied) ----
+        const world = $("#world");
+        const wr = world.getBoundingClientRect();
+        const k = wr.width / 1920;
+        const box = (sel) => {
+          const r = $(sel).getBoundingClientRect();
+          return { x: (r.left - wr.left) / k, y: (r.top - wr.top) / k, w: r.width / k, h: r.height / k };
+        };
+        const ctr = (b) => ({ x: b.x + b.w / 2, y: b.y + b.h / 2 });
+
+        // selection box on the spine row of the sheet (row 3), measured from the grid
+        const sheetB = box("#sheet");
+        const spineCell = box("#s-spine");
+        const sel = $("#sel");
+        sel.style.left = (spineCell.x - sheetB.x - 2) + "px";
+        sel.style.top = (spineCell.y - sheetB.y - 2) + "px";
+        sel.style.width = (sheetB.w - (spineCell.x - sheetB.x) + 2) + "px";
+        sel.style.height = (spineCell.h + 3) + "px";
+
+        const sheetC = ctr(sheetB);
+        const drop = box("#drop");
+        const dropC = ctr(drop);
+        const kpis = box("#kpis");
+        const table = box("#table");
+        const radar = box("#radar");
+        const r2 = box("#r2");
+        const panel = box("#panel");
+        const launch = box("#launch");
+        const launchC = ctr(launch);
+        const sts = box("#st3");
+
+        // camera: point (fx, fy) in world coords lands at screen centre, at scale s
+        const cam = (fx, fy, s) => ({ x: 960 - fx * s, y: 540 - fy * s, scale: s });
+        const S0 = 1.45;
+        const K0 = cam(sheetC.x, sheetB.y + (540 - 96) / S0, S0); // sheet top sits at ~96px on screen
+        const K0b = cam(sheetC.x, sheetB.y + (540 - 96) / S0, 1.5);
+        const K1 = cam(960, 540, 1.0);
+        const K2 = cam(1080, (kpis.y + table.y + table.h) / 2, 1.3); // KPIs + stages + table
+        const K3 = cam(table.x + table.w / 2, (r2.y - 60 + radar.y + radar.h) / 2, 1.45); // spine row + radar card
+        const K4 = cam(1800 - 960 / 1.35, (panel.y + 80 + sts.y + sts.h) / 2, 1.35); // the campaign panel
+        const K5 = cam(kpis.x + kpis.w / 2, kpis.y + kpis.h / 2 + 120, 1.45); // the KPI strip
+        const move = (from, to, t, d, ease) => tl.fromTo(world, { ...from }, { ...to, duration: d, ease, immediateRender: false }, t);
+        tl.set(world, { ...K0 }, 0);
+        move(K0, K0b, 0, 3.9, "sine.inOut");
+        move(K0b, K1, 3.9, 0.7, "power3.inOut");
+        move(K1, K2, 5.1, 0.6, "power2.inOut");
+        move(K2, K3, 9.3, 0.55, "power2.inOut"); // lands before the 9.90 warm reveal
+        move(K3, K4, 11.7, 0.6, "power2.inOut");
+        move(K4, K5, 16.1, 0.55, "power2.inOut"); // lands before the 16.68 roll-up
+        move(K5, { ...K5, y: K5.y - 1700 }, 18.0, 0.6, "power3.in");
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 18.35);
+
+        // ---- ambient ----
+        tl.fromTo("#bg-grid", { y: 0 }, { y: -64, duration: 24.5, ease: "none" }, 0);
+
+        // ---- hook: the sheet and the problem ----
+        tl.set("#win", { opacity: 0 }, 0);
+        tl.fromTo("#cap1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 0.25);
+        tl.fromTo("#cap2", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 1.56); // beat 1.56
+        tl.fromTo("#cap", { opacity: 1, y: 0 }, { opacity: 0, y: 20, duration: 0.3, ease: "power2.in", immediateRender: false }, 3.65);
+        tl.fromTo("#sel", { opacity: 0.35 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 0.1);
+        tl.set("#sticky", { rotation: -3 }, 0);
+        tl.fromTo("#sticky", { opacity: 0, scale: 0.9, rotation: -3 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.4, ease: "back.out(1.8)" }, 2.62); // beat 2.62
+
+        // ---- the sheet flies into the dashboard; the dashboard rises ----
+        tl.fromTo("#win", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, 3.95);
+        const flyTo = { x: dropC.x - sheetC.x, y: dropC.y - sheetC.y, scale: 0.1 };
+        tl.fromTo("#sheet", { x: 0, y: 0, scale: 1 }, { ...flyTo, duration: 0.55, ease: "power3.in", immediateRender: false }, 4.08);
+        tl.fromTo("#sheet", { opacity: 1 }, { opacity: 0, duration: 0.12, ease: "power2.in", immediateRender: false }, 4.5);
+        tl.fromTo("#drop-lit", { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, 4.4);
+
+        // ---- 4.65 DROP: the rows land ----
+        tl.fromTo("#drop", { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.03, duration: 0.1, ease: "power2.in", immediateRender: false }, 4.6);
+        tl.fromTo("#stages", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 4.75);
+        tl.fromTo("#table .th", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 4.68);
+        for (let i = 1; i <= 6; i++) {
+          tl.fromTo(`#r${i}`, { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.4)" }, 4.68 + (i - 1) * 0.06);
+        }
+        tl.fromTo("#toast", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 4.8);
+
+        // KPI counters
+        const count = (sel, from, to, t, d) => {
+          const el = $(sel);
+          const o = { v: from };
+          tl.fromTo(o, { v: from }, { v: to, duration: d, ease: "none", immediateRender: false, onUpdate: () => { el.textContent = String(Math.round(o.v)); } }, t);
+        };
+        count("#k1", 0, 6, 4.75, 0.45);
+        count("#k2", 0, 6, 5.72, 3.5);
+        count("#k3", 0, 3, 9.95, 0.4);
+        count("#k4", 0, 3, 16.72, 0.5);
+        count("#k5", 0, 6, 16.72, 0.6);
+        tl.fromTo(["#k4", "#k5"], { color: "#ecfeff" }, { color: "#67e8f9", duration: 0.2, immediateRender: false }, 16.72);
+        tl.fromTo(["#k4", "#k5"], { color: "#67e8f9" }, { color: "#ecfeff", duration: 0.6, immediateRender: false }, 17.5);
+        tl.fromTo("#zero", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 16.9);
+
+        // ---- enrichment: one stage per beat pair ----
+        const stage = (n, t) => {
+          tl.fromTo(`#sg${n}`, { borderColor: "rgba(103,232,249,0.2)" }, { borderColor: "rgba(103,232,249,0.85)", duration: 0.2, immediateRender: false }, t);
+          tl.fromTo(`#sg${n} .spin`, { rotation: 0 }, { rotation: 540, duration: 0.6, ease: "none" }, t);
+          tl.fromTo(`#sg${n} .spin`, { opacity: 1 }, { opacity: 0, duration: 0.12, immediateRender: false }, t + 0.58);
+          tl.fromTo(`#sg${n} .chk`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.6);
+        };
+        [5.72, 6.76, 7.81, 8.85].forEach((t, i) => stage(i + 1, t)); // beat grid
+        const rows = [1, 2, 3, 4, 5, 6];
+        rows.forEach((r, i) => {
+          const d = i * 0.07;
+          // 1. company data
+          tl.fromTo(`#r${r} .c:nth-child(2) .raw`, { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 5.8 + d);
+          tl.fromTo(`#r${r} .c:nth-child(2) .cln`, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.3 }, 5.8 + d);
+          tl.fromTo(`#r${r} .sub`, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.85 + d);
+          // 2. titles cleaned
+          tl.fromTo(`#r${r} .c:nth-child(3) .raw`, { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 6.84 + d);
+          tl.fromTo(`#r${r} .c:nth-child(3) .cln`, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.3 }, 6.84 + d);
+          // 3. LinkedIn signals
+          tl.fromTo(`#r${r} .sig`, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.3 }, 7.89 + d);
+          // 4. score
+          tl.fromTo(`#r${r} .sc`, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 8.93 + d);
+        });
+
+        // ---- 9.90 warm leads; Post Radar on the spine row ----
+        [2, 3, 4].forEach((r, i) => {
+          tl.fromTo(`#r${r} .wt`, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 9.9 + i * 0.08);
+        });
+        tl.fromTo("#radar", { opacity: 0, y: -10, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 9.95);
+        tl.fromTo("#radar", { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 11.75);
+
+        // ---- 11.85 the campaign panel ----
+        tl.set("#panel", { x: 600 }, 0);
+        tl.fromTo("#panel", { x: 600 }, { x: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, 11.85);
+        tl.fromTo("#auto", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 12.3);
+        [1, 2, 3, 4].forEach((n, i) => {
+          tl.fromTo(`#f${n} .fv > *`, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.3 }, 12.4 + i * 0.13);
+          tl.fromTo(`#f${n} .fv`, { borderColor: "rgba(103,232,249,0.2)" }, { borderColor: "rgba(103,232,249,0.7)", duration: 0.15, immediateRender: false }, 12.4 + i * 0.13);
+          tl.fromTo(`#f${n} .fv`, { borderColor: "rgba(103,232,249,0.7)" }, { borderColor: "rgba(103,232,249,0.2)", duration: 0.5, immediateRender: false }, 12.65 + i * 0.13);
+        });
+
+        // cursor clicks Launch at 13.56
+        tl.set("#cursor", { x: launchC.x + 210, y: launchC.y + 170, scale: 1, opacity: 0 }, 0);
+        tl.fromTo("#cursor", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 12.9);
+        tl.fromTo("#cursor", { x: launchC.x + 210, y: launchC.y + 170 }, { x: launchC.x + 30, y: launchC.y + 2, duration: 0.55, ease: "power2.inOut", immediateRender: false }, 12.95);
+        tl.fromTo("#cursor", { scale: 1 }, { scale: 0.86, duration: 0.08, ease: "power2.in", immediateRender: false }, 13.5);
+        tl.fromTo("#cursor", { scale: 0.86 }, { scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, 13.58);
+        tl.fromTo("#tap", { x: launchC.x + 17, y: launchC.y - 11, opacity: 0.9, scale: 0.4 }, { x: launchC.x + 17, y: launchC.y - 11, opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, 13.56);
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 13.9);
+        tl.fromTo("#launch-live", { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, 13.6);
+        tl.fromTo("#launch .l1", { opacity: 1 }, { opacity: 0, duration: 0.15, immediateRender: false }, 13.6);
+        tl.fromTo("#launch .l2", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 13.65);
+
+        // status lines on the beat
+        [14.07, 14.59, 15.11].forEach((t, i) => { // beat grid
+          const id = `#st${i + 1}`;
+          tl.fromTo(id, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.3 }, t);
+          tl.fromTo(`${id} .spin`, { rotation: 0 }, { rotation: 540, duration: 0.5, ease: "none" }, t);
+          tl.fromTo(`${id} .spin`, { opacity: 1 }, { opacity: 0, duration: 0.12, immediateRender: false }, t + 0.48);
+          tl.fromTo(`${id} .chk`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.5);
+        });
+
+        // panel closes, KPIs catch up
+        tl.fromTo("#panel", { x: 0 }, { x: 600, duration: 0.45, ease: "power3.in", immediateRender: false }, 16.15);
+
+        // ---- 18.0 pan down below the window to the workflow ----
+        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 18.25);
+        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 18.55);
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 18.75);
+        tl.fromTo("#under img", { scale: 1 }, { scale: 1.04, duration: 3.0, ease: "none" }, 18.25);
+        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "power2.in", immediateRender: false }, 20.95);
+
+        // ---- 21.38 lockup in a selected cell ----
+        tl.fromTo("#cell", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6 }, 21.38); // beat-locked
+        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 21.7);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 22.0);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 3.0, ease: "sine.out" }, 21.38);
+
+        // ---- audio-reactive: bass breathes the cyan glow ----
+        if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+          const glow = $("#bg-glow");
+          const fps = AUDIO_DATA.fps || 30;
+          const draw = (b) => { glow.style.opacity = (0.14 + b * 0.18).toFixed(3); };
+          const n = Math.min(AUDIO_DATA.totalFrames, Math.round(24.5 * fps));
+          for (let f = 0; f < n; f++) tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      });
+    </script>
+  </body>
+</html>

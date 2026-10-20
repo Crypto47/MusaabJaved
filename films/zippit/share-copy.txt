@@ -1,0 +1,1 @@
+One headline, written once, published in English and Dutch at the same URL: the Zippit content engine researches, cites and drafts two SEO articles a day for one person to approve. It runs on $50 to $100 a month in API costs.

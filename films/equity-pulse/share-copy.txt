@@ -1,0 +1,2 @@
+Screenshot your brokerage app, get an advisor-grade PDF back. Equity Pulse reads every holding, scores it against Graham fair value and beta risk, and emails the report: under 10 minutes when it runs direct, or after an advisor signs off in review mode.
+Built with n8n, GPT-4o Vision, Yahoo Finance and SendGrid.

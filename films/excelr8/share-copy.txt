@@ -1,0 +1,2 @@
+Drop a messy lead sheet into Excelr8 and watch it clean itself up: company data, titles, LinkedIn signals and a score, then a warm-lead campaign that launches in one click and syncs to HubSpot.
+Campaign setup, hours down to minutes. Built on n8n, Apollo, Clay and HubSpot.

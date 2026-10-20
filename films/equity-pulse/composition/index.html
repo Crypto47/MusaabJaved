@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Equity Pulse: the screenshot</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-sans-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 500; font-style: normal; src: url("assets/fonts/instrument-sans-500-normal-latin.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #020c18; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #e6fffb; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+      /* ---------- background ---------- */
+      .bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, #041e30 0%, #020c18 70%); }
+      #bg-grid { position: absolute; left: 0; top: 0; width: 1920px; height: 1144px; background-image: linear-gradient(rgba(20,184,166,0.06) 1px, rgba(20,184,166,0) 1px), linear-gradient(90deg, rgba(20,184,166,0.06) 1px, rgba(20,184,166,0) 1px); background-size: 64px 64px; }
+      #bg-glow { position: absolute; left: 260px; top: -300px; width: 1400px; height: 1400px; border-radius: 50%; background: radial-gradient(circle, rgba(20,184,166,0.5) 0%, rgba(20,184,166,0) 60%); opacity: 0.2; }
+
+      /* ---------- the world ---------- */
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; will-change: transform; }
+
+      /* the brokerage app: deliberately generic, no name, no logo */
+      #phone { position: absolute; left: 300px; top: 90px; width: 430px; height: 900px; border-radius: 58px; background: #05070a; border: 2px solid #2c3540; box-shadow: 0 60px 120px -40px rgba(0,0,0,0.85), 0 0 0 1px rgba(94,234,212,0.08); }
+      .scr { position: absolute; left: 12px; top: 12px; width: 406px; height: 876px; border-radius: 46px; overflow: hidden; background: #0e1116; color: #f3f5f7; font-family: "Instrument Sans", system-ui, sans-serif; }
+      .notch { position: absolute; left: 143px; top: 10px; width: 120px; height: 32px; border-radius: 16px; background: #000000; }
+      .sb { height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 0 34px; font-size: 17px; font-weight: 500; }
+      .sbi { display: flex; gap: 6px; align-items: center; }
+      .sbi i { display: block; width: 6px; border-radius: 2px; background: #f3f5f7; }
+      .apphead { display: flex; justify-content: space-between; align-items: center; height: 58px; padding: 6px 22px 0; }
+      .ttl { font-size: 32px; font-weight: 500; letter-spacing: -0.01em; }
+      .pav { width: 40px; height: 40px; border-radius: 50%; background: #2b3440; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 500; color: #dfe5ea; }
+      .tot { padding: 10px 22px 0; display: flex; flex-direction: column; gap: 2px; }
+      .tot small { font-size: 16px; color: #a3acb7; }
+      .tot b { font-size: 44px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; }
+      .pos { color: #34d399; }
+      .neg { color: #f87171; }
+      .tot .pos { font-size: 18px; }
+      .spark { display: block; margin: 10px 22px 0; }
+      .lhead { display: flex; justify-content: space-between; padding: 12px 22px 8px; font-size: 16px; color: #a3acb7; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .prow { display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .pic { width: 40px; height: 40px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; color: #ffffff; }
+      .k1 { background: #3b4656; } .k2 { background: #33506a; } .k3 { background: #3d5a3f; } .k4 { background: #6a3b3b; } .k5 { background: #2f4a6b; } .k6 { background: #5a4a2c; }
+      .pn { flex: 1 1 auto; display: flex; flex-direction: column; }
+      .pn b { font-size: 22px; font-weight: 500; }
+      .pn small { font-size: 16px; color: #a3acb7; }
+      .pv { display: flex; flex-direction: column; align-items: flex-end; }
+      .pv b { font-size: 20px; font-weight: 500; }
+      .pv small { font-size: 16px; }
+      .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 68px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); font-size: 14px; color: #8b95a1; background: #0e1116; }
+      .tabs .on { color: #ffffff; }
+
+      /* the Equity Pulse upload form */
+      #up { position: absolute; left: 860px; top: 116px; width: 820px; padding: 28px 34px 30px; border-radius: 22px; background: #061a2b; border: 1px solid rgba(20,184,166,0.38); box-shadow: 0 60px 120px -40px rgba(0,0,0,0.85); display: flex; flex-direction: column; gap: 12px; opacity: 0; }
+      .uphead { display: flex; align-items: center; gap: 14px; padding-bottom: 16px; border-bottom: 1px solid rgba(94,234,212,0.16); }
+      .logo { width: 44px; height: 44px; border-radius: 12px; background: #14b8a6; display: flex; align-items: center; justify-content: center; }
+      .uphead b { font-size: 30px; font-weight: 500; }
+      .uphead span.muted { margin-left: auto; font-size: 20px; color: #9cc9c3; }
+      .lab { font-size: 18px; color: #9cc9c3; margin-top: 6px; }
+      .drop { display: flex; align-items: center; gap: 28px; padding: 18px; border: 2px dashed rgba(94,234,212,0.42); border-radius: 16px; background: rgba(20,184,166,0.05); }
+      #dslot { width: 150px; height: 324px; flex: 0 0 auto; border-radius: 17px; background: rgba(255,255,255,0.03); border: 1px solid rgba(94,234,212,0.2); }
+      .dtext { position: relative; flex: 1 1 auto; height: 84px; }
+      #d-empty { position: absolute; left: 0; top: 0; font-size: 24px; color: #9cc9c3; }
+      #d-file { position: absolute; left: 0; top: 0; opacity: 0; }
+      #d-file b { display: block; font-size: 30px; font-weight: 500; color: #ffffff; }
+      #d-file small { display: block; font-size: 20px; color: #9cc9c3; margin-top: 4px; }
+      .field { padding: 14px 18px; border-radius: 12px; background: #041322; border: 1px solid rgba(94,234,212,0.26); font-size: 24px; color: #e6fffb; }
+      .tog { display: flex; align-items: center; gap: 18px; margin-top: 8px; }
+      .sw { position: relative; width: 60px; height: 34px; flex: 0 0 auto; border-radius: 17px; background: #14b8a6; }
+      .sw i { position: absolute; right: 4px; top: 4px; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; }
+      .tog b { display: block; font-size: 24px; font-weight: 500; }
+      .tog small { display: block; font-size: 18px; color: #9cc9c3; }
+      #analyse { position: relative; height: 64px; margin-top: 10px; border-radius: 14px; overflow: hidden; }
+      #an-a, #an-b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 500; border-radius: 14px; }
+      #an-a { background: #14b8a6; color: #02131a; }
+      #an-b { background: #0b3b3a; color: #5eead4; border: 1px solid rgba(94,234,212,0.5); opacity: 0; }
+
+      /* the analysis board */
+      #board { position: absolute; left: 2160px; top: 150px; display: flex; gap: 48px; align-items: flex-start; }
+      #slot { width: 343px; height: 740px; flex: 0 0 auto; border-radius: 40px; border: 2px dashed rgba(94,234,212,0.28); }
+      #tcol { width: 1360px; display: flex; flex-direction: column; gap: 16px; }
+      .bhead { display: flex; align-items: center; gap: 16px; height: 52px; }
+      .btitle { font-size: 30px; font-weight: 500; color: #e6fffb; }
+      #bcount { font-size: 24px; color: #5eead4; opacity: 0; }
+      .chips { margin-left: auto; display: flex; gap: 10px; }
+      .chip { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 20px; color: #c9fbf2; background: rgba(20,184,166,0.16); border: 1px solid rgba(94,234,212,0.4); border-radius: 8px; padding: 5px 12px; white-space: nowrap; opacity: 0; }
+      #tbl { border-radius: 18px; background: #061a2b; border: 1px solid rgba(20,184,166,0.32); overflow: hidden; }
+      .th, .trow { display: grid; grid-template-columns: 250px 250px 110px 160px 160px 170px minmax(0, 1fr); align-items: center; padding: 0 24px; }
+      .th { height: 52px; font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; color: #5eead4; background: rgba(20,184,166,0.08); }
+      .trow { height: 80px; border-top: 1px solid rgba(94,234,212,0.1); font-size: 24px; color: #e6fffb; opacity: 0; }
+      .trow > div { position: relative; }
+      .c-hold b { display: block; font-size: 24px; font-weight: 500; line-height: 1.15; }
+      .c-hold small { display: block; font-size: 17px; color: #8fc1b9; }
+      .trow .c-isin { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 22px; color: #bfe7e1; }
+      .sk { position: absolute; left: 0; top: 50%; width: 92px; height: 14px; margin-top: -7px; border-radius: 7px; background: rgba(94,234,212,0.15); }
+      .v { display: inline-block; }
+      .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; vertical-align: 2px; }
+      .lo { background: #5eead4; } .no { background: #cbd5e1; } .hi { background: #fb7185; }
+      .vb { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 21px; font-weight: 500; white-space: nowrap; }
+      .vb.dn { background: rgba(20,184,166,0.2); color: #5eead4; border: 1px solid rgba(94,234,212,0.5); }
+      .vb.up { background: rgba(251,191,36,0.16); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); }
+      .vb.na { background: rgba(255,255,255,0.06); color: #b4cbc7; border: 1px solid rgba(255,255,255,0.16); }
+      #fnote .rt { font-family: "Instrument Sans", system-ui, sans-serif; font-size: 26px; color: #5eead4; }
+      #fnote { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 22px; color: #9cc9c3; opacity: 0; }
+      #review { display: flex; align-items: center; gap: 18px; padding: 16px 20px; border-radius: 16px; background: #071f2e; border: 1px solid rgba(251,191,36,0.5); opacity: 0; }
+      .rtag { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 17px; letter-spacing: 0.12em; color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); border-radius: 8px; padding: 5px 10px; }
+      .rtext { font-size: 24px; color: #e6fffb; }
+      .ghost { margin-left: auto; padding: 12px 20px; border: 1px solid rgba(94,234,212,0.4); border-radius: 12px; font-size: 20px; color: #bfe7e1; }
+      #approve { position: relative; width: 210px; height: 54px; flex: 0 0 auto; border-radius: 12px; overflow: hidden; }
+      #ap-a, #ap-b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 22px; font-weight: 500; color: #02131a; border-radius: 12px; }
+      #ap-a { background: #14b8a6; }
+      #ap-b { background: #34d399; opacity: 0; }
+
+      /* the travelling screenshot (a copy of the phone screen, built at load) */
+      #shot { position: absolute; left: 0; top: 0; width: 406px; height: 876px; border-radius: 46px; overflow: hidden; transform-origin: 0 0; opacity: 0; box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 40px 80px -20px rgba(0,0,0,0.85); }
+      #shot .scr { left: 0; top: 0; }
+      #flash { position: absolute; inset: 0; background: #ffffff; opacity: 0; }
+      #scan { position: absolute; left: 0; top: 0; width: 1px; height: 1px; }
+      #scanbar { position: absolute; left: 0; top: 0; width: 343px; height: 4px; border-radius: 2px; background: #5eead4; box-shadow: 0 0 18px 4px rgba(94,234,212,0.6); opacity: 0; }
+      .hl { position: absolute; left: 0; top: 0; border-radius: 6px; background: rgba(94,234,212,0.2); border: 1px solid rgba(94,234,212,0.7); opacity: 0; }
+
+      #cursor { position: absolute; left: 0; top: 0; width: 30px; height: 38px; opacity: 0; }
+      #tap { position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; border: 3px solid #5eead4; opacity: 0; }
+
+      /* ---------- screen-space layers ---------- */
+      #cap { position: absolute; left: 1080px; top: 300px; width: 560px; display: flex; flex-direction: column; gap: 14px; }
+      .capl { font-family: "Instrument Serif", Georgia, serif; font-size: 100px; line-height: 1.02; letter-spacing: -0.02em; opacity: 0; }
+      #cap1 { color: #f4fbfa; }
+      #cap2 { color: #fbbf24; }
+
+      #mail { position: absolute; inset: 0; opacity: 0; }
+      .mwin { position: absolute; left: 400px; top: 170px; width: 1120px; border-radius: 22px; background: #061a2b; border: 1px solid rgba(20,184,166,0.38); overflow: hidden; box-shadow: 0 60px 120px -40px rgba(0,0,0,0.85); }
+      .mbar { height: 58px; display: flex; align-items: center; gap: 12px; padding: 0 28px; background: #082436; border-bottom: 1px solid rgba(94,234,212,0.16); font-size: 20px; color: #b7dcd6; }
+      .mbar .new { font-size: 16px; color: #02131a; background: #5eead4; border-radius: 999px; padding: 2px 10px; }
+      .mhd { display: flex; align-items: center; gap: 18px; padding: 28px 36px 0; }
+      .mav { width: 56px; height: 56px; border-radius: 50%; background: #14b8a6; color: #02131a; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; flex: 0 0 auto; }
+      .mhd b { display: block; font-size: 26px; font-weight: 500; }
+      .mhd small { display: block; font-size: 19px; color: #9cc9c3; }
+      .mtime { margin-left: auto; font-size: 19px; color: #9cc9c3; }
+      .msubj { padding: 22px 36px 0; font-family: "Instrument Serif", Georgia, serif; font-size: 56px; line-height: 1.1; color: #ffffff; }
+      .mbody { padding: 12px 36px 0; font-size: 26px; line-height: 1.5; color: #d4ece8; }
+      #matt { margin: 26px 36px 36px; display: flex; align-items: center; gap: 18px; width: 640px; padding: 18px 22px; border-radius: 16px; background: #0a2a3a; border: 1px solid rgba(94,234,212,0.45); }
+      .pdfic { width: 48px; height: 60px; flex: 0 0 auto; border-radius: 6px; background: #fbbf24; color: #2a1a00; font-size: 14px; font-weight: 500; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
+      #matt b { display: block; font-size: 23px; font-weight: 500; color: #ffffff; }
+      #matt small { display: block; font-size: 18px; color: #9cc9c3; }
+      #mcap { position: absolute; left: 0; right: 0; top: 790px; text-align: center; font-family: "Instrument Serif", Georgia, serif; font-size: 76px; letter-spacing: -0.01em; color: #fbbf24; opacity: 0; }
+
+      #preview { position: absolute; inset: 0; opacity: 0; }
+      #preview .back { position: absolute; inset: 0; background: rgba(2,8,16,0.9); }
+      /* the report: an invented, illustrative portfolio */
+      .page { position: absolute; left: 510px; top: 60px; width: 900px; border-radius: 14px; overflow: hidden; background: #f6f9fb; color: #12303a; font-family: "Instrument Sans", system-ui, sans-serif; box-shadow: 0 60px 120px -30px rgba(0,0,0,0.85); }
+      .rp-head { background: linear-gradient(135deg, #053b44 0%, #0a5560 55%, #042a33 100%); color: #ffffff; padding: 44px 48px 40px; }
+      .rp-eye { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 16px; letter-spacing: 0.18em; color: #8ff3e4; }
+      .rp-title { font-family: "Instrument Serif", Georgia, serif; font-size: 80px; line-height: 1; margin-top: 16px; }
+      .rp-sub { font-size: 22px; color: #d3f1ec; margin-top: 12px; }
+      .rp-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+      .rp-tiles div { background: rgba(255,255,255,0.09); border-radius: 14px; padding: 16px 18px; }
+      .rp-tiles b { display: block; font-size: 34px; font-weight: 500; color: #fcd34d; }
+      .rp-tiles span { display: block; font-size: 15px; color: #d3f1ec; margin-top: 2px; }
+      .rp-body { padding: 8px 48px 40px; }
+      .rp-h { display: flex; align-items: center; gap: 16px; font-family: "Instrument Serif", Georgia, serif; font-size: 42px; color: #0d2b33; margin: 32px 0 14px; }
+      .rp-tag { font-family: "Instrument Sans", system-ui, sans-serif; font-size: 15px; font-weight: 500; color: #0b5f58; background: #d9f4ef; border-radius: 999px; padding: 4px 12px; }
+      .rp-p { font-size: 21px; line-height: 1.6; color: #1f3f48; background: #ffffff; border-radius: 14px; padding: 22px 26px; border-left: 5px solid #14b8a6; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+      .rp-tbl { background: #ffffff; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+      .rr { display: grid; grid-template-columns: 150px 140px 150px 150px minmax(0, 1fr); align-items: center; padding: 0 24px; height: 56px; border-top: 1px solid #e3ecef; font-size: 20px; color: #1f3f48; }
+      .rr.h { border-top: 0; height: 46px; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #4d6a71; background: #eef5f6; }
+      .rr b { font-weight: 500; color: #0d2b33; }
+      .pp { display: inline-block; font-size: 16px; font-weight: 500; border-radius: 999px; padding: 4px 12px; }
+      .pdn { background: #d5f5ef; color: #0b5f58; } .pup { background: #fdf0cc; color: #7a4f00; } .pna { background: #eaf0f2; color: #4d6a71; }
+      .rp-risk { display: flex; flex-direction: column; gap: 14px; background: #ffffff; border-radius: 14px; padding: 22px 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+      .rk { display: grid; grid-template-columns: 250px minmax(0, 1fr) 40px; align-items: center; gap: 16px; font-size: 20px; color: #1f3f48; }
+      .rk small { font-size: 16px; color: #4d6a71; }
+      .rb { height: 18px; border-radius: 9px; background: #e3ecef; overflow: hidden; }
+      .rf { height: 100%; width: 33.3%; border-radius: 9px; }
+      .rk b { font-weight: 500; text-align: right; }
+      .rp-foot { margin-top: 30px; padding-top: 18px; border-top: 1px solid #dfe8eb; text-align: center; font-size: 16px; color: #4d6a71; }
+
+      #under { position: absolute; inset: 0; }
+      #under img { position: absolute; left: 0; top: 400px; width: 1920px; height: 620px; display: block; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 14%, #000000 86%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 14%, #000000 86%, rgba(0,0,0,0) 100%); }
+      .ucap { position: absolute; left: 160px; top: 120px; width: 1600px; display: flex; flex-direction: column; gap: 14px; }
+      .ueye { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 20px; letter-spacing: 0.18em; color: #5eead4; }
+      .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 80px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
+      .us { font-size: 32px; color: #c9ece6; }
+
+      #end { position: absolute; inset: 0; }
+      .lock { position: absolute; left: 0; right: 0; top: 300px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      #l-ic { display: flex; align-items: center; gap: 22px; opacity: 0; }
+      .mini-s { width: 56px; height: 112px; border-radius: 12px; background: #0e1116; border: 3px solid #e6fffb; padding: 22px 8px 0; display: flex; flex-direction: column; gap: 9px; }
+      .mini-s i { display: block; height: 5px; border-radius: 3px; background: #6b7682; }
+      .mini-p { width: 76px; height: 94px; border-radius: 10px; background: #fbbf24; color: #2a1a00; font-size: 20px; font-weight: 500; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; }
+      .lh { font-family: "Instrument Serif", Georgia, serif; font-size: 168px; line-height: 1; letter-spacing: -0.03em; color: #ffffff; opacity: 0; }
+      .ls { font-size: 40px; color: #fbbf24; opacity: 0; }
+      .lu { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 24px; letter-spacing: 0.06em; color: #5eead4; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1920" data-height="1080">
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-grid"></div>
+        <div id="bg-glow"></div>
+      </div>
+
+      <!-- ===== the world ===== -->
+      <div id="world" data-layout-allow-overflow data-layout-allow-occlusion>
+        <!-- a generic brokerage app: no name, no logo -->
+        <div id="phone" data-layout-allow-overlap>
+          <div class="scr" id="scr">
+            <div class="notch"></div>
+            <div class="sb"><span>9:41</span><span class="sbi"><i style="height:7px"></i><i style="height:10px"></i><i style="height:13px"></i><i style="height:16px"></i></span></div>
+            <div class="apphead"><span class="ttl">Portfolio</span><span class="pav">MO</span></div>
+            <div class="tot"><small>Total value</small><b>$41,227.20</b><span class="pos">+$389.52 · 0.95% today</span></div>
+            <svg class="spark" width="362" height="66" viewBox="0 0 362 66" aria-hidden="true"><path d="M0 52 L30 48 L58 54 L88 40 L118 44 L146 30 L176 36 L206 26 L236 32 L266 18 L296 24 L326 12 L362 8" fill="none" stroke="#34d399" stroke-width="3" stroke-linejoin="round" /></svg>
+            <div class="lhead"><span>Holdings</span><span>6</span></div>
+            <div class="prow"><span class="pic k1">A</span><div class="pn"><b>AAPL</b><small>40 shares</small></div><div class="pv"><b>$9,044.00</b><small class="pos">+1.2%</small></div></div>
+            <div class="prow"><span class="pic k2">M</span><div class="pn"><b>MSFT</b><small>12 shares</small></div><div class="pv"><b>$5,023.20</b><small class="neg">-0.4%</small></div></div>
+            <div class="prow"><span class="pic k3">N</span><div class="pn"><b>NVDA</b><small>60 shares</small></div><div class="pv"><b>$7,908.00</b><small class="pos">+2.9%</small></div></div>
+            <div class="prow"><span class="pic k4">J</span><div class="pn"><b>JNJ</b><small>25 shares</small></div><div class="pv"><b>$3,810.00</b><small class="neg">-0.3%</small></div></div>
+            <div class="prow"><span class="pic k5">B</span><div class="pn"><b>BAC</b><small>150 shares</small></div><div class="pv"><b>$5,970.00</b><small class="pos">+0.6%</small></div></div>
+            <div class="prow"><span class="pic k6">V</span><div class="pn"><b>VT</b><small>80 shares</small></div><div class="pv"><b>$9,472.00</b><small class="pos">+0.5%</small></div></div>
+            <div class="tabs"><span>Home</span><span class="on">Portfolio</span><span>Markets</span><span>Account</span></div>
+          </div>
+        </div>
+
+        <!-- the Equity Pulse upload form -->
+        <div id="up" data-layout-allow-overlap>
+          <div class="uphead">
+            <span class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#02131a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6" /></svg></span>
+            <b>Equity Pulse</b><span class="muted">New report</span>
+          </div>
+          <div class="lab">Portfolio screenshot</div>
+          <div class="drop">
+            <div id="dslot"></div>
+            <div class="dtext"><span id="d-empty">Drop a screenshot here</span><span id="d-file"><b>portfolio.png</b><small>1 screenshot · ready</small></span></div>
+          </div>
+          <div class="lab">Send report to</div>
+          <div class="field">maya.okafor@example.com</div>
+          <div class="tog"><span class="sw"><i></i></span><div><b>Review before sending</b><small>An advisor signs off in Google Sheets</small></div></div>
+          <div id="analyse"><span id="an-a">Analyse portfolio</span><span id="an-b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>Uploaded · batch EP-2041</span></div>
+        </div>
+
+        <!-- the analysis board -->
+        <div id="board" data-layout-allow-overlap>
+          <div id="slot"></div>
+          <div id="tcol">
+            <div class="bhead">
+              <span class="btitle">Batch EP-2041</span><span id="bcount">6 holdings read</span>
+              <span class="chips"><span class="chip" id="chip1">GPT-4o Vision</span><span class="chip" id="chip2">Yahoo Finance</span><span class="chip" id="chip3">Graham fair value</span><span class="chip" id="chip4">Beta risk</span></span>
+            </div>
+            <div id="tbl">
+              <div class="th"><div class="c-hold">Holding</div><div class="c-isin">ISIN</div><div class="c-sh">Shares</div><div class="c-px">Price</div><div class="c-fv">Fair value</div><div class="c-risk">Beta risk</div><div class="c-ver">Verdict</div></div>
+              <div class="trow"><div class="c-hold"><b>AAPL</b><small>Apple Inc.</small></div><div class="c-isin">US0378331005</div><div class="c-sh">40</div><div class="c-px"><span class="sk"></span><span class="v">$226.10</span></div><div class="c-fv"><span class="sk"></span><span class="v">$92.70</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot no"></i>1.18 Normal</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb up">Above fair value</span></span></div></div>
+              <div class="trow"><div class="c-hold"><b>MSFT</b><small>Microsoft Corp.</small></div><div class="c-isin">US5949181045</div><div class="c-sh">12</div><div class="c-px"><span class="sk"></span><span class="v">$418.60</span></div><div class="c-fv"><span class="sk"></span><span class="v">$196.40</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot no"></i>1.05 Normal</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb up">Above fair value</span></span></div></div>
+              <div class="trow"><div class="c-hold"><b>NVDA</b><small>NVIDIA Corp.</small></div><div class="c-isin">US67066G1040</div><div class="c-sh">60</div><div class="c-px"><span class="sk"></span><span class="v">$131.80</span></div><div class="c-fv"><span class="sk"></span><span class="v">$38.10</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot hi"></i>1.72 High</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb up">Above fair value</span></span></div></div>
+              <div class="trow"><div class="c-hold"><b>JNJ</b><small>Johnson &amp; Johnson</small></div><div class="c-isin">US4781601046</div><div class="c-sh">25</div><div class="c-px"><span class="sk"></span><span class="v">$152.40</span></div><div class="c-fv"><span class="sk"></span><span class="v">$171.30</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot lo"></i>0.52 Low</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb dn">Below fair value</span></span></div></div>
+              <div class="trow"><div class="c-hold"><b>BAC</b><small>Bank of America</small></div><div class="c-isin">US0605051046</div><div class="c-sh">150</div><div class="c-px"><span class="sk"></span><span class="v">$39.80</span></div><div class="c-fv"><span class="sk"></span><span class="v">$52.60</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot hi"></i>1.31 High</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb dn">Below fair value</span></span></div></div>
+              <div class="trow"><div class="c-hold"><b>VT</b><small>Vanguard Total World</small></div><div class="c-isin">US9220427424</div><div class="c-sh">80</div><div class="c-px"><span class="sk"></span><span class="v">$118.40</span></div><div class="c-fv"><span class="sk"></span><span class="v">n/a</span></div><div class="c-risk"><span class="sk"></span><span class="v"><i class="dot lo"></i>0.98 Low</span></div><div class="c-ver"><span class="sk"></span><span class="v"><span class="vb na">ETF, not scored</span></span></div></div>
+            </div>
+            <div id="fnote">Fair value = <span class="rt">√</span>(22.5 × EPS × Book value) × 1.15</div>
+            <div id="review">
+              <span class="rtag">REVIEW MODE</span>
+              <span class="rtext">Approve to write the report.</span>
+              <span class="ghost">Edit in Sheets</span>
+              <div id="approve"><span id="ap-a">Approve</span><span id="ap-b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#02131a" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>Approved</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="shot" data-layout-allow-overlap><div id="shot-in"></div><div id="flash"></div></div>
+        <div id="scan" data-layout-allow-occlusion><div id="scanbar"></div><div class="hl"></div><div class="hl"></div><div class="hl"></div><div class="hl"></div><div class="hl"></div><div class="hl"></div></div>
+
+        <div id="tap"></div>
+        <div id="cursor"><svg viewBox="0 0 26 34" width="30" height="38" aria-hidden="true"><path d="M2 2 L23 18 L13 20 L18 31 L13.5 33 L8.5 22 L2 28 Z" fill="#ffffff" stroke="#02131a" stroke-width="2" stroke-linejoin="round" /></svg></div>
+      </div>
+
+      <!-- ===== screen-space layers ===== -->
+      <div id="cap">
+        <div class="capl" id="cap1">Your broker shows prices.</div>
+        <div class="capl" id="cap2">Not answers.</div>
+      </div>
+
+      <div id="mail" data-layout-allow-overflow>
+        <div class="mwin" data-layout-allow-overlap data-layout-allow-occlusion>
+          <div class="mbar"><span>Inbox</span><span class="new">1 new</span></div>
+          <div class="mhd"><span class="mav">EP</span><div><b>Equity Pulse</b><small>to maya.okafor@example.com</small></div><span class="mtime">now</span></div>
+          <div class="msubj">Your portfolio report is ready</div>
+          <div class="mbody">Hi Maya, your report is attached. Reviewed before sending.</div>
+          <div id="matt"><span class="pdfic">PDF</span><div><b>Portfolio report, Maya Okafor.pdf</b><small>PDF attachment</small></div></div>
+        </div>
+        <div id="mcap">Under 10 minutes in direct mode.</div>
+      </div>
+
+      <div id="preview" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div class="back"></div>
+        <div class="page" id="page" data-layout-allow-overlap data-layout-allow-occlusion>
+          <div class="rp-head">
+            <div class="rp-eye">EQUITY PULSE · PORTFOLIO REPORT</div>
+            <div class="rp-title">Portfolio review</div>
+            <div class="rp-sub">Prepared for Maya Okafor · 20 October 2026</div>
+            <div class="rp-tiles">
+              <div><b>6</b><span>Holdings</span></div>
+              <div><b>$41,227</b><span>Total value</span></div>
+              <div><b>2</b><span>Below fair value</span></div>
+              <div><b>2</b><span>High risk by beta</span></div>
+            </div>
+          </div>
+          <div class="rp-body">
+            <div class="rp-h">Summary <span class="rp-tag">Written by GPT-4o-mini</span></div>
+            <div class="rp-p">Three of your five stocks trade above their Graham fair value, NVIDIA furthest of all. Johnson &amp; Johnson and Bank of America trade below it. Two holdings carry high risk by beta: NVIDIA and Bank of America. Your world ETF is not scored on fair value.</div>
+            <div class="rp-h">Price vs fair value</div>
+            <div class="rp-tbl">
+              <div class="rr h"><span>Holding</span><span>Price</span><span>Fair value</span><span>Analysts</span><span>Verdict</span></div>
+              <div class="rr"><b>AAPL</b><span>$226.10</span><span>$92.70</span><span>Buy</span><span><span class="pp pup">Above</span></span></div>
+              <div class="rr"><b>MSFT</b><span>$418.60</span><span>$196.40</span><span>Strong buy</span><span><span class="pp pup">Above</span></span></div>
+              <div class="rr"><b>NVDA</b><span>$131.80</span><span>$38.10</span><span>Strong buy</span><span><span class="pp pup">Above</span></span></div>
+              <div class="rr"><b>JNJ</b><span>$152.40</span><span>$171.30</span><span>Hold</span><span><span class="pp pdn">Below</span></span></div>
+              <div class="rr"><b>BAC</b><span>$39.80</span><span>$52.60</span><span>Buy</span><span><span class="pp pdn">Below</span></span></div>
+              <div class="rr"><b>VT</b><span>$118.40</span><span>n/a</span><span>n/a</span><span><span class="pp pna">ETF</span></span></div>
+            </div>
+            <div class="rp-h">Risk by beta</div>
+            <div class="rp-risk">
+              <div class="rk"><span>Low <small>β below 1.0</small></span><span class="rb"><span class="rf" style="display:block;background:#14b8a6"></span></span><b>2</b></div>
+              <div class="rk"><span>Normal <small>β 1.0 to 1.2</small></span><span class="rb"><span class="rf" style="display:block;background:#94a3b8"></span></span><b>2</b></div>
+              <div class="rk"><span>High <small>β above 1.2</small></span><span class="rb"><span class="rf" style="display:block;background:#f43f5e"></span></span><b>2</b></div>
+            </div>
+            <div class="rp-foot">Illustrative report. Fictional portfolio, not investment advice.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="under" data-layout-allow-overflow>
+        <img src="assets/img/flow.png" alt="" />
+        <div class="ucap">
+          <div class="ueye" id="u-eye">UNDER THE HOOD</div>
+          <div class="uh" id="u-h">An n8n loop enriches every holding.</div>
+          <div class="us" id="u-s">Zero manual data pulls.</div>
+        </div>
+      </div>
+
+      <div id="end">
+        <div class="lock">
+          <div id="l-ic">
+            <div class="mini-s"><i></i><i></i><i></i><i></i><i></i></div>
+            <svg width="54" height="24" viewBox="0 0 54 24" fill="none" stroke="#5eead4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h46M38 3l10 9-10 9" /></svg>
+            <div class="mini-p">PDF</div>
+          </div>
+          <div class="lh" id="l-h">Equity Pulse</div>
+          <div class="ls" id="l-s">Screenshot in. Advisor-grade PDF out.</div>
+          <div class="lu" id="l-u">musaabjaved.com</div>
+        </div>
+      </div>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-9-by-ende-dot-app.mp3" data-start="0" data-duration="25" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="sfx-shot" src="assets/sfx/interface/click_003.ogg" data-start="2.62" data-track-index="11" data-volume="0.65"></audio>
+      <audio id="sfx-land" src="assets/sfx/interface/drop_001.ogg" data-start="4.2" data-track-index="12" data-volume="0.6"></audio>
+      <audio id="sfx-analyse" src="assets/sfx/interface/click_003.ogg" data-start="4.75" data-track-index="13" data-volume="0.7"></audio>
+      <audio id="sfx-verdict" src="assets/sfx/interface/drop_002.ogg" data-start="10.54" data-track-index="14" data-volume="0.6"></audio>
+      <audio id="sfx-approve" src="assets/sfx/interface/click_003.ogg" data-start="12.65" data-track-index="15" data-volume="0.7"></audio>
+      <audio id="sfx-mail" src="assets/sfx/interface/drop_001.ogg" data-start="16.32" data-track-index="16" data-volume="0.55"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="23.17" data-track-index="17" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      document.fonts.ready.then(() => {
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+        // ---- the travelling screenshot is a copy of the phone screen ----
+        const copy = $("#scr").cloneNode(true);
+        copy.removeAttribute("id");
+        $("#shot-in").appendChild(copy);
+
+        // ---- measure in world coordinates (before any transform is applied) ----
+        const world = $("#world");
+        const wr = world.getBoundingClientRect();
+        const k = wr.width / 1920;
+        const boxEl = (el) => {
+          const r = el.getBoundingClientRect();
+          return { x: (r.left - wr.left) / k, y: (r.top - wr.top) / k, w: r.width / k, h: r.height / k };
+        };
+        const box = (sel) => boxEl($(sel));
+        const ph = box("#phone"), up = box("#up"), scr = box("#scr"), dsl = box("#dslot");
+        const sl = box("#slot"), bd = box("#board"), col3 = box("#tbl .th .c-sh");
+        const an = box("#analyse"), ap = box("#approve");
+        const rows = $$("#scr .prow").map(boxEl);
+
+        // camera: point (fx, fy) in world coords lands at screen centre, at scale s
+        const cam = (fx, fy, s) => ({ x: 960 - fx * s, y: 540 - fy * s, scale: s });
+        const K0 = cam(ph.x + ph.w / 2 + 400 / 1.35, scr.y - 8 + 400, 1.35); // macro on the phone: header to last holding, phone left of centre
+        const K1 = cam((ph.x + up.x + up.w) / 2, ph.y + ph.h / 2, 1.0); // the desk: phone + upload form
+        const ocrL = sl.x - 50, ocrR = col3.x + col3.w + 60;
+        const sO = Math.min(1.3, 1920 / (ocrR - ocrL), 1040 / (sl.h + 60));
+        const K2 = cam((ocrL + ocrR) / 2, sl.y + sl.h / 2, sO); // screenshot + the first three columns
+        const sB = Math.min(1, 1840 / bd.w, 1040 / bd.h);
+        const K3 = cam(bd.x + bd.w / 2, bd.y + bd.h / 2, sB); // the whole board
+        const move = (from, to, t, d, ease) => tl.fromTo(world, { ...from }, { ...to, duration: d, ease, immediateRender: false }, t);
+        tl.set(world, { ...K0, opacity: 1 }, 0);
+        move(K0, K1, 3.7, 0.8, "power3.inOut"); // strong cue 3.70
+        move(K1, K2, 5.2, 0.75, "power2.inOut");
+        move(K2, K3, 7.75, 0.6, "power2.inOut");
+
+        // ---- ambient ----
+        tl.fromTo("#bg-grid", { y: 0 }, { y: -64, duration: 25, ease: "none" }, 0);
+
+        // ---- hook ----
+        tl.fromTo("#cap1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 0.35);
+        tl.fromTo("#cap2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 1.59);
+        tl.fromTo("#cap", { opacity: 1 }, { opacity: 0, duration: 0.28, ease: "power2.in", immediateRender: false }, 3.4);
+
+        // ---- the screenshot: flash, thumbnail, into the form, on to the board ----
+        const S0 = { x: scr.x, y: scr.y, scale: 1 };
+        const thS = 0.3;
+        const S1 = { x: scr.x + 22, y: scr.y + scr.h * (1 - thS) - 22, scale: thS };
+        const S2 = { x: dsl.x, y: dsl.y, scale: dsl.w / scr.w };
+        const S3 = { x: sl.x, y: sl.y, scale: sl.w / scr.w };
+        tl.set("#shot", { ...S0 }, 0);
+        tl.fromTo("#shot", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, 2.62);
+        tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.9, duration: 0.06, ease: "none" }, 2.62);
+        tl.fromTo("#flash", { opacity: 0.9 }, { opacity: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 2.7);
+        tl.fromTo("#shot", { ...S0 }, { ...S1, duration: 0.5, ease: "power3.inOut", immediateRender: false }, 2.78);
+        tl.fromTo("#shot", { ...S1 }, { ...S2, duration: 0.52, ease: "power2.inOut", immediateRender: false }, 3.7);
+        tl.fromTo("#shot", { ...S2 }, { ...S3, duration: 0.72, ease: "power2.inOut", immediateRender: false }, 5.22);
+
+        // ---- the upload form ----
+        tl.fromTo("#up", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45 }, 3.72);
+        tl.fromTo("#d-empty", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 4.12);
+        tl.fromTo("#d-file", { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.35 }, 4.28);
+
+        // ---- cursor clicks Analyse ----
+        const anC = { x: an.x + an.w * 0.62, y: an.y + an.h / 2 };
+        tl.set("#cursor", { x: anC.x + 260, y: anC.y + 170, scale: 1, opacity: 0 }, 0);
+        tl.set("#tap", { opacity: 0 }, 0);
+        tl.fromTo("#cursor", { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, 4.25);
+        tl.fromTo("#cursor", { x: anC.x + 260, y: anC.y + 170 }, { x: anC.x, y: anC.y, duration: 0.4, ease: "power2.inOut", immediateRender: false }, 4.3);
+        tl.fromTo("#cursor", { scale: 1 }, { scale: 0.86, duration: 0.07, ease: "power2.in", immediateRender: false }, 4.7);
+        tl.fromTo("#cursor", { scale: 0.86 }, { scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, 4.77);
+        tl.fromTo("#tap", { x: anC.x - 12, y: anC.y - 12, opacity: 0.9, scale: 0.4 }, { x: anC.x - 12, y: anC.y - 12, opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, 4.75);
+        tl.fromTo("#an-a", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 4.8);
+        tl.fromTo("#an-b", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 4.82);
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 5.05);
+
+        // ---- OCR: the scan line reads the screenshot row by row (half beats) ----
+        const kk = sl.w / scr.w;
+        const map = (b) => ({ x: sl.x + (b.x - scr.x) * kk, y: sl.y + (b.y - scr.y) * kk, w: b.w * kk, h: b.h * kk });
+        const ROWT = [6.08, 6.34, 6.6, 6.86, 7.13, 7.4];
+        $$(".hl").forEach((el, i) => {
+          const m = map(rows[i]);
+          el.style.left = `${m.x + 4}px`; el.style.top = `${m.y + 2}px`; el.style.width = `${m.w - 8}px`; el.style.height = `${m.h - 4}px`;
+        });
+        const r0 = map(rows[0]), r5 = map(rows[5]);
+        const c0 = r0.y + r0.h / 2, c5 = r5.y + r5.h / 2;
+        const vy = (c5 - c0) / (ROWT[5] - ROWT[0]);
+        $("#scanbar").style.left = `${sl.x}px`;
+        tl.fromTo("#scanbar", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 5.93);
+        tl.fromTo("#scanbar", { y: c0 - vy * 0.15 }, { y: c5 + vy * 0.15, duration: ROWT[5] - ROWT[0] + 0.3, ease: "none" }, ROWT[0] - 0.15);
+        tl.fromTo("#scanbar", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 7.6);
+        tl.fromTo("#chip1", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 5.93);
+        const hls = $$(".hl"), trs = $$("#tbl .trow");
+        ROWT.forEach((t, i) => {
+          tl.fromTo(hls[i], { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, t);
+          tl.fromTo(hls[i], { opacity: 1 }, { opacity: 0.35, duration: 0.3, immediateRender: false }, t + 0.12);
+          tl.fromTo(trs[i], { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.3 }, t + 0.04);
+        });
+        tl.fromTo(hls, { opacity: 0.35 }, { opacity: 0, duration: 0.3, immediateRender: false }, 7.75);
+        tl.fromTo("#bcount", { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.35 }, 7.66);
+
+        // ---- enrichment fills the table, column by column, on the beat ----
+        const col = (cls, t, ease) => {
+          tl.fromTo(`#tbl .trow .${cls} .sk`, { opacity: 1 }, { opacity: 0, duration: 0.15, stagger: 0.05, immediateRender: false }, t);
+          tl.fromTo(`#tbl .trow .${cls} .v`, { opacity: 0, y: 8, scale: 1 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, stagger: 0.05, ease: ease || "power3.out" }, t);
+        };
+        col("c-px", 8.44);
+        tl.fromTo("#chip2", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 8.44);
+        col("c-fv", 8.96);
+        tl.fromTo("#chip3", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 8.96);
+        tl.fromTo("#fnote", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4 }, 9.05);
+        col("c-risk", 9.5);
+        tl.fromTo("#chip4", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 9.5);
+        tl.fromTo("#tbl .trow .c-ver .sk", { opacity: 1 }, { opacity: 0, duration: 0.15, stagger: 0.06, immediateRender: false }, 10.54);
+        tl.fromTo("#tbl .trow .c-ver .v", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.06, ease: "back.out(2)" }, 10.54); // verdicts on 10.54
+
+        // ---- review mode: the advisor approves ----
+        tl.fromTo("#review", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 11.06);
+        const apC = { x: ap.x + ap.w * 0.55, y: ap.y + ap.h / 2 };
+        tl.fromTo("#cursor", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 11.6);
+        tl.fromTo("#cursor", { x: apC.x + 280, y: apC.y + 150 }, { x: apC.x, y: apC.y, duration: 0.75, ease: "power2.inOut", immediateRender: false }, 11.65);
+        tl.fromTo("#cursor", { scale: 1 }, { scale: 0.86, duration: 0.07, ease: "power2.in", immediateRender: false }, 12.6);
+        tl.fromTo("#cursor", { scale: 0.86 }, { scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, 12.67);
+        tl.fromTo("#tap", { x: apC.x - 12, y: apC.y - 12, opacity: 0.9, scale: 0.4 }, { x: apC.x - 12, y: apC.y - 12, opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, 12.65); // strong cue 12.65
+        tl.fromTo("#ap-b", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 12.68);
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 12.95);
+
+        // ---- the report unfolds out of Approve, reads, folds into the email ----
+        const apS = { x: apC.x * K3.scale + K3.x, y: apC.y * K3.scale + K3.y };
+        const pg = box("#page");
+        const pageC = { x: pg.x + pg.w / 2, y: pg.y + pg.h / 2 };
+        const panY = -Math.max(0, pg.h + pg.y - 1030);
+        const fold = { x: apS.x - pageC.x, y: apS.y - pageC.y, scale: 0.12, opacity: 0 };
+        const att = box("#matt");
+        const into = { x: att.x + 40 - pageC.x, y: att.y + att.h / 2 - pageC.y, scale: 0.06, opacity: 0 };
+        tl.fromTo("#preview", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 12.95);
+        tl.fromTo("#page", { ...fold }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.55, ease: "power3.out" }, 12.95);
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 13.3);
+        tl.fromTo("#page", { y: 0 }, { y: panY, duration: 2.2, ease: "sine.inOut", immediateRender: false }, 13.6);
+        tl.fromTo("#mail", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 15.85);
+        tl.fromTo("#preview .back", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, 15.9);
+        tl.fromTo("#page", { x: 0, y: panY, scale: 1, opacity: 1 }, { ...into, duration: 0.4, ease: "power3.in", immediateRender: false }, 15.94);
+        tl.fromTo("#matt", { scale: 0.95 }, { scale: 1, duration: 0.45, ease: "back.out(2.5)", immediateRender: false }, 16.32); // drop_001 at 16.32
+        tl.fromTo("#mcap", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45 }, 16.35);
+
+        // ---- pan down below the inbox to the workflow ----
+        tl.fromTo("#mail", { y: 0 }, { y: -1100, duration: 0.6, ease: "power3.in", immediateRender: false }, 18.7);
+        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 18.96);
+        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 19.4);
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 19.6);
+        tl.fromTo("#u-s", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 20.35);
+        tl.fromTo("#under img", { scale: 1 }, { scale: 1.04, duration: 3.7, ease: "none" }, 18.96);
+        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 22.4);
+
+        // ---- lockup: screenshot in, PDF out ----
+        tl.fromTo("#l-ic", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 22.75);
+        tl.fromTo("#l-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 23.17); // strong cue 23.17
+        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 23.38);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 23.6);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 1.8, ease: "sine.out" }, 23.17);
+
+        // ---- audio-reactive: bass breathes the teal glow ----
+        if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+          const glow = $("#bg-glow");
+          const fps = AUDIO_DATA.fps || 30;
+          const draw = (b) => { glow.style.opacity = (0.14 + b * 0.16).toFixed(3); };
+          for (let f = 0; f < AUDIO_DATA.totalFrames; f++) tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      });
+    </script>
+  </body>
+</html>

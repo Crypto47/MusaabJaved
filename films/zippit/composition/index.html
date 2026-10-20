@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Zippit: written once, in two languages</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-sans-400-normal-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 500; font-style: normal; src: url("assets/fonts/instrument-sans-500-normal-latin.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #030d06; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #f0fff4; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+      .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
+
+      /* ---------- background ---------- */
+      .bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, #061e0c 0%, #030d06 70%); }
+      #bg-glow { position: absolute; left: 260px; top: -300px; width: 1400px; height: 1400px; border-radius: 50%; background: radial-gradient(circle, rgba(74,222,128,0.42) 0%, rgba(74,222,128,0) 60%); opacity: 0.18; }
+
+      /* ---------- the world: one tall column the camera pans down ---------- */
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 6000px; transform-origin: 0 0; will-change: transform; }
+      #wgrid { position: absolute; left: -2000px; top: -1200px; width: 5920px; height: 8400px; background-image: linear-gradient(rgba(74,222,128,0.05) 1px, rgba(74,222,128,0) 1px), linear-gradient(90deg, rgba(74,222,128,0.05) 1px, rgba(74,222,128,0) 1px); background-size: 64px 64px; }
+
+      /* desk (section 0) */
+      #desk { position: absolute; left: 160px; top: 90px; width: 1600px; height: 900px; border-radius: 16px; overflow: hidden; background: #07170c; border: 1px solid rgba(134,239,172,0.18); box-shadow: 0 70px 140px -50px rgba(0,0,0,0.85), 0 0 0 1px rgba(74,222,128,0.08); }
+      .dtop { position: absolute; left: 0; top: 0; right: 0; height: 52px; background: #0b2414; border-bottom: 1px solid rgba(134,239,172,0.14); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+      .dtop b { font-weight: 500; font-size: 19px; color: #f0fff4; display: flex; align-items: center; gap: 10px; }
+      .dtop b i { width: 12px; height: 12px; border-radius: 3px; background: #4ade80; display: inline-block; }
+      .dtop span { font-size: 16px; color: #b6d9c0; }
+      .queue { position: absolute; left: 0; top: 52px; bottom: 0; width: 360px; border-right: 1px solid rgba(134,239,172,0.12); padding: 24px 20px; display: flex; flex-direction: column; gap: 12px; }
+      .lab { font-family: "IBM Plex Mono", monospace; font-size: 14px; letter-spacing: 0.14em; color: #86efac; }
+      .qi { border-radius: 10px; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(134,239,172,0.12); }
+      .qi b { display: block; font-weight: 500; font-size: 17px; line-height: 1.35; color: #e6f7ea; }
+      .qi span { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: "IBM Plex Mono", monospace; font-size: 13px; color: #a8cbb2; }
+      .qi.on { border-color: rgba(74,222,128,0.7); background: rgba(74,222,128,0.08); }
+      .qi.on span { color: #86efac; }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; display: inline-block; }
+
+      .paper { position: absolute; background: #f4f7f1; color: #0f1f14; border-radius: 12px; box-shadow: 0 40px 90px -30px rgba(0,0,0,0.7); display: flex; flex-direction: column; }
+      #doc { left: 384px; top: 76px; width: 792px; height: 800px; padding: 32px 40px 28px; }
+      .drow { display: flex; align-items: center; justify-content: space-between; }
+      .tag { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: #14532d; background: #dcefe0; border-radius: 6px; padding: 4px 10px; }
+      .stat { position: relative; display: grid; font-size: 16px; color: #1f5f36; }
+      .stat > span { grid-area: 1 / 1; display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+      .dhl { font-family: "Instrument Serif", Georgia, serif; font-size: 46px; line-height: 1.08; color: #0f1f14; margin-top: 18px; min-height: 100px; position: relative; }
+      #hl-ph { position: absolute; left: 0; top: 0; color: #8a978d; }
+      .caret { display: inline-block; width: 3px; height: 42px; background: #15803d; vertical-align: -6px; margin-left: 2px; }
+      .dmeta { display: flex; align-items: baseline; gap: 12px; margin-top: 12px; font-size: 17px; line-height: 1.4; color: #3f5146; }
+      .dmeta em { font-style: normal; font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.1em; color: #14532d; background: #dcefe0; border-radius: 4px; padding: 2px 6px; flex: 0 0 auto; }
+      .hr { height: 1px; background: #d5ddd2; margin: 20px 0 4px; }
+      .dh2 { font-family: "Instrument Serif", Georgia, serif; font-size: 31px; line-height: 1.15; color: #0f1f14; margin-top: 16px; }
+      .dp { font-size: 21px; line-height: 1.5; color: #1d2e22; margin-top: 8px; min-height: 63px; }
+      .cite { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 14px; line-height: 20px; color: #8a2c0d; background: #ffe2cc; border-radius: 4px; padding: 0 5px; margin: 0 2px; vertical-align: 3px; }
+      .sk { display: block; height: 12px; border-radius: 6px; background: #dbe3d8; margin-top: 11px; transform-origin: 0 50%; }
+      .checks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+      .ck { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #14532d; background: #e1f2e4; border: 1px solid #b9dcc1; border-radius: 999px; padding: 6px 13px 6px 7px; }
+      .ck i { width: 20px; height: 20px; border-radius: 50%; background: #16a34a; display: flex; align-items: center; justify-content: center; }
+      .review { margin-top: auto; padding-top: 18px; border-top: 1px solid #d5ddd2; display: flex; align-items: center; justify-content: space-between; }
+      .review .rl { font-size: 17px; color: #3f5146; }
+      .btn { position: relative; display: grid; border-radius: 9px; background: #15803d; color: #ffffff; font-size: 18px; font-weight: 500; }
+      .btn > span { grid-area: 1 / 1; padding: 11px 24px; display: flex; align-items: center; gap: 8px; justify-content: center; }
+
+      .rail { position: absolute; left: 1196px; top: 76px; width: 380px; display: flex; flex-direction: column; gap: 14px; }
+      .rail .sub { font-size: 15px; color: #a8cbb2; margin-top: -6px; }
+      .src { border-radius: 12px; padding: 15px 18px; background: rgba(255,255,255,0.04); border: 1px solid rgba(134,239,172,0.2); }
+      .src .r { display: flex; align-items: center; justify-content: space-between; }
+      .tool { font-family: "IBM Plex Mono", monospace; font-size: 13px; border-radius: 5px; padding: 2px 8px; }
+      .tool.px { color: #fdba74; background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.45); }
+      .tool.pc { color: #86efac; background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.45); }
+      .src .n { font-family: "IBM Plex Mono", monospace; font-size: 15px; color: #fdba74; }
+      .src .n.g { color: #86efac; }
+      .src b { display: block; font-weight: 500; font-size: 19px; line-height: 1.3; color: #f0fff4; margin-top: 10px; }
+      .src span.d { display: block; font-family: "IBM Plex Mono", monospace; font-size: 14px; color: #a8cbb2; margin-top: 6px; }
+
+      #cursor { position: absolute; left: 0; top: 0; width: 26px; height: 34px; opacity: 0; z-index: 20; }
+      #tap { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; border: 3px solid #4ade80; opacity: 0; z-index: 19; }
+
+      /* split (section 1) */
+      .scap { position: absolute; left: 0; width: 1920px; top: 1330px; text-align: center; font-family: "Instrument Serif", Georgia, serif; font-size: 64px; line-height: 1.1; color: #f0fff4; }
+      .card2 { left: 560px; top: 1470px; width: 800px; height: 430px; padding: 34px 42px; }
+      .card2 .dhl { font-size: 50px; min-height: 0; }
+      .card2 .dh2 { font-size: 32px; margin-top: 24px; }
+      .card2 .dp { font-size: 24px; min-height: 0; }
+      .card2 .hr { margin-top: 22px; }
+      #nl2 { z-index: 1; }
+      #en2 { z-index: 2; }
+
+      /* store (section 2) */
+      #store { position: absolute; left: 210px; top: 2490px; width: 1500px; height: 900px; border-radius: 14px; overflow: hidden; background: #fbfaf6; color: #13231a; box-shadow: 0 70px 140px -50px rgba(0,0,0,0.85); }
+      .chrome { height: 58px; background: #e9ece6; border-bottom: 1px solid #d3d8cf; display: flex; align-items: center; gap: 18px; padding: 0 20px; }
+      .dots { display: flex; gap: 8px; }
+      .dots i { width: 13px; height: 13px; border-radius: 50%; background: #c3c9bf; display: block; }
+      .url { display: flex; align-items: center; gap: 10px; width: 700px; height: 36px; border-radius: 8px; background: #ffffff; border: 1px solid #cfd6cb; padding: 0 14px; font-family: "IBM Plex Mono", monospace; font-size: 17px; color: #1f3326; }
+      #same { font-size: 20px; font-weight: 500; color: #ffffff; background: #15803d; border-radius: 999px; padding: 6px 14px; }
+      .nav { height: 76px; border-bottom: 1px solid #e3e6df; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; }
+      .nav .wm { font-family: "Instrument Serif", Georgia, serif; font-size: 36px; color: #13231a; }
+      .nav .links { display: flex; gap: 34px; font-size: 18px; color: #2f4436; }
+      .nav .links .act { color: #13231a; border-bottom: 2px solid #15803d; padding-bottom: 3px; }
+      .lang { position: relative; display: flex; width: 120px; height: 40px; border-radius: 999px; background: #e7ebe4; border: 1px solid #cfd6cb; font-family: "IBM Plex Mono", monospace; font-size: 16px; }
+      #knob { position: absolute; left: 3px; top: 3px; width: 56px; height: 32px; border-radius: 999px; background: #15803d; }
+      .lang span { position: relative; flex: 1 1 0; display: flex; align-items: center; justify-content: center; }
+      .page2 { display: flex; gap: 56px; padding: 44px 56px 0; }
+      .art { width: 900px; }
+      .swap { display: grid; }
+      .swap > * { grid-area: 1 / 1; }
+      .eyeb { font-family: "IBM Plex Mono", monospace; font-size: 15px; letter-spacing: 0.12em; color: #166534; }
+      .ahl { font-family: "Instrument Serif", Georgia, serif; font-size: 66px; line-height: 1.04; color: #13231a; margin-top: 12px; }
+      .by { font-size: 18px; color: #4b5d51; margin-top: 14px; }
+      .hero { height: 250px; border-radius: 12px; margin-top: 24px; position: relative; overflow: hidden; background: linear-gradient(160deg, #0c2a1a 0%, #123b2a 45%, #1b5a3c 100%); }
+      .hero .moon { position: absolute; right: 120px; top: 44px; width: 86px; height: 86px; border-radius: 50%; background: #f3efd8; box-shadow: 0 0 60px rgba(243,239,216,0.45); }
+      .hero .hill { position: absolute; left: -60px; right: -60px; bottom: -120px; height: 220px; border-radius: 50%; background: #0a2216; }
+      .ap { font-size: 24px; line-height: 1.5; color: #1f3326; margin-top: 22px; }
+      .side2 { width: 380px; padding-top: 6px; }
+      .side2 .h { font-family: "IBM Plex Mono", monospace; font-size: 15px; letter-spacing: 0.12em; color: #166534; }
+      .rel { border-top: 1px solid #e3e6df; padding: 16px 0; font-size: 20px; line-height: 1.35; color: #13231a; }
+      .rel:first-of-type { margin-top: 14px; }
+      #toast { position: absolute; right: 36px; bottom: 36px; display: flex; align-items: center; gap: 10px; background: #14532d; color: #f0fff4; font-size: 18px; font-weight: 500; border-radius: 10px; padding: 12px 18px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.4); }
+
+      /* calendar (section 3) */
+      .ccol { position: absolute; left: 150px; top: 3930px; width: 640px; }
+      .chd { font-family: "Instrument Serif", Georgia, serif; font-size: 82px; line-height: 1.02; color: #f0fff4; }
+      .csub { font-size: 34px; line-height: 1.3; color: #bfe6ca; margin-top: 26px; }
+      #cal { position: absolute; left: 860px; top: 3740px; width: 910px; }
+      .calh { display: flex; align-items: baseline; justify-content: space-between; }
+      .calh b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 44px; color: #f0fff4; }
+      .calh span { display: flex; align-items: center; gap: 16px; font-size: 16px; color: #bfe6ca; }
+      .lg { display: inline-flex; align-items: center; gap: 6px; }
+      .lg i { width: 18px; height: 8px; border-radius: 4px; display: inline-block; }
+      .wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin-top: 18px; font-family: "IBM Plex Mono", monospace; font-size: 15px; color: #a8cbb2; }
+      .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+      .cell { position: relative; height: 112px; border-radius: 10px; background: rgba(255,255,255,0.035); border: 1px solid rgba(134,239,172,0.16); padding: 10px 12px; }
+      .cell.empty { background: none; border-color: rgba(0,0,0,0); }
+      .cell.fut { border-style: dashed; border-color: rgba(134,239,172,0.22); background: none; }
+      .cell .num { font-family: "IBM Plex Mono", monospace; font-size: 16px; color: #d6f3de; }
+      .cell.fut .num { color: #8fb39a; }
+      .cell .bars { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
+      .cell .bars i { display: block; width: 100%; height: 9px; border-radius: 5px; transform-origin: 0 50%; }
+      .cell .bars i.a { background: #4ade80; }
+      .cell .bars i.b { background: #fb923c; }
+      .cell .glow { position: absolute; inset: -2px; border-radius: 11px; border: 2px solid #4ade80; box-shadow: 0 0 34px rgba(74,222,128,0.6); opacity: 0; }
+      .cell .tday { position: absolute; right: 10px; top: 10px; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #030d06; background: #4ade80; border-radius: 4px; padding: 1px 6px; }
+
+      /* workflow (section 4) */
+      #flowimg { position: absolute; left: 0; top: 5280px; width: 1920px; height: 570px; display: block; -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 14%, #000 86%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 14%, #000 86%, rgba(0,0,0,0) 100%); }
+      .ucap { position: absolute; left: 160px; top: 4990px; width: 1600px; display: flex; flex-direction: column; gap: 14px; }
+      .ueye { font-family: "IBM Plex Mono", monospace; font-size: 22px; letter-spacing: 0.18em; color: #86efac; }
+      .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 84px; line-height: 1.04; letter-spacing: -0.01em; color: #f0fff4; }
+
+      /* ---------- screen-space layers ---------- */
+      #ctx { position: absolute; left: 64px; top: 930px; display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-radius: 999px; background: rgba(3,13,6,0.86); border: 1px solid rgba(74,222,128,0.45); font-family: "IBM Plex Mono", monospace; font-size: 24px; color: #d6f3de; }
+
+      #end { position: absolute; inset: 0; }
+      .lock { position: absolute; left: 0; right: 0; top: 300px; display: flex; flex-direction: column; align-items: center; }
+      #efield { width: 1090px; border: 1px solid rgba(134,239,172,0.4); background: #071a0d; border-radius: 16px; padding: 22px 44px 26px; opacity: 0; }
+      .ename { font-family: "Instrument Serif", Georgia, serif; font-size: 124px; line-height: 1; letter-spacing: -0.02em; color: #ffffff; white-space: pre; min-width: 40px; min-height: 124px; }
+      #e-caret { display: inline-block; width: 4px; height: 100px; background: #4ade80; vertical-align: -10px; margin-left: 4px; }
+      #l-en { font-size: 40px; color: #f0fff4; margin-top: 26px; opacity: 0; }
+      #l-nl { font-size: 34px; color: #86efac; margin-top: 10px; opacity: 0; }
+      #l-u { font-family: "IBM Plex Mono", monospace; font-size: 24px; letter-spacing: 0.06em; color: #bfe6ca; margin-top: 34px; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1920" data-height="1080">
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-glow"></div>
+      </div>
+
+      <!-- ===== the world ===== -->
+      <div id="world" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div id="wgrid" data-layout-ignore></div>
+
+        <!-- section 0: the content desk -->
+        <div id="desk">
+          <div class="dtop"><b><i></i>Content desk</b><span>Zippit Journal &#183; EN + NL</span></div>
+          <div class="queue">
+            <div class="lab">TOPIC QUEUE</div>
+            <div class="qi on" id="q1"><b>Nose breathing at night: a beginner's guide</b><span><i class="dot"></i>Writing</span></div>
+            <div class="qi"><b>Why you wake up with a dry mouth</b><span>Today 14:00</span></div>
+            <div class="qi"><b>A wind-down routine that sticks</b><span>Tomorrow</span></div>
+            <div class="qi"><b>Sleeping well while travelling</b><span>Tomorrow</span></div>
+          </div>
+
+          <div class="paper" id="doc">
+            <div class="drow">
+              <span class="tag">Draft &#183; EN</span>
+              <span class="stat"><span id="st-w"><i class="dot"></i>Writing</span><span id="st-a" style="opacity:0"><i class="dot"></i>Approved</span></span>
+            </div>
+            <div class="dhl" id="hl"><span id="hl-ph">Headline</span><span id="hl-t"></span><span class="caret" id="hl-caret"></span></div>
+            <div class="dmeta" id="meta"><em>META</em><span>A calm, practical guide to breathing through your nose at night.</span></div>
+            <div class="hr"></div>
+            <div class="dh2" id="h2a">Why breathe through your nose?</div>
+            <div class="dp"><span id="pa"></span><span class="cite" id="c1">1</span><span id="pb"></span><span class="cite" id="c2">2</span></div>
+            <span class="sk" id="sk1" style="width:100%"></span>
+            <span class="sk" id="sk2" style="width:88%"></span>
+            <div class="dh2" id="h2b">A simple routine for tonight</div>
+            <span class="sk" id="sk3" style="width:96%"></span>
+            <span class="sk" id="sk4" style="width:58%"></span>
+            <div class="checks">
+              <span class="ck" id="ck1"><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></i>2 citations</span>
+              <span class="ck" id="ck2"><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></i>Brand voice grounded</span>
+              <span class="ck" id="ck3"><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></i>Internal links</span>
+              <span class="ck" id="ck4"><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></i>Meta description</span>
+            </div>
+            <div class="review">
+              <span class="rl">Review checkpoint</span>
+              <span class="btn" id="approve"><span id="b-1">Approve</span><span id="b-2" style="opacity:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>Approved</span></span>
+            </div>
+          </div>
+
+          <div class="rail">
+            <div class="lab">RESEARCH</div>
+            <div class="sub">Cited while it writes</div>
+            <div class="src" id="s1"><div class="r"><span class="tool px">Perplexity</span><span class="n">[1]</span></div><b>Nasal breathing during sleep: a review</b><span class="d">journal.example</span></div>
+            <div class="src" id="s2"><div class="r"><span class="tool px">Perplexity</span><span class="n">[2]</span></div><b>Breathing patterns in sleep, a primer</b><span class="d">sleep-research.example</span></div>
+            <div class="src" id="s3"><div class="r"><span class="tool pc">Pinecone</span><span class="n g">brand</span></div><b>Zippit brand voice and past posts</b><span class="d">brand store</span></div>
+          </div>
+        </div>
+
+        <div id="tap"></div>
+        <div id="cursor"><svg viewBox="0 0 26 34" width="26" height="34" aria-hidden="true"><path d="M2 2 L23 18 L13 20 L18 31 L13.5 33 L8.5 22 L2 28 Z" fill="#ffffff" stroke="#05130a" stroke-width="2" stroke-linejoin="round" /></svg></div>
+
+        <!-- section 1: the split -->
+        <div class="scap" id="scap">Written once, in two languages.</div>
+        <div class="paper card2" id="nl2" data-layout-allow-overlap>
+          <div class="drow"><span class="tag">Concept &#183; NL</span><span class="stat"><span><i class="dot"></i>Goedgekeurd</span></span></div>
+          <div class="dhl">Neusademhaling &#8217;s nachts: een beginnersgids</div>
+          <div class="hr"></div>
+          <div class="dh2">Waarom door je neus ademen?</div>
+          <div class="dp">Door je neus ademen tijdens het slapen is een gewoonte die je stap voor stap opbouwt.<span class="cite">1</span></div>
+          <span class="sk" style="width:94%"></span>
+          <span class="sk" style="width:70%"></span>
+        </div>
+        <div class="paper card2" id="en2" data-layout-allow-overlap>
+          <div class="drow"><span class="tag">Draft &#183; EN</span><span class="stat"><span><i class="dot"></i>Approved</span></span></div>
+          <div class="dhl">Nose breathing at night: a beginner's guide</div>
+          <div class="hr"></div>
+          <div class="dh2">Why breathe through your nose?</div>
+          <div class="dp">Nose breathing at night is a habit you can build, step by step.<span class="cite">1</span></div>
+          <span class="sk" style="width:94%"></span>
+          <span class="sk" style="width:70%"></span>
+        </div>
+
+        <!-- section 2: the store's blog -->
+        <div id="store">
+          <div class="chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f3326" stroke-width="2.2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>/blogs/journal/nose-breathing-at-night</div>
+            <span id="same">One URL, both languages.</span>
+          </div>
+          <div class="nav">
+            <span class="wm">Zippit</span>
+            <span class="links"><span>Shop</span><span>Sleep</span><span class="act">Journal</span></span>
+            <span class="lang" id="lang"><span id="knob"></span><span id="lg-en" style="color:#ffffff">EN</span><span id="lg-nl" style="color:#2f4436">NL</span></span>
+          </div>
+          <div class="page2">
+            <div class="art">
+              <div class="swap eyeb"><span class="en">JOURNAL &#183; 4 MIN READ</span><span class="nl">JOURNAL &#183; 4 MIN LEESTIJD</span></div>
+              <div class="swap ahl"><span class="en">Nose breathing at night: a beginner's guide</span><span class="nl">Neusademhaling &#8217;s nachts: een beginnersgids</span></div>
+              <div class="swap by"><span class="en">Zippit Journal &#183; October 20, 2026</span><span class="nl">Zippit Journal &#183; 20 oktober 2026</span></div>
+              <div class="hero" aria-hidden="true"><div class="moon"></div><div class="hill"></div></div>
+              <div class="swap ap"><span class="en">Nose breathing at night is a habit you can build, step by step.</span><span class="nl">Door je neus ademen tijdens het slapen is een gewoonte die je stap voor stap opbouwt.</span></div>
+            </div>
+            <div class="side2">
+              <div class="swap h"><span class="en">RELATED</span><span class="nl">GERELATEERD</span></div>
+              <div class="swap rel"><span class="en">Why you wake up with a dry mouth</span><span class="nl">Waarom je wakker wordt met een droge mond</span></div>
+              <div class="swap rel"><span class="en">A wind-down routine that sticks</span><span class="nl">Een avondroutine die je volhoudt</span></div>
+              <div class="swap rel"><span class="en">Sleeping well while travelling</span><span class="nl">Goed slapen op reis</span></div>
+            </div>
+          </div>
+          <div id="toast"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3.5" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>Published to the store blog</div>
+        </div>
+
+        <!-- section 3: the month -->
+        <div class="ccol">
+          <div class="chd" id="c-h">Two articles a day. Every day.</div>
+          <div class="csub" id="c-s">$50 to $100 a month in API costs.</div>
+        </div>
+        <div id="cal">
+          <div class="calh"><b>October 2026</b><span><span class="lg"><i style="background:#4ade80"></i>article 1</span><span class="lg"><i style="background:#fb923c"></i>article 2</span><span>EN + NL each</span></span></div>
+          <div class="wk"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+          <div class="grid" id="grid"></div>
+        </div>
+
+        <!-- section 4: under the hood -->
+        <img id="flowimg" src="assets/img/flow.png" alt="" />
+        <div class="ucap">
+          <div class="ueye" id="u-eye">UNDER THE HOOD</div>
+          <div class="uh" id="u-h">One pipeline. One human checkpoint.</div>
+        </div>
+      </div>
+
+      <!-- ===== screen-space layers ===== -->
+      <div id="ctx"><span class="dot" style="width:10px;height:10px"></span>06:00 &#183; First topic of the day</div>
+
+      <div id="end">
+        <div class="lock">
+          <div id="efield"><div class="ename"><span id="e-t"></span><span id="e-caret"></span></div></div>
+          <div id="l-en">Two SEO articles a day. Two languages.</div>
+          <div id="l-nl">Twee SEO-artikelen per dag. Twee talen.</div>
+          <div id="l-u">musaabjaved.com</div>
+        </div>
+      </div>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/zippit.mp3" data-start="0" data-duration="25" data-media-start="0.52" data-track-index="10" data-volume="0.32" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="sfx-src" src="assets/sfx/interface/drop_001.ogg" data-start="4.8" data-track-index="11" data-volume="0.55"></audio>
+      <audio id="sfx-approve" src="assets/sfx/interface/click_003.ogg" data-start="9.12" data-track-index="12" data-volume="0.7"></audio>
+      <audio id="sfx-split" src="assets/sfx/interface/drop_002.ogg" data-start="10.05" data-track-index="13" data-volume="0.55"></audio>
+      <audio id="sfx-lang" src="assets/sfx/interface/click_003.ogg" data-start="13.92" data-track-index="14" data-volume="0.65"></audio>
+      <audio id="sfx-today" src="assets/sfx/interface/drop_001.ogg" data-start="17.28" data-track-index="15" data-volume="0.55"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="22.56" data-track-index="16" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      // ---- the month grid (deterministic, built before measuring) ----
+      (() => {
+        const grid = document.getElementById("grid");
+        const lead = 3; // October 1, 2026 is a Thursday; the week starts on Monday
+        let html = "";
+        for (let i = 0; i < lead; i++) html += '<div class="cell empty"></div>';
+        for (let d = 1; d <= 31; d++) {
+          if (d <= 20) {
+            html += `<div class="cell" id="d${d}"><span class="num">${d}</span>` + (d === 20 ? '<span class="glow"></span><span class="tday">today</span>' : "") + '<span class="bars"><i class="a"></i><i class="b"></i></span></div>';
+          } else {
+            html += `<div class="cell fut"><span class="num">${d}</span></div>`;
+          }
+        }
+        grid.innerHTML = html;
+      })();
+
+      document.fonts.ready.then(() => {
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        const $ = (s) => document.querySelector(s);
+
+        // ---- measure in world coordinates (before any transform is applied) ----
+        const world = $("#world");
+        const wr = world.getBoundingClientRect();
+        const k = wr.width / 1920;
+        const box = (sel) => {
+          const r = $(sel).getBoundingClientRect();
+          return { x: (r.left - wr.left) / k, y: (r.top - wr.top) / k, w: r.width / k, h: r.height / k };
+        };
+        const hl = box("#hl");
+        const doc = box("#doc");
+        const ap = box("#approve");
+        const apC = { x: ap.x + ap.w / 2, y: ap.y + ap.h / 2 };
+
+        // camera: point (fx, fy) in world coords lands at screen centre, at scale s
+        const cam = (fx, fy, s) => ({ x: 960 - fx * s, y: 540 - fy * s, scale: s });
+        const K0 = cam(hl.x + 500, hl.y + 30, 1.8); // macro on the headline
+        const K1 = cam(960, 540, 1.0); // the whole desk
+        const rail = box(".rail");
+        const K2 = cam((doc.x + rail.x + rail.w) / 2, doc.y + doc.h / 2, 1.3); // draft + research rail
+        const KS = cam(960, 1640, 1.0); // the split
+        const KT = cam(960, 2940, 1.0); // the store
+        const KT2 = cam(960, 2920, 1.04);
+        const KC = cam(960, 4140, 1.0); // the month
+        const KF = cam(960, 5340, 1.0); // the workflow
+        const move = (from, to, t, d, ease) => tl.fromTo(world, { ...from }, { ...to, duration: d, ease, immediateRender: false }, t);
+        tl.set(world, { ...K0, opacity: 1 }, 0);
+        move(K0, K1, 3.84, 0.8, "power3.inOut"); // beat-locked: 3.84 pull out
+        move(K1, K2, 4.5, 0.7, "power2.inOut");
+        move(K2, KS, 9.6, 0.75, "power3.inOut"); // beat-locked: 9.60 split
+        move(KS, KT, 12.48, 0.75, "power3.inOut");
+        move(KT, KT2, 13.25, 2.05, "sine.inOut");
+        move(KT2, KC, 15.36, 0.75, "power3.inOut"); // beat-locked: 15.36 calendar
+        move(KC, KF, 19.2, 0.65, "power3.inOut"); // beat-locked: 19.20 workflow
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 21.3);
+
+        // ---- context strip ----
+        tl.fromTo("#ctx", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.4 }, 0.15);
+        tl.fromTo("#ctx", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 3.6);
+
+        // ---- the headline types itself ----
+        const H = "Nose breathing at night: a beginner's guide";
+        const ht = $("#hl-t");
+        const hs = { n: 0 };
+        tl.set("#hl-ph", { opacity: 1 }, 0);
+        tl.set("#hl-ph", { opacity: 0 }, 0.4);
+        tl.fromTo(hs, { n: 0 }, { n: H.length, duration: 2.2, ease: "none", onUpdate: () => { ht.textContent = H.slice(0, Math.round(hs.n)); } }, 0.4);
+        tl.set("#hl-caret", { opacity: 1 }, 0);
+        tl.set("#hl-caret", { opacity: 0 }, 3.84);
+
+        // ---- the draft fills: meta, research, body ----
+        tl.fromTo("#meta", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 2.75);
+        [["#s1", 4.8], ["#s2", 5.28], ["#s3", 5.76]].forEach(([id, t]) => { // beat grid; 5.76 strong
+          tl.fromTo(id, { opacity: 0, y: 18, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, t);
+        });
+        tl.fromTo("#h2a", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.7);
+        const A = "Nose breathing at night is a habit you can build, step by step.";
+        const B = " Start with a few calm minutes before bed.";
+        const pa = $("#pa"), pb = $("#pb");
+        const ps = { n: 0 };
+        const W0 = 5.95, WD = 1.5;
+        tl.fromTo(ps, { n: 0 }, { n: A.length + B.length, duration: WD, ease: "none", immediateRender: false, onUpdate: () => {
+          const n = Math.round(ps.n);
+          pa.textContent = A.slice(0, Math.min(n, A.length));
+          pb.textContent = B.slice(0, Math.max(0, n - A.length));
+        } }, W0);
+        const tA = W0 + (A.length / (A.length + B.length)) * WD;
+        tl.fromTo("#c1", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, tA);
+        tl.fromTo("#c2", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, W0 + WD);
+        // the cited sources light up as their markers land
+        tl.fromTo("#s1", { borderColor: "rgba(134,239,172,0.2)" }, { borderColor: "rgba(251,146,60,0.85)", duration: 0.25, immediateRender: false }, tA);
+        tl.fromTo("#s2", { borderColor: "rgba(134,239,172,0.2)" }, { borderColor: "rgba(251,146,60,0.85)", duration: 0.25, immediateRender: false }, W0 + WD);
+        [["#sk1", 6.55], ["#sk2", 6.75], ["#h2b", 6.95], ["#sk3", 7.1], ["#sk4", 7.25]].forEach(([id, t]) => {
+          if (id === "#h2b") tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+          else tl.fromTo(id, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.out" }, t);
+        });
+        [7.68, 7.83, 7.98, 8.13].forEach((t, i) => { // beat-locked: 7.68 checks
+          tl.fromTo(`#ck${i + 1}`, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t);
+        });
+
+        // ---- the one human checkpoint: cursor clicks Approve ----
+        tl.set("#cursor", { x: apC.x + 260, y: apC.y + 170, scale: 1, opacity: 0 }, 0);
+        tl.fromTo("#cursor", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 8.25);
+        tl.fromTo("#cursor", { x: apC.x + 260, y: apC.y + 170 }, { x: apC.x + 10, y: apC.y - 4, duration: 0.7, ease: "power2.inOut", immediateRender: false }, 8.3);
+        tl.fromTo("#cursor", { scale: 1 }, { scale: 0.86, duration: 0.08, ease: "power2.in", immediateRender: false }, 9.06);
+        tl.fromTo("#cursor", { scale: 0.86 }, { scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, 9.14);
+        tl.fromTo("#tap", { x: apC.x - 3, y: apC.y - 17, opacity: 0.9, scale: 0.4 }, { x: apC.x - 3, y: apC.y - 17, opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, 9.12); // click at 9.12
+        tl.fromTo("#b-1", { opacity: 1 }, { opacity: 0, duration: 0.15, immediateRender: false }, 9.12);
+        tl.fromTo("#b-2", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 9.15);
+        tl.fromTo("#st-w", { opacity: 1 }, { opacity: 0, duration: 0.15, immediateRender: false }, 9.15);
+        tl.fromTo("#st-a", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 9.2);
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 9.45);
+
+        // ---- the split: one article becomes two ----
+        tl.set("#nl2", { opacity: 0, x: 0 }, 0);
+        tl.set("#en2", { x: 0 }, 0);
+        tl.fromTo("#nl2", { opacity: 0 }, { opacity: 1, duration: 0.1, immediateRender: false }, 9.95);
+        tl.fromTo("#en2", { x: 0 }, { x: -430, duration: 0.65, ease: "power3.inOut", immediateRender: false }, 9.95);
+        tl.fromTo("#nl2", { x: 0 }, { x: 430, duration: 0.65, ease: "power3.inOut", immediateRender: false }, 9.95);
+        tl.fromTo("#scap", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 10.3);
+
+        // ---- published to the store's blog; same URL, other language ----
+        tl.set("#store .nl", { opacity: 0 }, 0);
+        tl.set("#store .en", { opacity: 1 }, 0);
+        tl.fromTo("#toast", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.6)" }, 13.0);
+        tl.fromTo("#knob", { x: 0 }, { x: 58, duration: 0.3, ease: "power2.inOut", immediateRender: false }, 13.92); // click at 13.92
+        tl.set("#knob", { x: 0 }, 0);
+        tl.fromTo("#lg-en", { color: "#ffffff" }, { color: "#2f4436", duration: 0.2, immediateRender: false }, 13.97);
+        tl.fromTo("#lg-nl", { color: "#2f4436" }, { color: "#ffffff", duration: 0.2, immediateRender: false }, 13.97);
+        tl.fromTo("#store .en", { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "power2.in", immediateRender: false }, 13.95);
+        tl.fromTo("#store .nl", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, 14.12);
+        tl.fromTo("#same", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.4 }, 14.1);
+
+        // ---- October fills: two articles a day ----
+        tl.fromTo("#c-h", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, 15.8);
+        tl.fromTo("#c-s", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 16.4);
+        for (let d = 1; d <= 20; d++) {
+          const t = 15.95 + (d - 1) * 0.062;
+          tl.fromTo(`#d${d} .bars i.a`, { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: "power2.out" }, t);
+          tl.fromTo(`#d${d} .bars i.b`, { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: "power2.out" }, t + 0.06);
+        }
+        tl.fromTo("#d20 .glow", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 17.28); // beat-locked: today
+        tl.fromTo("#d20", { scale: 1 }, { scale: 1.08, duration: 0.18, ease: "power2.out", immediateRender: false }, 17.28);
+        tl.fromTo("#d20", { scale: 1.08 }, { scale: 1, duration: 0.35, ease: "power2.inOut", immediateRender: false }, 17.46);
+        tl.fromTo("#d20 .tday", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 17.3);
+
+        // ---- under the hood ----
+        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 19.4);
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 19.55);
+        tl.fromTo("#flowimg", { scale: 1 }, { scale: 1.04, duration: 2.6, ease: "none" }, 19.2);
+
+        // ---- the headline field returns alone and types the name ----
+        const E = "Zippit AI Content Engine";
+        const et = $("#e-t");
+        const es = { n: 0 };
+        tl.fromTo("#efield", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, 21.6);
+        tl.fromTo(es, { n: 0 }, { n: E.length, duration: 0.8, ease: "none", immediateRender: false, onUpdate: () => { et.textContent = E.slice(0, Math.round(es.n)); } }, 21.75);
+        tl.fromTo("#efield", { borderColor: "rgba(134,239,172,0.4)", backgroundColor: "rgba(7,26,13,1)" }, { borderColor: "rgba(134,239,172,0)", backgroundColor: "rgba(7,26,13,0)", duration: 0.5, immediateRender: false }, 22.56);
+        tl.set("#e-caret", { opacity: 1 }, 0);
+        tl.set("#e-caret", { opacity: 0 }, 22.56);
+        tl.fromTo("#l-en", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 22.56); // impact at 22.56
+        tl.fromTo("#l-nl", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 23.04);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 23.4);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 2.4, ease: "sine.out" }, 22.56);
+
+        // ---- audio-reactive: bass breathes the green glow ----
+        if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+          const glow = $("#bg-glow");
+          const fps = AUDIO_DATA.fps || 30;
+          const draw = (b) => { glow.style.opacity = (0.12 + b * 0.16).toFixed(3); };
+          const n = Math.min(AUDIO_DATA.totalFrames, 750);
+          for (let f = 0; f < n; f++) tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      });
+    </script>
+  </body>
+</html>

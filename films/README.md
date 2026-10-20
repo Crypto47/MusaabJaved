@@ -1,10 +1,11 @@
 # Case-study films made with /brag + Hyperframes
 
-The Remotion films (`remotion/`) animate real n8n workflows. The two projects here
-are not workflows, so their card films were made with the
-[`/brag`](https://github.com/latent-spaces/brag) skill, which plans a 15–25s
-launch video and renders it with [Hyperframes](https://github.com/heygen-com/hyperframes)
-(HTML + GSAP → MP4 through headless Chrome).
+Every card film on the portfolio is now a Hyperframes film
+([Hyperframes](https://github.com/heygen-com/hyperframes): HTML + GSAP → MP4 through headless Chrome).
+The first two were planned with the [`/brag`](https://github.com/latent-spaces/brag) skill. The workflow
+projects (Dossier Bot, Equity Pulse, Excelr8, Zippit) used to have Remotion films (`remotion/`) that only
+animated the n8n graph; their Hyperframes films show the product in use and keep one frame of that graph
+for a short "under the hood" beat.
 
 ```
 films/
@@ -16,6 +17,10 @@ films/
     composition/          the Hyperframes project: index.html + assets/
   chai-kahan/             same layout
   dossier-bot/            same layout; concept.md is the timing table (also in ~/Documents/Code/VIDEOS/concepts)
+  equity-pulse/           same as dossier-bot (music: brag vol. 9)
+  excelr8/                same as dossier-bot (music: public/audio/excelr8.mp3, data-media-start 4.23)
+  zippit/                 same as dossier-bot (music: public/audio/zippit.mp3, data-media-start 0.52)
+  krownai/                frames the app's own one-take film (assets/video/, not committed)
 ```
 
 ## Regenerate a film
@@ -23,7 +28,7 @@ films/
 Needs Node 22+, FFmpeg on PATH, and the brag skill installed (`~/.claude/skills/brag`).
 
 ```bash
-# 1. music is not committed — copy the track named in composition-brief.md
+# 1. music is not committed: copy the track named in composition-brief.md or concept.md
 cp ~/.claude/skills/brag/assets/music/<track>.mp3 films/<slug>/composition/assets/music/
 
 # 2. gate, then render
@@ -40,7 +45,7 @@ ffmpeg -y -i brag.mp4 -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -c:a aa
   ../../public/projects/<slug>/<slug>.mp4
 ```
 
-Poster timestamps used: Arabic OCR 14.6s (the word-error counter, settled), Chai Kahan 10.6s (the needle still points), Dossier Bot 8.0s (the agent's tool calls in the thread).
+Poster timestamps used: Arabic OCR 14.6s (the word-error counter, settled), Chai Kahan 10.6s (the needle still points), Dossier Bot 8.0s (the agent's tool calls in the thread), Equity Pulse 11.55s (every verdict in the table), Excelr8 11.0s (enriched table with the warm-lead card), Zippit 11.5s (the English and Dutch drafts side by side). Web copies of the workflow films use `scale=1280:-2` at crf 27, audio 96k.
 
 Authoring rule learned on Dossier Bot: the renderer seeks frames out of order across workers, so every exit tween is a `fromTo` with `immediateRender: false`, never a bare `tl.to`.
 

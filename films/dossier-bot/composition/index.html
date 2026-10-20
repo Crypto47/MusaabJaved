@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Dossier Bot: the real thread</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0716; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: #d1d2d3; font-family: "Lato", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+      /* ---------- background ---------- */
+      .bg { position: absolute; inset: 0; pointer-events: none; }
+      #bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(167,139,250,0.07) 1px, rgba(167,139,250,0) 1px), linear-gradient(90deg, rgba(167,139,250,0.07) 1px, rgba(167,139,250,0) 1px); background-size: 64px 64px; }
+      #bg-glow { position: absolute; left: 260px; top: -260px; width: 1400px; height: 1400px; border-radius: 50%; background: radial-gradient(circle, rgba(124,92,230,0.55) 0%, rgba(124,92,230,0) 60%); opacity: 0.22; }
+
+      /* ---------- the world (everything the camera moves over) ---------- */
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; will-change: transform; }
+      #win { position: absolute; left: 160px; top: 90px; width: 1600px; height: 900px; border-radius: 16px; overflow: hidden; background: #1a1d21; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 70px 140px -50px rgba(0,0,0,0.8), 0 0 0 1px rgba(167,139,250,0.1); }
+      .topbar { position: absolute; left: 0; top: 0; right: 0; height: 44px; background: #2a1a45; display: flex; align-items: center; justify-content: center; }
+      .search { width: 520px; height: 28px; border-radius: 7px; background: rgba(255,255,255,0.14); color: #ece7f8; font-size: 15px; display: flex; align-items: center; gap: 8px; padding-left: 12px; }
+
+      .side { position: absolute; left: 0; top: 44px; bottom: 0; width: 260px; background: #1f1433; color: #e2dbf1; padding-top: 16px; }
+      .ws { font-size: 20px; font-weight: 700; color: #ffffff; padding: 0 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .sec { font-size: 14px; color: #c6bce0; padding: 18px 18px 6px; letter-spacing: 0.02em; }
+      .ch { font-size: 17px; padding: 5px 18px; color: #e2dbf1; display: flex; align-items: center; gap: 10px; }
+      .ch.active { background: #6d4fc2; color: #ffffff; font-weight: 700; }
+      .ch .dot { width: 10px; height: 10px; border-radius: 50%; background: #2bac76; }
+      .ch .app { width: 18px; height: 18px; border-radius: 5px; background: #7c5ce6; }
+
+      .main { position: absolute; left: 260px; top: 44px; right: 0; bottom: 0; }
+      .chhead { height: 60px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: baseline; gap: 14px; padding: 18px 24px 0; }
+      .chhead b { font-size: 20px; color: #ffffff; }
+      .chhead span { font-size: 15px; color: #b4b6ba; }
+      .msgs { position: absolute; left: 0; right: 0; top: 60px; bottom: 124px; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 24px 4px; }
+      .day { display: flex; align-items: center; gap: 12px; color: #b4b6ba; font-size: 14px; font-weight: 700; padding: 6px 0; }
+      .day::before, .day::after { content: ""; flex: 1 1 0; height: 1px; background: rgba(255,255,255,0.12); }
+      .msg { display: flex; gap: 14px; padding: 9px 0; max-width: 760px; }
+      .av { width: 44px; height: 44px; flex: 0 0 auto; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 17px; }
+      .av.am { background: #c2416b; }
+      .av.oh { background: #1f7a6c; }
+      .av.bot { background: #7c5ce6; }
+      .av svg { width: 24px; height: 24px; }
+      .mhead { font-size: 17px; font-weight: 700; color: #ffffff; }
+      .mhead .t { font-size: 14px; font-weight: 400; color: #b4b6ba; margin-left: 8px; }
+      .mhead .tag { font-size: 11px; font-weight: 700; color: #d9ccff; background: rgba(167,139,250,0.22); border-radius: 3px; padding: 1px 5px; margin-left: 6px; vertical-align: 2px; }
+      .mtext { font-size: 18px; line-height: 1.45; color: #dcdddf; }
+      .mention { background: rgba(167,139,250,0.24); color: #e4dbff; border-radius: 4px; padding: 0 3px; }
+      .replies { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 15px; font-weight: 700; color: #c9b8ff; }
+      .replies .mini { width: 22px; height: 22px; border-radius: 5px; background: #7c5ce6; }
+
+      .composer { position: absolute; left: 24px; right: 24px; bottom: 22px; height: 88px; border: 1px solid rgba(255,255,255,0.26); border-radius: 10px; background: #222529; padding: 14px 18px; }
+      .ctext { position: relative; font-size: 20px; line-height: 28px; color: #eeeef0; white-space: pre; }
+      #c-ph { position: absolute; left: 0; top: 0; color: #a3a5a9; }
+      #c-caret { display: inline-block; width: 2px; height: 24px; background: #ffffff; vertical-align: -5px; margin-left: 1px; }
+      .send { position: absolute; right: 14px; bottom: 12px; width: 34px; height: 30px; border-radius: 6px; background: #2bac76; display: flex; align-items: center; justify-content: center; }
+
+      /* thread pane */
+      .thread { position: absolute; left: 1080px; top: 44px; bottom: 0; width: 520px; background: #1a1d21; border-left: 1px solid rgba(255,255,255,0.14); }
+      .thead { height: 60px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: baseline; gap: 10px; padding: 18px 20px 0; }
+      .thead b { font-size: 20px; color: #ffffff; }
+      .thead span { font-size: 15px; color: #b4b6ba; }
+      .tbody { padding: 10px 20px; display: flex; flex-direction: column; }
+      .tbody .msg { max-width: 480px; }
+      .tbody .av { width: 36px; height: 36px; font-size: 14px; }
+      .tbody .av svg { width: 20px; height: 20px; }
+      .rule { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #b4b6ba; padding: 4px 0; }
+      .rule::after { content: ""; flex: 1 1 0; height: 1px; background: rgba(255,255,255,0.12); }
+      .st { display: flex; align-items: center; gap: 10px; font-size: 16px; color: #dcdddf; padding: 4px 0; width: 410px; }
+      .st .ico { position: relative; width: 18px; height: 18px; flex: 0 0 auto; }
+      .st .spin { position: absolute; inset: 1px; border-radius: 50%; border: 2px solid rgba(196,181,253,0.28); border-top-color: #c4b5fd; }
+      .st .chk { position: absolute; inset: 0; border-radius: 50%; background: #2bac76; display: flex; align-items: center; justify-content: center; opacity: 0; }
+      .st .txt { flex: 1 1 auto; }
+      .chip { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: #e4dbff; background: rgba(167,139,250,0.2); border: 1px solid rgba(167,139,250,0.35); border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+      .card { display: flex; align-items: center; gap: 14px; width: 400px; margin-top: 8px; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: #222529; }
+      .pdf { width: 38px; height: 46px; flex: 0 0 auto; border-radius: 5px; background: #fb7185; color: #2a0b14; font-size: 11px; font-weight: 900; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px; }
+      .card b { display: block; font-size: 16px; color: #ffffff; }
+      .card span { font-size: 14px; color: #b4b6ba; }
+
+      #cursor { position: absolute; left: 0; top: 0; width: 26px; height: 34px; opacity: 0; z-index: 20; }
+      #tap { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; border: 3px solid #c4b5fd; opacity: 0; z-index: 19; }
+
+      /* ---------- screen-space layers ---------- */
+      #ctx { position: absolute; left: 64px; top: 790px; display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-radius: 999px; background: rgba(11,7,22,0.82); border: 1px solid rgba(167,139,250,0.4); font-family: "IBM Plex Mono", monospace; font-size: 22px; color: #e4dbff; }
+      #ctx .dot { width: 10px; height: 10px; border-radius: 50%; background: #fb7185; }
+
+      #preview { position: absolute; inset: 0; opacity: 0; }
+      #preview .back { position: absolute; inset: 0; background: rgba(8,5,16,0.86); }
+      .page { position: absolute; left: 580px; top: 70px; width: 760px; height: 1250px; border-radius: 10px; background: #fbfaff; color: #1b1530; padding: 60px 72px; box-shadow: 0 60px 120px -30px rgba(0,0,0,0.8); }
+      .peye { font-family: "IBM Plex Mono", monospace; font-size: 15px; letter-spacing: 0.14em; color: #5b3fb0; }
+      .page h1 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 82px; line-height: 1; letter-spacing: -0.02em; color: #120d24; margin-top: 18px; }
+      .psub { font-size: 21px; color: #463d5e; margin-top: 10px; }
+      .page hr { border: 0; height: 2px; background: #e4def4; margin: 28px 0 8px; }
+      .page h2 { position: relative; display: inline-block; font-size: 26px; font-weight: 900; color: #120d24; margin-top: 26px; }
+      .page h2 .hl { position: absolute; left: -6px; right: -6px; bottom: 3px; height: 13px; background: rgba(167,139,250,0.42); z-index: 0; transform-origin: left center; }
+      .page h2 .ht { position: relative; z-index: 1; }
+      .page ul, .page ol { margin: 12px 0 0 26px; font-size: 21px; line-height: 1.5; color: #2b2442; }
+      .page li { margin-top: 6px; }
+      .quote { font-family: "Instrument Serif", Georgia, serif; font-size: 34px; line-height: 1.2; color: #2a1f4d; margin-top: 12px; }
+      .qmeta { font-size: 16px; color: #5a5270; margin-top: 6px; }
+      .pfoot { font-family: "IBM Plex Mono", monospace; font-size: 14px; color: #5a5270; margin-top: 40px; }
+
+      #under { position: absolute; inset: 0; }
+      #under img { position: absolute; left: 0; top: 400px; width: 1920px; height: 620px; display: block; }
+      .ucap { position: absolute; left: 160px; top: 110px; width: 1600px; display: flex; flex-direction: column; gap: 14px; }
+      .ueye { font-family: "IBM Plex Mono", monospace; font-size: 20px; letter-spacing: 0.18em; color: #c4b5fd; }
+      .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 72px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
+      .us { font-size: 30px; color: #ddd6f3; }
+
+      #end { position: absolute; inset: 0; }
+      .ebar { position: absolute; left: 560px; top: 470px; width: 800px; height: 100px; border: 1px solid rgba(255,255,255,0.3); border-radius: 14px; background: #222529; padding: 30px 28px; opacity: 0; }
+      .etext { font-size: 34px; line-height: 40px; color: #ffffff; white-space: pre; }
+      #e-caret { display: inline-block; width: 3px; height: 34px; background: #ffffff; vertical-align: -6px; margin-left: 2px; }
+      .lock { position: absolute; left: 0; right: 0; top: 330px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      .lh { font-family: "Instrument Serif", Georgia, serif; font-size: 168px; line-height: 1; letter-spacing: -0.03em; color: #ffffff; opacity: 0; }
+      .ls { font-size: 38px; color: #fb7185; opacity: 0; }
+      .lu { font-family: "IBM Plex Mono", monospace; font-size: 24px; letter-spacing: 0.06em; color: #c4b5fd; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1920" data-height="1080">
+      <div class="bg" aria-hidden="true" data-layout-ignore>
+        <div id="bg-grid"></div>
+        <div id="bg-glow"></div>
+      </div>
+
+      <!-- ===== the world ===== -->
+      <div id="world" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div id="win">
+          <div class="topbar"><div class="search">Search Northwind Sales</div></div>
+
+          <div class="side">
+            <div class="ws">Northwind Sales</div>
+            <div class="sec">Channels</div>
+            <div class="ch"># general</div>
+            <div class="ch"># pipeline</div>
+            <div class="ch active"># sales</div>
+            <div class="ch"># wins</div>
+            <div class="sec">Direct messages</div>
+            <div class="ch"><span class="dot"></span>Ayesha Malik</div>
+            <div class="ch"><span class="dot"></span>Omar Haddad</div>
+            <div class="sec">Apps</div>
+            <div class="ch"><span class="app"></span>Dossier Bot</div>
+          </div>
+
+          <div class="main">
+            <div class="chhead"><b># sales</b><span>Pipeline calls and prep</span></div>
+            <div class="msgs">
+              <div class="day">Today</div>
+              <div class="msg">
+                <div class="av am">AM</div>
+                <div><div class="mhead">Ayesha Malik<span class="t">9:12 AM</span></div>
+                <div class="mtext">Northwind call moved to 10. Sarah Chen is joining, their new Head of Ops.</div></div>
+              </div>
+              <div class="msg">
+                <div class="av oh">OH</div>
+                <div><div class="mhead">Omar Haddad<span class="t">9:14 AM</span></div>
+                <div class="mtext">Anyone know what she's focused on?</div></div>
+              </div>
+              <div class="msg" id="m-new">
+                <div class="av am">AM</div>
+                <div><div class="mhead">Ayesha Malik<span class="t">9:41 AM</span></div>
+                <div class="mtext"><span class="mention">@Dossier Bot</span> Sarah Chen, Head of Ops at Northwind</div>
+                <div class="replies" id="m-replies"><span class="mini"></span>1 reply</div></div>
+              </div>
+            </div>
+            <div class="composer" id="composer">
+              <div class="ctext"><span id="c-ph">Message #sales</span><span id="c-typed"><span id="c-m" class="mention"></span><span id="c-r"></span></span><span id="c-caret"></span></div>
+              <div class="send"><svg width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><path d="M3 20l18-8L3 4v6l12 2-12 2z" /></svg></div>
+            </div>
+          </div>
+
+          <div class="thread" id="thread">
+            <div class="thead"><b>Thread</b><span># sales</span></div>
+            <div class="tbody">
+              <div class="msg">
+                <div class="av am">AM</div>
+                <div><div class="mhead">Ayesha Malik<span class="t">9:41 AM</span></div>
+                <div class="mtext"><span class="mention">@Dossier Bot</span> Sarah Chen, Head of Ops at Northwind</div></div>
+              </div>
+              <div class="rule">1 reply</div>
+              <div class="msg" id="t-bot">
+                <div class="av bot"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" /><path d="M10 12h5M10 16h5" /></svg></div>
+                <div>
+                  <div class="mhead">Dossier Bot<span class="tag">APP</span><span class="t">9:41 AM</span></div>
+                  <div class="st" id="st1"><span class="ico"><span class="spin"></span><span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Checking for an existing dossier</span><span class="chip">dossier_bucket</span></div>
+                  <div class="st" id="st2"><span class="ico"><span class="spin"></span><span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Looking up Sarah Chen by name</span><span class="chip">search_by_name</span></div>
+                  <div class="st" id="st3"><span class="ico"><span class="spin"></span><span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Reading her profile and 12 posts</span><span class="chip">get_lead_posts</span></div>
+                  <div class="st" id="st4"><span class="ico"><span class="spin"></span><span class="chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span></span><span class="txt">Writing the briefing</span><span class="chip">generate_dossier</span></div>
+                  <div class="mtext" id="t-reply" style="margin-top:8px">Here's your briefing on Sarah Chen.</div>
+                  <div class="card" id="t-card"><div class="pdf">PDF</div><div><b>Sarah Chen, Northwind.pdf</b><span>3 pages · ready for the 10:00 call</span></div></div>
+                </div>
+              </div>
+              <div class="msg" id="t-omar">
+                <div class="av oh">OH</div>
+                <div><div class="mhead">Omar Haddad<span class="t">9:52 AM</span></div>
+                <div class="mtext"><span class="mention">@Dossier Bot</span> Sarah Chen</div></div>
+              </div>
+              <div class="msg" id="t-cache">
+                <div class="av bot"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" /><path d="M10 12h5M10 16h5" /></svg></div>
+                <div><div class="mhead">Dossier Bot<span class="tag">APP</span><span class="t">9:52 AM</span></div>
+                <div class="mtext">Already briefed this morning. Same file, no new work.</div>
+                <div style="margin-top:6px"><span class="chip">cache hit · 0 tool calls</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tap"></div>
+        <div id="cursor"><svg viewBox="0 0 26 34" width="26" height="34" aria-hidden="true"><path d="M2 2 L23 18 L13 20 L18 31 L13.5 33 L8.5 22 L2 28 Z" fill="#ffffff" stroke="#120d24" stroke-width="2" stroke-linejoin="round" /></svg></div>
+      </div>
+
+      <!-- ===== screen-space layers ===== -->
+      <div id="ctx"><span class="dot"></span>9:41 AM · Call with Northwind at 10:00</div>
+
+      <div id="preview" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div class="back"></div>
+        <div class="page" id="page">
+          <div class="peye">LEAD BRIEFING · NORTHWIND · FOR THE 10:00 CALL</div>
+          <h1>Sarah Chen</h1>
+          <div class="psub">Head of Operations at Northwind. Four months in the role.</div>
+          <hr />
+          <h2><span class="hl" id="hl1"></span><span class="ht">What she cares about right now</span></h2>
+          <ul>
+            <li>Cutting new-customer onboarding from six weeks to three</li>
+            <li>Hiring two operations leads before Q1</li>
+            <li>Wary of tools that need a rollout team</li>
+          </ul>
+          <h2><span class="hl" id="hl2"></span><span class="ht">From her recent posts</span></h2>
+          <div class="quote">“Every hand-off in onboarding is a place a customer waits.”</div>
+          <div class="qmeta">Posted 2 days ago</div>
+          <h2><span class="hl" id="hl3"></span><span class="ht">Openers for the call</span></h2>
+          <ol>
+            <li>Ask how the three-week onboarding target is tracking.</li>
+            <li>Bring up the hand-off post: where do customers wait longest?</li>
+            <li>Keep the demo to setup time. Skip the rollout plan.</li>
+          </ol>
+          <div class="pfoot">Page 1 of 3 · Generated by Dossier Bot</div>
+        </div>
+      </div>
+
+      <div id="under" data-layout-allow-overflow>
+        <img src="assets/img/flow.png" alt="" />
+        <div class="ucap">
+          <div class="ueye" id="u-eye">UNDER THE HOOD</div>
+          <div class="uh" id="u-h">Three n8n workflows and one agent with memory.</div>
+          <div class="us" id="u-s">Every night it briefs the top five leads before anyone asks.</div>
+        </div>
+      </div>
+
+      <div id="end">
+        <div class="ebar" id="ebar"><div class="etext"><span id="e-t"></span><span id="e-caret"></span></div></div>
+        <div class="lock">
+          <div class="lh" id="l-h">Dossier Bot</div>
+          <div class="ls" id="l-s">Lead briefings in Slack, ready before the call.</div>
+          <div class="lu" id="l-u">musaabjaved.com</div>
+        </div>
+      </div>
+
+      <!-- audio -->
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3" data-start="0" data-duration="25" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="sfx-send" src="assets/sfx/interface/click_003.ogg" data-start="3.7" data-track-index="11" data-volume="0.7"></audio>
+      <audio id="sfx-card" src="assets/sfx/interface/drop_001.ogg" data-start="9.5" data-track-index="12" data-volume="0.6"></audio>
+      <audio id="sfx-click" src="assets/sfx/interface/click_003.ogg" data-start="11.06" data-track-index="13" data-volume="0.7"></audio>
+      <audio id="sfx-cache" src="assets/sfx/interface/drop_001.ogg" data-start="16.86" data-track-index="14" data-volume="0.55"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="22.65" data-track-index="15" data-volume="0.6"></audio>
+    </div>
+
+    <script>
+      document.fonts.ready.then(() => {
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        const $ = (s) => document.querySelector(s);
+
+        // ---- measure in world coordinates (before any transform is applied) ----
+        const world = $("#world");
+        const wr = world.getBoundingClientRect();
+        const k = wr.width / 1920;
+        const box = (sel) => {
+          const r = $(sel).getBoundingClientRect();
+          return { x: (r.left - wr.left) / k, y: (r.top - wr.top) / k, w: r.width / k, h: r.height / k };
+        };
+        const card = box("#t-card");
+        const cache = box("#t-cache");
+        const cardC = { x: card.x + card.w / 2, y: card.y + card.h / 2 };
+
+        // camera: point (fx, fy) in world coords lands at screen centre, at scale s
+        const cam = (fx, fy, s) => ({ x: 960 - fx * s, y: 540 - fy * s, scale: s });
+        const K0 = cam(760, 900, 2.0); // macro on the composer
+        const K1 = cam(960, 540, 1.0); // the whole workspace
+        const K2 = cam(1800 - 960 / 1.5, 470, 1.5); // channel + thread, right edge on the window
+        const K3 = cam(Math.min(cardC.x, 1800 - 960 / 1.75), cardC.y, 1.75); // the briefing card
+        const K4 = cam(1800 - 960 / 1.5, Math.max(470, cache.y + cache.h + 40 - 360), 1.5); // the cache reply
+        const move = (from, to, t, d, ease) => tl.fromTo(world, { ...from }, { ...to, duration: d, ease, immediateRender: false }, t);
+        tl.set(world, { ...K0 }, 0);
+        move(K0, K1, 3.7, 0.85, "power3.inOut"); // beat-locked: 3.70 send
+        move(K1, K2, 5.0, 0.75, "power2.inOut");
+        move(K2, K3, 9.5, 0.6, "power2.inOut"); // beat-locked: 9.50 card
+        move(K3, K4, 15.3, 0.55, "power2.inOut");
+        move(K4, { ...K4, y: K4.y - 1600 }, 17.91, 0.6, "power3.in"); // beat-locked: 17.91 pan down
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 18.3);
+
+        // ---- ambient ----
+        tl.fromTo("#bg-grid", { y: 0 }, { y: -64, duration: 25, ease: "none" }, 0);
+
+        // ---- context strip ----
+        tl.fromTo("#ctx", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.4 }, 0.15);
+        tl.fromTo("#ctx", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 3.55);
+
+        // ---- composer: type the mention ----
+        const M = "@Dossier Bot";
+        const R = " Sarah Chen, Head of Ops at Northwind";
+        const cm = $("#c-m"), cr = $("#c-r");
+        const typed = { n: 0 };
+        const paint = () => {
+          const n = Math.round(typed.n);
+          cm.textContent = M.slice(0, Math.min(n, M.length));
+          cr.textContent = R.slice(0, Math.max(0, n - M.length));
+        };
+        tl.set("#c-ph", { opacity: 1 }, 0);
+        tl.set("#c-ph", { opacity: 0 }, 0.4);
+        tl.fromTo(typed, { n: 0 }, { n: M.length + R.length, duration: 3.0, ease: "none", onUpdate: paint }, 0.4);
+        tl.set("#c-typed", { opacity: 1 }, 0);
+        tl.set("#c-typed", { opacity: 0 }, 3.7);
+        tl.set("#c-ph", { opacity: 1 }, 3.7);
+        tl.set("#c-caret", { opacity: 1 }, 0);
+        tl.set("#c-caret", { opacity: 0 }, 3.7);
+
+        // ---- the message lands; the thread opens ----
+        tl.fromTo("#m-new", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35 }, 3.7);
+        tl.fromTo("#m-replies", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 4.7);
+        tl.fromTo("#thread", { x: 540 }, { x: 0, duration: 0.5, ease: "power3.out" }, 4.75);
+
+        // ---- the agent works: one status line per beat ----
+        tl.fromTo("#t-bot .mhead", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.55);
+        [5.8, 6.86, 7.91, 8.96].forEach((t, i) => { // beat-grid: 5.80 / 6.86 / 7.91 / 8.96
+          const id = `#st${i + 1}`;
+          tl.fromTo(id, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.3 }, t);
+          tl.fromTo(`${id} .spin`, { rotation: 0 }, { rotation: 540, duration: 0.75, ease: "none" }, t);
+          tl.fromTo(`${id} .spin`, { opacity: 1 }, { opacity: 0, duration: 0.15, immediateRender: false }, t + 0.72);
+          tl.fromTo(`${id} .chk`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.75);
+        });
+        tl.fromTo("#t-reply", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 9.5);
+        tl.fromTo("#t-card", { opacity: 0, y: 14, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 9.5); // drop_001 at 9.50
+
+        // ---- cursor opens the card ----
+        tl.set("#cursor", { x: cardC.x + 230, y: cardC.y + 150, scale: 1, opacity: 0 }, 0);
+        tl.fromTo("#cursor", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, 10.2);
+        tl.fromTo("#cursor", { x: cardC.x + 230, y: cardC.y + 150 }, { x: cardC.x + 40, y: cardC.y - 4, duration: 0.7, ease: "power2.inOut", immediateRender: false }, 10.3);
+        tl.fromTo("#cursor", { scale: 1 }, { scale: 0.86, duration: 0.08, ease: "power2.in", immediateRender: false }, 11.0);
+        tl.fromTo("#cursor", { scale: 0.86 }, { scale: 1, duration: 0.14, ease: "back.out(2)", immediateRender: false }, 11.08);
+        tl.fromTo("#tap", { x: cardC.x + 27, y: cardC.y - 17, opacity: 0.9, scale: 0.4 }, { x: cardC.x + 27, y: cardC.y - 17, opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, 11.06); // click at 11.06
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 11.4);
+
+        // ---- the PDF opens out of the card, reads, folds back ----
+        const cardScreen = { x: cardC.x * K3.scale + K3.x, y: cardC.y * K3.scale + K3.y };
+        const pageC = { x: 580 + 380, y: 70 + 625 };
+        const fold = { x: cardScreen.x - pageC.x, y: cardScreen.y - pageC.y, scale: 0.22, opacity: 0 };
+        tl.fromTo("#preview", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 11.3);
+        tl.fromTo("#page", { ...fold }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.55, ease: "power3.out" }, 11.3);
+        tl.fromTo("#page", { y: 0 }, { y: -290, duration: 2.6, ease: "sine.inOut", immediateRender: false }, 12.2);
+        [["#hl1", 12.65], ["#hl2", 13.7], ["#hl3", 14.76]].forEach(([id, t]) => { // beat-grid headings
+          tl.fromTo(id, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.out" }, t);
+        });
+        tl.fromTo("#page", { x: 0, y: -290, scale: 1, opacity: 1 }, { ...fold, duration: 0.4, ease: "power3.in", immediateRender: false }, 15.15);
+        tl.fromTo("#preview", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 15.3);
+        // the window sits out while the page is open, so nothing reads through the backdrop
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.2, immediateRender: false }, 11.62);
+        tl.fromTo(world, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, 15.15);
+
+        // ---- the second ask costs nothing ----
+        tl.fromTo("#t-omar", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35 }, 15.81);
+        tl.fromTo("#t-cache", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)" }, 16.86); // drop_001 at 16.86
+
+        // ---- pan down below the window to the workflow ----
+        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 18.2); // velocity-matched with the world exit
+        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 18.6);
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 18.85);
+        tl.fromTo("#u-s", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 19.9);
+        tl.fromTo("#under img", { scale: 1 }, { scale: 1.04, duration: 3.2, ease: "none" }, 18.2);
+        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 21.2);
+
+        // ---- the bar comes back alone and types the name ----
+        const E = "Dossier Bot";
+        const et = $("#e-t");
+        const etyped = { n: 0 };
+        tl.fromTo("#ebar", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, 21.4);
+        tl.fromTo(etyped, { n: 0 }, { n: E.length, duration: 0.9, ease: "none", onUpdate: () => { et.textContent = E.slice(0, Math.round(etyped.n)); } }, 21.6);
+        tl.fromTo("#ebar", { opacity: 1, y: 0, scale: 1 }, { opacity: 0, y: -30, scale: 0.9, duration: 0.3, ease: "power2.in", immediateRender: false }, 22.55);
+        tl.fromTo("#l-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 22.65); // beat-locked: 22.65 lockup
+        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 22.95);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 23.2);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 2.3, ease: "sine.out" }, 22.65);
+
+        // ---- audio-reactive: bass breathes the violet glow ----
+        if (window.AUDIO_DATA && AUDIO_DATA.frames) {
+          const glow = $("#bg-glow");
+          const fps = AUDIO_DATA.fps || 30;
+          const draw = (b) => { glow.style.opacity = (0.16 + b * 0.18).toFixed(3); };
+          for (let f = 0; f < AUDIO_DATA.totalFrames; f++) tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
+        }
+
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      });
+    </script>
+  </body>
+</html>

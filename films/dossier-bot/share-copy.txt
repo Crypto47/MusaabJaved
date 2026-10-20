@@ -1,0 +1,2 @@
+Mention a name in Slack, get a lead briefing back in the thread. Dossier Bot checks its cache, finds the lead, reads their recent posts and writes the PDF before the call.
+Built with n8n, a LangChain agent and Supabase.

@@ -15,6 +15,7 @@ films/
     brag.jpg              poster frame (baked as frame 0 of the render)
     composition/          the Hyperframes project: index.html + assets/
   chai-kahan/             same layout
+  dossier-bot/            same layout; concept.md is the timing table (also in ~/Documents/Code/VIDEOS/concepts)
 ```
 
 ## Regenerate a film
@@ -39,7 +40,9 @@ ffmpeg -y -i brag.mp4 -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -c:a aa
   ../../public/projects/<slug>/<slug>.mp4
 ```
 
-Poster timestamps used: Arabic OCR 14.6s (the word-error counter, settled), Chai Kahan 10.6s (the needle still points).
+Poster timestamps used: Arabic OCR 14.6s (the word-error counter, settled), Chai Kahan 10.6s (the needle still points), Dossier Bot 8.0s (the agent's tool calls in the thread).
+
+Authoring rule learned on Dossier Bot: the renderer seeks frames out of order across workers, so every exit tween is a `fromTo` with `immediateRender: false`, never a bare `tl.to`.
 
 `assets/music/audio-data.js` is the pre-extracted per-frame band data that drives the
 subtle audio-reactive glow; regenerate it with the `hyperframes-creative` skill's

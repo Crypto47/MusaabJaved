@@ -180,7 +180,9 @@
       .rp-foot { margin-top: 30px; padding-top: 18px; border-top: 1px solid #dfe8eb; text-align: center; font-size: 16px; color: #4d6a71; }
 
       #under { position: absolute; inset: 0; }
-      #under img { position: absolute; left: 0; top: 400px; width: 1920px; height: 620px; display: block; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 14%, #000000 86%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 14%, #000000 86%, rgba(0,0,0,0) 100%); }
+      /* the animated reveal clip; its last frame is held underneath it as a still once the clip ends */
+      #flowwrap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000000 58%, rgba(0,0,0,0) 100%); mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000000 58%, rgba(0,0,0,0) 100%); }
+      #flowhold, #flowvid { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; object-fit: cover; }
       .ucap { position: absolute; left: 160px; top: 120px; width: 1600px; display: flex; flex-direction: column; gap: 14px; }
       .ueye { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 20px; letter-spacing: 0.18em; color: #5eead4; }
       .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 80px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
@@ -198,7 +200,7 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="31.9" data-width="1920" data-height="1080">
       <div class="bg" aria-hidden="true" data-layout-ignore>
         <div id="bg-grid"></div>
         <div id="bg-glow"></div>
@@ -332,7 +334,10 @@
       </div>
 
       <div id="under" data-layout-allow-overflow>
-        <img src="assets/img/flow.png" alt="" />
+        <div id="flowwrap">
+          <img id="flowhold" src="assets/img/flow-end.png" alt="" />
+          <video id="flowvid" class="clip" src="assets/video/flow-reveal.mp4" data-start="20.55" data-duration="8" data-track-index="20" data-volume="0" muted playsinline></video>
+        </div>
         <div class="ucap">
           <div class="ueye" id="u-eye">UNDER THE HOOD</div>
           <div class="uh" id="u-h">An n8n loop enriches every holding.</div>
@@ -354,14 +359,14 @@
       </div>
 
       <!-- audio -->
-      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-9-by-ende-dot-app.mp3" data-start="0" data-duration="25" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-9-by-ende-dot-app.mp3" data-start="0" data-duration="31.9" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
       <audio id="sfx-shot" src="assets/sfx/interface/click_003.ogg" data-start="2.62" data-track-index="11" data-volume="0.65"></audio>
       <audio id="sfx-land" src="assets/sfx/interface/drop_001.ogg" data-start="4.2" data-track-index="12" data-volume="0.6"></audio>
       <audio id="sfx-analyse" src="assets/sfx/interface/click_003.ogg" data-start="4.75" data-track-index="13" data-volume="0.7"></audio>
       <audio id="sfx-verdict" src="assets/sfx/interface/drop_002.ogg" data-start="10.54" data-track-index="14" data-volume="0.6"></audio>
       <audio id="sfx-approve" src="assets/sfx/interface/click_003.ogg" data-start="12.65" data-track-index="15" data-volume="0.7"></audio>
       <audio id="sfx-mail" src="assets/sfx/interface/drop_001.ogg" data-start="16.32" data-track-index="16" data-volume="0.55"></audio>
-      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="23.17" data-track-index="17" data-volume="0.6"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="30.01" data-track-index="17" data-volume="0.6"></audio>
     </div>
 
     <script>
@@ -405,7 +410,7 @@
         move(K2, K3, 7.75, 0.6, "power2.inOut");
 
         // ---- ambient ----
-        tl.fromTo("#bg-grid", { y: 0 }, { y: -64, duration: 25, ease: "none" }, 0);
+        tl.fromTo("#bg-grid", { y: 0 }, { y: -80, duration: 31.9, ease: "none" }, 0);
 
         // ---- hook ----
         tl.fromTo("#cap1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, 0.35);
@@ -514,20 +519,20 @@
         tl.fromTo("#mcap", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45 }, 16.35);
 
         // ---- pan down below the inbox to the workflow ----
-        tl.fromTo("#mail", { y: 0 }, { y: -1100, duration: 0.6, ease: "power3.in", immediateRender: false }, 18.7);
-        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 18.96);
-        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 19.4);
-        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 19.6);
-        tl.fromTo("#u-s", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 20.35);
-        tl.fromTo("#under img", { scale: 1 }, { scale: 1.04, duration: 3.7, ease: "none" }, 18.96);
-        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 22.4);
+        tl.fromTo("#mail", { y: 0 }, { y: -1100, duration: 0.6, ease: "power3.in", immediateRender: false }, 19.22);
+        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 19.48); // lands 20.43
+        tl.fromTo("#flowwrap", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 20.55); // the clip starts on the beat after the pan lands
+        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 19.75);
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 26.85); // strong cue 26.85, as the pull-out lands (clip 5.0 to 6.4)
+        tl.fromTo("#u-s", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 27.38);
+        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 29.24);
 
         // ---- lockup: screenshot in, PDF out ----
-        tl.fromTo("#l-ic", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 22.75);
-        tl.fromTo("#l-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 23.17); // strong cue 23.17
-        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 23.38);
-        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 23.6);
-        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 1.8, ease: "sine.out" }, 23.17);
+        tl.fromTo("#l-ic", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 29.59);
+        tl.fromTo("#l-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7 }, 30.01); // strong cue 30.01
+        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 30.22);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 30.44);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 1.85, ease: "sine.out" }, 30.01);
 
         // ---- audio-reactive: bass breathes the teal glow ----
         if (window.AUDIO_DATA && AUDIO_DATA.frames) {

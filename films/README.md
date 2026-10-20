@@ -27,7 +27,10 @@ The "under the hood" beat in the four workflow films is a clip, not a still: the
 building itself left to right, rendered by the Remotion flow engine (`remotion/src/film/FlowReveal.tsx`,
 compositions `*Reveal` in the "Reveals" folder). The clips are not committed; before rendering one of
 those films, run `npm run render:reveals` in `remotion/`, which writes each to
-`films/<slug>/composition/assets/video/flow-reveal.mp4`.
+`films/<slug>/composition/assets/video/flow-reveal.mp4`. Equity Pulse, Excelr8 and Zippit hold the
+finished graph after the clip ends with a committed still of its last frame (`assets/img/flow-end.*`);
+if a clip changes, re-extract it with `ffmpeg -sseof -0.1 -i assets/video/flow-reveal.mp4 -frames:v 1 -update 1 assets/img/flow-end.png`
+(`.jpg` for Excelr8).
 
 ## Regenerate a film
 

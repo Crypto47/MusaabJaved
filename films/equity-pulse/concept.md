@@ -5,7 +5,7 @@ a spine, a timing table, one camera, music maths. It replaces the old Remotion c
 n8n workflow) at `portfolio-v2/public/projects/equity-pulse/equity-pulse.mp4`. Rendered with HyperFrames. Build lives
 in `portfolio-v2/films/equity-pulse/composition/`.
 
-Format: 1920×1080, 30 fps, 25.00 s = 750 frames. Poster: 11.55 s (the full table with verdicts and the review bar), baked as frame 0. Silent-safe: every beat reads with the sound off.
+Format: 1920×1080, 30 fps, 31.90 s = 957 frames. Poster: 11.55 s (the full table with verdicts and the review bar), baked as frame 0. Silent-safe: every beat reads with the sound off.
 
 ---
 
@@ -17,12 +17,13 @@ screenshot is the thing the camera follows: it shrinks to a thumbnail, flies int
 flies on to the analysis board, where a scan line reads it row by row and every holding lands in a table. The table
 grows the answers the broker never gave: price, Graham fair value, beta risk, and a verdict. An advisor approves it,
 the approval opens the PDF report, and the report folds into the investor's inbox as an attachment. Only then does
-the camera pan down below the inbox to the n8n loop that did the work. At the end the screenshot comes back alone,
+the camera pan down below the inbox to the n8n loop that did the work, which builds itself node by node in an
+8 s reveal clip (rendered from the old Remotion flow engine) and pulls out to the whole graph. At the end the screenshot comes back alone,
 flips into a PDF, and the name lands.
 
 Why this works for Equity Pulse: the product's whole promise is a transformation, "Screenshot in. Advisor-grade PDF
 out." The old film showed the pipeline and never the screenshot or the report. This one shows both ends and the
-table in between, and keeps the pipeline for a short "under the hood" beat.
+table in between, and keeps the pipeline for an "under the hood" beat that plays the workflow reveal start to finish.
 
 What we kept from Dossier: macro open on the input, the camera lands before every reveal, dead-still holds where the
 viewer reads, a screen-space document that opens out of a click and folds back into a smaller object, a pan down to
@@ -36,9 +37,12 @@ public identifiers. The report carries "Illustrative report. Fictional portfolio
 ## TIMING
 
 Music: "Happy Beats / Business Moves vol. 9" (ende.app, bundled with /brag), 114.84 BPM, beat 0.5225 s,
-bar 2.09 s. Strong cues locked: 3.70 (the screenshot leaves the phone), 12.65 (approve), 23.17 (lockup); the verdicts also land on the strong beat at 10.54.
+bar 2.09 s. Strong cues locked: 3.70 (the screenshot leaves the phone), 12.65 (approve), 26.85 (the workflow pull-out lands, headline), 30.01 (lockup); the verdicts also land on the
+strong beat at 10.54. Everything after the under-the-hood beat moved 6.84 s later than v1 (23.17 → 30.01). That is
+13 beats, not a whole number of bars: a whole-bar shift lands the lockup on 27.35 or 29.44, neither of which is a
+strong cue in the preset, while 30.01 is the strongest cue (1.00) in that stretch.
 Beat grid used for smaller entrances: 1.59, 2.65, 4.23, 4.75, 5.28, 6.08 to 7.40 (half beats), 8.44, 8.96, 9.50,
-11.06, 16.34, 18.96.
+11.06, 16.34, 19.48, 20.55, 27.38.
 
 ```
  t              beat                                   camera                              carries into the next beat
@@ -70,16 +74,26 @@ Beat grid used for smaller entrances: 1.59, 2.65, 4.23, 4.75, 5.28, 6.08 to 7.40
  12.95–15.94    the PDF unfolds from Approve: cover,   screen-space, slow pan down page    it folds into the email
                 AI-written summary, price vs fair
                 value table, risk by beta
- 15.85–18.70    email card; the page folds into the    dead still                          the inbox
+ 15.85–19.22    email card; the page folds into the    dead still                          the inbox
                 attachment (lands 16.32). Caption
                 16.35: "Under 10 minutes in
                 direct mode."
- 18.70          pan down below the inbox               mail rises out, workflow rises in   the workflow
-                                                       (18.96)
- 19.40–22.80    "Under the hood" + the enrichment loop dead still, slow push on the graph  the screenshot icon
- 22.75          screenshot → PDF icon pair             dead still                          the name
- 23.17          lockup (strong cue)                    (still)                             end
- 23.17–25.00    hold; music fades out over 1.5 s       (still)                             end
+ 19.22          pan down below the inbox               mail rises out; the beat rises in   the workflow
+                                                       19.48, lands 20.43
+ 19.75          eyebrow "UNDER THE HOOD" rides in      (still)                             (same)
+ 20.55–28.55    the reveal clip (flow-reveal.mp4,      the clip's own camera: glides       the graph
+                8.00 s) plays in full: the enrichment  behind the newest node, then pulls
+                graph builds node by node with node    out to the whole graph (clip 5.0
+                names                                  to 6.4 = 25.55 to 26.95)
+ 26.85          headline (strong cue) as the pull-out  (still)                             (same)
+                lands: "An n8n loop enriches every
+                holding."
+ 27.38          "Zero manual data pulls."              (still)                             (same)
+ 28.55–29.64    the clip's last frame holds as a still (still)                             the screenshot icon
+                (flow-end.png); the beat fades 29.24
+ 29.59          screenshot → PDF icon pair             dead still                          the name
+ 30.01          lockup (strong cue)                    (still)                             end
+ 30.01–31.90    hold; music fades out over 1.5 s       (still)                             end
 ```
 
 ## COPY (verbatim)
@@ -106,7 +120,9 @@ Beat grid used for smaller entrances: 1.59, 2.65, 4.23, 4.75, 5.28, 6.08 to 7.40
 - Caption: `Under 10 minutes in direct mode.` (the case study states the time for direct mode; this run went
   through review, so the caption names the mode)
 - Lockup icons: a phone screenshot, an arrow, a PDF tile
-- Under the hood: `UNDER THE HOOD` / `An n8n loop enriches every holding.` / `Zero manual data pulls.`
+- Under the hood: `UNDER THE HOOD` / `An n8n loop enriches every holding.` / `Zero manual data pulls.` (over the
+  reveal clip; its node names, such as Loop Over Items, Get Yahoo Quote, Get latest news, Parse News, Merge, come
+  from the real workflow)
 - Lockup: `Equity Pulse` / `Screenshot in. Advisor-grade PDF out.` / `musaabjaved.com`
 
 Numbers: the only product numbers are from the case study: "under 10 minutes" (direct mode, upload to report), the
@@ -115,7 +131,8 @@ Graham formula `√(22.5 × EPS × Book value) × 1.15`, the beta bands (Low bel
 
 ## DESIGN TOKENS
 
-From `EP_THEME` (`remotion/src/flow/theme.ts`), so the workflow frame from the old film sits seamlessly:
+From `EP_THEME` (`remotion/src/flow/theme.ts`), so the workflow reveal clip from the old flow engine sits seamlessly (its edges are
+feathered with a radial mask into the film's ground):
 page `#020c18`, alt ground `#041e30`, teal `#14b8a6` / `#5eead4`, label `#e6fffb`, amber headline `#fbbf24`,
 grid `rgba(20,184,166,0.06)`. Equity Pulse surfaces `#061a2b` with teal hairlines. The brokerage app is
 deliberately neutral (graphite `#0e1116`, white text, green `#34d399` / red `#f87171`) so it reads as "someone
@@ -126,8 +143,9 @@ Instrument Sans (UI), IBM Plex Mono (ISINs, formula, chips).
 ## AUDIO
 
 Bed at 0.30, fade out over the last 1.5 s. SFX (Kenney, CC0): click on the screenshot 2.65, soft drop when the
-thumbnail lands 4.23, click on Analyse 4.75, soft drop on the verdicts 10.54, click on Approve 12.65, soft drop when
-the PDF lands in the email 16.86, soft impact on the lockup 23.17. Nothing on the OCR rows: the half beats carry them.
+thumbnail lands 4.20, click on Analyse 4.75, soft drop on the verdicts 10.54, click on Approve 12.65, soft drop when
+the PDF lands in the email 16.32, soft impact on the lockup 30.01. The reveal clip is muted. The track is 113.6 s
+long, so the 31.9 s bed never runs out. Nothing on the OCR rows: the half beats carry them.
 Bass breathes the teal glow behind the scene.
 
 ## ACCEPTANCE

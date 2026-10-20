@@ -140,23 +140,25 @@
       #cap div { font-family: "Instrument Serif", Georgia, serif; font-size: 72px; line-height: 1.04; letter-spacing: -0.015em; color: #ffffff; }
       #cap #cap2 { color: #f0abfc; }
 
+      /* the n8n reveal clip, edges blended into the page */
+      #flowwrap { position: absolute; inset: 0; opacity: 0; -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, #000 7%, #000 93%, rgba(0,0,0,0) 100%), linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 12%, #000 88%, rgba(0,0,0,0) 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, #000 7%, #000 93%, rgba(0,0,0,0) 100%), linear-gradient(180deg, rgba(0,0,0,0) 0%, #000 12%, #000 88%, rgba(0,0,0,0) 100%); mask-composite: intersect; }
+      #flowvid, #flowhold { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
       #under { position: absolute; inset: 0; }
-      #under img { position: absolute; left: 0; top: 380px; width: 1920px; height: 620px; display: block; }
-      .ucap { position: absolute; left: 160px; top: 150px; width: 1600px; display: flex; flex-direction: column; gap: 16px; }
-      .ueye { font-family: "IBM Plex Mono", monospace; font-size: 22px; letter-spacing: 0.18em; color: #67e8f9; }
-      .uh { font-family: "Instrument Serif", Georgia, serif; font-size: 84px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
+      .ueye { position: absolute; left: 160px; top: 70px; font-family: "IBM Plex Mono", monospace; font-size: 22px; letter-spacing: 0.18em; color: #67e8f9; }
+      .uh { position: absolute; left: 160px; top: 200px; width: 1600px; font-family: "Instrument Serif", Georgia, serif; font-size: 84px; line-height: 1.04; letter-spacing: -0.02em; color: #ffffff; }
 
       #end { position: absolute; inset: 0; }
       .lock { position: absolute; left: 0; right: 0; top: 340px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
       #cell { position: relative; padding: 18px 56px 26px; border: 4px solid #22d3ee; background: rgba(34,211,238,0.06); opacity: 0; }
       #cell .hdl { position: absolute; right: -9px; bottom: -9px; width: 14px; height: 14px; background: #22d3ee; border: 2px solid #06050f; }
-      .lh { font-family: "Instrument Serif", Georgia, serif; font-size: 168px; line-height: 1; letter-spacing: -0.03em; color: #ffffff; }
+      .lh { font-family: "Instrument Serif", Georgia, serif; font-size: 168px; line-height: 1; letter-spacing: -0.03em; color: #ffffff; white-space: pre; }
+      #e-caret { display: inline-block; width: 5px; height: 128px; background: #22d3ee; vertical-align: -14px; margin-left: 6px; }
       .ls { font-family: "Instrument Serif", Georgia, serif; font-size: 52px; color: #f0abfc; opacity: 0; }
       .lu { font-family: "IBM Plex Mono", monospace; font-size: 24px; letter-spacing: 0.06em; color: #67e8f9; opacity: 0; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="24.5" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32.86" data-width="1920" data-height="1080">
       <div class="bg" aria-hidden="true" data-layout-ignore>
         <div id="bg-grid"></div>
         <div id="bg-glow"></div>
@@ -304,28 +306,29 @@
         <div id="cap2">Campaigns launch by hand.</div>
       </div>
 
+      <div id="flowwrap" data-layout-allow-overflow data-layout-ignore>
+        <img id="flowhold" src="assets/img/flow-end.jpg" alt="" />
+        <video id="flowvid" class="clip" src="assets/video/flow-reveal.mp4" data-start="19.15" data-duration="8.15" data-track-index="20" muted playsinline></video>
+      </div>
       <div id="under" data-layout-allow-overflow>
-        <img src="assets/img/flow.png" alt="" />
-        <div class="ucap">
-          <div class="ueye" id="u-eye">UNDER THE HOOD</div>
-          <div class="uh" id="u-h">n8n workflows, Apollo and Clay to HubSpot.</div>
-        </div>
+        <div class="ueye" id="u-eye">UNDER THE HOOD</div>
+        <div class="uh" id="u-h">n8n workflows, Apollo and Clay to HubSpot.</div>
       </div>
 
       <div id="end">
         <div class="lock">
-          <div id="cell"><div class="lh">Excelr8</div><span class="hdl"></span></div>
+          <div id="cell"><div class="lh"><span id="e-t">Excelr8</span><span id="e-caret"></span></div><span class="hdl"></span></div>
           <div class="ls" id="l-s">Campaign setup, hours down to minutes.</div>
           <div class="lu" id="l-u">musaabjaved.com</div>
         </div>
       </div>
 
       <!-- audio -->
-      <audio id="bgm" src="assets/music/excelr8.mp3" data-start="0" data-duration="24.5" data-media-start="4.23" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
+      <audio id="bgm" src="assets/music/excelr8.mp3" data-start="0" data-duration="32.86" data-media-start="4.23" data-track-index="10" data-volume="0.3" data-fade-out="1.5" data-timeline-role="music"></audio>
       <audio id="sfx-drop" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="4.65" data-track-index="11" data-volume="0.55"></audio>
       <audio id="sfx-warm" src="assets/sfx/interface/drop_001.ogg" data-start="9.9" data-track-index="12" data-volume="0.6"></audio>
       <audio id="sfx-click" src="assets/sfx/interface/click_003.ogg" data-start="13.56" data-track-index="13" data-volume="0.7"></audio>
-      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="21.38" data-track-index="14" data-volume="0.6"></audio>
+      <audio id="sfx-lock" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="29.68" data-track-index="14" data-volume="0.6"></audio>
     </div>
 
     <script>
@@ -385,11 +388,11 @@
         move(K2, K3, 9.3, 0.55, "power2.inOut"); // lands before the 9.90 warm reveal
         move(K3, K4, 11.7, 0.6, "power2.inOut");
         move(K4, K5, 16.1, 0.55, "power2.inOut"); // lands before the 16.68 roll-up
-        move(K5, { ...K5, y: K5.y - 1700 }, 18.0, 0.6, "power3.in");
-        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 18.35);
+        move(K5, { ...K5, y: K5.y - 1700 }, 18.55, 0.6, "power3.in");
+        tl.fromTo(world, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 18.9);
 
         // ---- ambient ----
-        tl.fromTo("#bg-grid", { y: 0 }, { y: -64, duration: 24.5, ease: "none" }, 0);
+        tl.fromTo("#bg-grid", { y: 0 }, { y: -88, duration: 32.86, ease: "none" }, 0);
 
         // ---- hook: the sheet and the problem ----
         tl.set("#win", { opacity: 0 }, 0);
@@ -496,25 +499,37 @@
         // panel closes, KPIs catch up
         tl.fromTo("#panel", { x: 0 }, { x: 600, duration: 0.45, ease: "power3.in", immediateRender: false }, 16.15);
 
-        // ---- 18.0 pan down below the window to the workflow ----
-        tl.fromTo("#under", { y: 1080, opacity: 1 }, { y: 0, opacity: 1, duration: 0.95, ease: "power3.out" }, 18.25);
-        tl.fromTo("#u-eye", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 18.55);
-        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 18.75);
-        tl.fromTo("#under img", { scale: 1 }, { scale: 1.04, duration: 3.0, ease: "none" }, 18.25);
-        tl.fromTo("#under", { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "power2.in", immediateRender: false }, 20.95);
+        // ---- 18.55 pan down below the window; the n8n reveal clip plays in full (19.15 to 27.30) ----
+        tl.fromTo("#u-eye", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6 }, 18.85);
+        tl.fromTo("#flowwrap", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 19.15); // clip lands as the pan lands
+        tl.set("#flowhold", { opacity: 0 }, 0);
+        tl.set("#flowhold", { opacity: 1 }, 27.1); // last frame of the clip holds after it ends
+        tl.fromTo("#u-h", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5 }, 24.5); // as the pull-out lands (clip 5.35 s)
+        tl.fromTo(["#flowwrap", "#under"], { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "power2.in", immediateRender: false }, 28.2);
 
-        // ---- 21.38 lockup in a selected cell ----
-        tl.fromTo("#cell", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6 }, 21.38); // beat-locked
-        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 21.7);
-        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 22.0);
-        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 3.0, ease: "sine.out" }, 21.38);
+        // ---- lockup: a selected cell types the name in the music break, the rest lands on the kick at 29.68 ----
+        const cellEl = $("#cell");
+        cellEl.style.width = cellEl.getBoundingClientRect().width / k + "px"; // fixed width, measured with the full name
+        const E = "Excelr8";
+        const et = $("#e-t");
+        et.textContent = "";
+        const etyped = { n: 0 };
+        tl.fromTo("#cell", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5 }, 28.6);
+        tl.fromTo(etyped, { n: 0 }, { n: E.length, duration: 0.6, ease: "none", onUpdate: () => { et.textContent = E.slice(0, Math.round(etyped.n)); } }, 28.8);
+        tl.set("#e-caret", { opacity: 1 }, 0);
+        tl.set("#e-caret", { opacity: 0 }, 29.68);
+        tl.fromTo("#cell", { boxShadow: "0 0 0px rgba(34,211,238,0)" }, { boxShadow: "0 0 90px rgba(34,211,238,0.55)", duration: 0.15, ease: "power2.out", immediateRender: false }, 29.68); // the kick after the break
+        tl.fromTo("#cell", { boxShadow: "0 0 90px rgba(34,211,238,0.55)" }, { boxShadow: "0 0 24px rgba(34,211,238,0.18)", duration: 0.9, ease: "power2.out", immediateRender: false }, 29.83);
+        tl.fromTo("#l-s", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 29.75);
+        tl.fromTo("#l-u", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 30.05);
+        tl.fromTo("#bg-glow", { scale: 1 }, { scale: 1.08, duration: 3.0, ease: "sine.out" }, 29.68);
 
         // ---- audio-reactive: bass breathes the cyan glow ----
         if (window.AUDIO_DATA && AUDIO_DATA.frames) {
           const glow = $("#bg-glow");
           const fps = AUDIO_DATA.fps || 30;
           const draw = (b) => { glow.style.opacity = (0.14 + b * 0.18).toFixed(3); };
-          const n = Math.min(AUDIO_DATA.totalFrames, Math.round(24.5 * fps));
+          const n = Math.min(AUDIO_DATA.totalFrames, Math.round(32.86 * fps));
           for (let f = 0; f < n; f++) tl.call(draw, [AUDIO_DATA.frames[f].bands[0]], f / fps);
         }
 

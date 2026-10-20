@@ -1,11 +1,17 @@
-# Excelr8 card film: "The spreadsheet row" (v1)
+# Excelr8 card film: "The spreadsheet row" (v1.1)
 
 Built on the shape of `../dossier-bot/concept.md` and `~/Documents/Code/VIDEOS/references/onetake-v8-concept.md`
 (a spine, a timing table, one camera, music maths), for the portfolio card at
 `portfolio-v2/public/projects/excelr8/excelr8.mp4`. Rendered with HyperFrames. It replaces the Remotion film,
 which only animated the n8n workflow graph. Build lives in `portfolio-v2/films/excelr8/composition/`.
 
-Format: 1920×1080, 30 fps, 24.50 s = 735 frames. Silent-safe: every beat reads with the sound off.
+Format: 1920×1080, 30 fps, 32.86 s = 986 frames. Silent-safe: every beat reads with the sound off.
+
+v1.1 (owner: the n8n flow "shows for a second and then is gone"): the still workflow frame is replaced by an
+animated reveal clip rendered with the old Remotion flow engine (`assets/video/flow-reveal.mp4`, 8.15 s, silent,
+gitignored, regenerated from the Remotion side). It plays in full: the graph builds node by node with names, then
+pulls out and holds lit, and its last frame (`assets/img/flow-end.jpg`) holds after the clip ends while the
+headline reads. Everything after the beat moved 4 bars later (+8.36 s).
 
 ---
 
@@ -16,8 +22,9 @@ a note that says "warm?? check LI". It is the first thing on screen, selected, i
 duplicate and a sticky note. The camera never cuts: it pulls out, the sheet drops into the Excelr8 dashboard on
 the music's drop, and the same row is cleaned up stage by stage (company data, titles, LinkedIn signals,
 qualification score). Post Radar flags it warm, a campaign fills itself in from what the enrichment found, one click
-launches it, HubSpot syncs, and the KPI strip catches up by itself. Then the camera drops below the window to the
-n8n workflow that did the work, and the lockup sits in a selected spreadsheet cell.
+launches it, HubSpot syncs, and the KPI strip catches up by itself. Then the camera drops below the window and the
+n8n workflow that did the work builds itself node by node. In the music's two-bar break a single selected
+spreadsheet cell types the name, and the lockup lands on the kick that ends the break.
 
 Why this works for Excelr8: the product is the distance between a messy row and a launched campaign. The old film
 showed the plumbing and never the dashboard. This one shows the row, the clean-up, the launch and the live numbers,
@@ -37,7 +44,12 @@ Music: `public/audio/excelr8.mp3` (Pixabay, LightBeatsMusic, "Joyful Rhythm Walk
 beat 0.5225 s, bar 2.09 s. Track intro is light until a 0.25 s gap at 8.54 and the full groove kicks in at
 **track 8.85**. `data-media-start = 4.23` (a beat), so the kick lands at **film 4.62** and the sheet drops into
 the dashboard on it. Film beat grid = track beats − 4.23: 0.00, 0.52, 1.04, 1.56 … 4.67, 5.20, 5.72 …
-Strong cues used (film): 9.90, 11.99 (beat), 13.56, 16.68 (beat), 18.25, 21.38 (beat).
+Strong cues used (film): 9.90, 11.99 (beat), 13.56, 16.68 (beat).
+The track has a near-silent two-bar break at track 31.81 to 33.85 (film 27.58 to 29.62) and the groove comes back
+with a kick at track 33.90 = **film 29.68**. The v1 lockup sat at 21.38; the clip needs about 8 s more, and a
+3-bar shift (27.65) would land the lockup at the start of the break, so the shift is **4 bars (+8.36 s)**, which
+puts the lockup on the kick after the break (21.38 + 8.36 = 29.74 on the grid, 29.68 measured). The break
+itself carries the typing. Track used: 4.23 to 37.09 of 138.29 s.
 
 ```
  t              beat                                   camera                              carries into the next beat
@@ -52,7 +64,7 @@ Strong cues used (film): 9.90, 11.99 (beat), 13.56, 16.68 (beat), 18.25, 21.38 (
  5.72–9.30      enrichment, one stage per beat-pair:   dead still                          the score column
                 company data 5.72, titles 6.76,
                 LinkedIn signals 7.81, score 8.85
- 9.30–9.85      -                                      push to the spine row, s 1.6        the row
+ 9.30–9.85      -                                      push to the spine row, s 1.45       the row
  9.90           three rows turn Warm; Post Radar card  dead still                          the warm leads
                 "Warm lead found" on Ines Moreau
  11.70–12.35    campaign panel slides in               to the panel, s 1.35                the panel
@@ -62,11 +74,19 @@ Strong cues used (film): 9.90, 11.99 (beat), 13.56, 16.68 (beat), 18.25, 21.38 (
  14.07 / 14.59  status lines: Duplicates merged ·      dead still                          -
  / 15.11        Synced to HubSpot · 3 leads in sequence
  16.10–16.65    panel closes                           to the KPI strip, s 1.45            the numbers
- 16.68          KPIs roll up; "zero manual reporting"  dead still                          -
- 18.00          DROP: pan down below the window        world rises out, workflow rises in  the workflow
- 18.60–21.00    "Under the hood" + headline            dead still                          -
- 21.38          lockup in a selected cell (beat)       -                                   end
- 21.38–24.50    hold; music fades over the last 1.5 s  -                                   -
+ 16.68–18.55    KPIs roll up; "zero manual reporting"  dead still                          -
+ 18.55–19.15    pan down below the window               world rises out                     the workflow
+ 18.85          "UNDER THE HOOD" eyebrow, top left     -                                   -
+ 19.15–27.30    n8n reveal clip plays in full: nodes    the clip's own camera glides        -
+                build left to right with names,         behind the newest node, then
+                then the whole graph, fully lit         pulls out (clip 5.1 to 6.5 s)
+ 24.50          headline as the pull-out lands         dead still                          -
+ 27.30–28.20    last frame holds; headline reads       dead still                          -
+ 28.20–28.55    workflow fades (break starts 27.58)    -                                   the cell
+ 28.60–29.40    a selected cell types "Excelr8"        dead still, in the silence          -
+ 29.68          KICK after the break: cell glows,      -                                   end
+                subline and URL land
+ 29.68–32.86    hold; music fades over the last 1.5 s  -                                   -
 ```
 
 ## COPY (verbatim)
@@ -99,8 +119,9 @@ display and numbers Instrument Serif, chips IBM Plex Mono, spreadsheet Lato.
 
 ## AUDIO
 
-Bed at 0.30 from track 4.23, fade out over the last 1.5 s. SFX (Kenney, CC0): soft impact on the drop 4.65,
-soft drop on the warm lead 9.90, click on Launch 13.56, soft impact on the lockup 21.38. Nothing on the
+Bed at 0.30 from track 4.23 for 32.86 s, fade out over the last 1.5 s. The reveal clip is muted. SFX (Kenney, CC0):
+soft impact on the drop 4.65, soft drop on the warm lead 9.90, click on Launch 13.56, soft impact on the lockup
+kick 29.68. Nothing on the
 enrichment stages: the beat carries them. Bass breathes the cyan glow behind the window.
 
 ## ACCEPTANCE
@@ -109,4 +130,5 @@ enrichment stages: the beat carries them. Bass breathes the cyan glow behind the
 - Every line on screen holds at least 0.3 s per word after it settles.
 - The spine row is readable in the hook and is the same row the camera lands on at 9.90.
 - No em dashes anywhere in on-screen copy.
-- Web copy at 1280×720, poster baked as frame 0.
+- The n8n reveal clip plays start to finish with no hard rectangle edge (masked into the page).
+- Web copy at 1280×720, poster baked as frame 0 (11.0 s).

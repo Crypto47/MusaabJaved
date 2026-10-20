@@ -5,7 +5,7 @@ for the portfolio card at `portfolio-v2/public/projects/dossier-bot/dossier-bot.
 not Remotion, because the HyperFrames registry already covers the chat, cursor and camera moves this needs.
 Build lives in `portfolio-v2/films/dossier-bot/composition/`.
 
-Format: 1920×1080, 30 fps, 25.00 s = 750 frames. Silent-safe: every beat reads with the sound off.
+Format: 1920×1080, 30 fps, 27.10 s = 813 frames. Silent-safe: every beat reads with the sound off.
 
 ---
 
@@ -30,30 +30,32 @@ All people and companies are fictional (Northwind, Sarah Chen, Ayesha Malik, Oma
 ## TIMING
 
 Music: "Happy Beats / Business Moves vol. 11" (ende.app, bundled with /brag), 114.84 BPM, beat 0.5225 s,
-bar 2.09 s. Downbeats used: 1.60, 3.70, 5.80, 9.50, 12.65, 17.91, 22.65 (strong cues from the brag preset).
+bar 2.09 s. Downbeats used: 1.60, 3.70, 5.80, 9.50, 12.65, 17.91, 24.74 (strong cues from the brag preset).
 
 ```
  t              beat                                   camera                              carries into the next beat
  0.00–3.60      composer, macro; "9:41 · call at 10"   s 2.0 on the bar, dead still        the bar
- 0.40–3.40      types "@Dossier Bot Sarah Chen, Head    —                                   —
+ 0.40–3.40      types "@Dossier Bot Sarah Chen, Head    ·                                   ·
                 of Ops at Northwind"
  3.70           SEND (downbeat)                        pull out 2.0 → 1.0                  the message lands in #sales
  4.75–5.25      "1 reply"; thread pane slides in        push to channel + thread, s 1.5    the thread
- 5.80–9.50      agent works: 4 status lines on the     dead still                          —
+ 5.80–9.50      agent works: 4 status lines on the     dead still                          ·
                 beat (5.80 / 6.86 / 7.91 / 8.96),
                 each spinner turns into a check
  9.50           briefing card drops (downbeat)         push to the card, s 1.75            the card
- 10.30–11.06    cursor travels, clicks                 —                                   the card opens
+ 10.30–11.06    cursor travels, clicks                 ·                                   the card opens
  11.30–15.20    PDF preview: name, what she cares       screen-space, slow pan down page    it folds back into the card
                 about, posts; the real dossier
                 template, scrolled top to bottom
- 15.81–17.40    Omar asks again; instant reply          back to s 1.5                       —
+ 15.81–17.40    Omar asks again; instant reply          back to s 1.5                       ·
                 "Already briefed. Same file."
  17.91          DROP: pan down below the window        world rises out, workflow rises in  the workflow
- 18.40–21.20    "Under the hood" + nightly line         dead still                          —
- 21.40–22.40    the bar returns alone, types the name  dead still                          —
- 22.65          SEND → lockup (downbeat)               —                                   end
- 23.50–25.00    hold; music fades                      —                                   —
+ 18.45–23.29    "Under the hood" + nightly line; the   the clip's own camera follows the   ·
+                Slack bot workflow builds node by      run, then pulls out to the whole
+                node (Remotion clip DossierBotReveal)  graph, held lit from ~22.4
+ 23.49–24.50    the bar returns alone, types the name  dead still                          ·
+ 24.74          SEND → lockup (downbeat, one bar later) ·                                  end
+ 25.60–27.10    hold; music fades                      ·                                   ·
 ```
 
 ## COPY (verbatim)
@@ -84,7 +86,7 @@ UI type Lato (Slack's own face), display Instrument Serif, tool chips IBM Plex M
 ## AUDIO
 
 Bed at 0.30, fade out over the last 1.5 s. SFX (Kenney, CC0): click on send 3.70, soft drop on the card 9.50,
-click on the cursor 11.06, soft drop on the cache reply 16.86, soft impact on the lockup 22.65. Nothing on the
+click on the cursor 11.06, soft drop on the cache reply 16.86, soft impact on the lockup 24.74. Nothing on the
 status lines: the beat already carries them. Bass breathes the violet glow behind the window.
 
 ## ACCEPTANCE

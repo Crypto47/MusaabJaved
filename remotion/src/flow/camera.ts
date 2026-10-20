@@ -66,6 +66,12 @@ export interface CameraKey {
   view: View;
   /** Vertical anchor once settled; interpolated alongside the view. */
   anchorY?: number;
+  /**
+   * Easing of the leg that arrives at this key. Defaults to the ease-out every
+   * film uses; "linear" is for dense tracking keys, where an ease-out per leg
+   * would make the camera pulse at every key.
+   */
+  ease?: "out" | "linear";
 }
 
 /**
@@ -96,7 +102,7 @@ export const sampleCamera = (
   const b = keys[i + 1];
 
   const t = interpolate(frame, [a.frame, b.frame], [0, 1], {
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
+    easing: b.ease === "linear" ? Easing.linear : Easing.bezier(0.16, 1, 0.3, 1),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

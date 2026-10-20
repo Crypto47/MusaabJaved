@@ -23,6 +23,12 @@ films/
   krownai/                frames the app's own one-take film (assets/video/, not committed)
 ```
 
+The "under the hood" beat in the four workflow films is a clip, not a still: the real n8n graph
+building itself left to right, rendered by the Remotion flow engine (`remotion/src/film/FlowReveal.tsx`,
+compositions `*Reveal` in the "Reveals" folder). The clips are not committed; before rendering one of
+those films, run `npm run render:reveals` in `remotion/`, which writes each to
+`films/<slug>/composition/assets/video/flow-reveal.mp4`.
+
 ## Regenerate a film
 
 Needs Node 22+, FFmpeg on PATH, and the brag skill installed (`~/.claude/skills/brag`).

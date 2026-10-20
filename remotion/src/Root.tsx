@@ -14,6 +14,8 @@ import {
 import { Zippit } from "./compositions/Zippit";
 import { ZippitFilm } from "./compositions/ZippitFilm";
 import { FILM_DURATION, FILM_FPS, FILM_HEIGHT, FILM_WIDTH } from "./film/CaseStudyFilm";
+import { FlowReveal, flowRevealDuration } from "./film/FlowReveal";
+import { FLOW_REVEALS } from "./compositions/FlowReveals";
 
 const RemotionRoot = () => {
   return (
@@ -52,6 +54,22 @@ const RemotionRoot = () => {
           width={FILM_WIDTH}
           height={FILM_HEIGHT}
         />
+      </Folder>
+
+      {/* "Under the hood" clips for the HyperFrames card films in films/. */}
+      <Folder name="Reveals">
+        {Object.entries(FLOW_REVEALS).map(([id, config]) => (
+          <Composition
+            key={id}
+            id={id}
+            component={FlowReveal}
+            defaultProps={config}
+            durationInFrames={flowRevealDuration(config)}
+            fps={FILM_FPS}
+            width={FILM_WIDTH}
+            height={FILM_HEIGHT}
+          />
+        ))}
       </Folder>
 
       {/* The original typographic videos, superseded by the films above but

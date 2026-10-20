@@ -1,0 +1,2 @@
+KrownAI reads a photo of textured hair, explains what it sees and builds a routine from 123 real products, each with the reason it is there. Expo, Supabase and Gemini Flash-Lite; in development.
+Music: "Wepa" by Kevin MacLeod (incompetech.com), CC BY 4.0.

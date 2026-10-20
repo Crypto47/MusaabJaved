@@ -1,0 +1,80 @@
+---
+title: "KrownAI: AI Hair and Scalp Analysis for Textured Hair"
+publishedAt: "2026-10-20"
+summary: "A native iOS and Android app that reads a photo of textured hair (3A to 4C), explains what it sees, and builds a routine from a 123-product catalogue with the reason each product is there. Built in Expo and Supabase for KrownAI, in development."
+images:
+  - "/projects/krownai/krownai.webp"
+team:
+  - name: "Musaab Javed"
+    role: "AI Engineer"
+    avatar: "/images/avatar.jpg"
+link: "https://krownai.lovable.app"
+video: "/projects/krownai/krownai.mp4"
+featured: false
+problem: "Mail-in hair kits cost $99 and take up to two weeks."
+solution: "One photo. A reading and a routine in about a minute."
+techStack:
+  - "Expo / React Native"
+  - "Supabase"
+  - "Gemini Flash-Lite"
+  - "pgvector"
+  - "Edge Functions"
+  - "NativeWind"
+features:
+  - "Eight-question hair quiz, saved answer by answer"
+  - "Camera with a gold framing guide and a drag-to-crop step"
+  - "AI reading: pattern, density, six scalp signs and how sure it is"
+  - "Up to three tries per scan; only the kept one counts"
+  - "Unusable photos explained kindly and never counted"
+  - "One product per routine step, with the reason it is there"
+  - "Journey of every kept scan, with a side-by-side compare"
+  - "Email, Google and Apple sign-in; full account deletion"
+impact:
+  - "123 products in the catalogue"
+  - "3 free scans a month"
+  - "About $0.001 of AI cost per reading"
+  - "About $0.001 of AI cost per routine"
+architecture:
+  - "Quiz + photo"
+  - "analyze Edge Function"
+  - "Gemini Flash-Lite reading"
+  - "Answer checker"
+  - "Embed needs per step"
+  - "pgvector shortlist"
+  - "Pick one per step"
+  - "Saved picks + Journey"
+---
+
+## The Problem
+
+People with textured hair are badly served by generic hair advice. Curl pattern, porosity and density change what works, and the usual route to a real answer is a mail-in kit: around $99, then ten to fifteen days of waiting for a report.
+
+KrownAI's bet is that a phone camera and a short quiz can get most of the way there in about a minute, for free, and then keep going: every new scan adds to a record you can compare against.
+
+## What I'm Building
+
+The mobile app, end to end: an Expo app for iOS and Android on a Supabase backend.
+
+**A quiz that never traps you.** Eight questions on texture, porosity, routine and goals, each answer saved as it is given. A new account is asked once; after that the quiz can be skipped and finished later from Home, or reopened one question at a time from Profile.
+
+**A camera built for one job.** A gold framing guide, a drag-to-crop step with handles kept clear of Android's swipe-back edge, and a photo shrunk to 1024 px (about 100 KB) before it leaves the phone. Permissions are asked when the camera opens, with the right recovery path on each platform when the answer is no.
+
+**A reading you can trust or retry.** Each photo goes to an `analyze` Edge Function that checks the quiz is done, consent is given and the monthly limits hold, then reads it with Gemini Flash-Lite under zero data retention. Every answer passes a checker before it is shown. The reading gives pattern, density, six scalp signs and how sure it is. A scan allows up to three tries; the user compares them as cards and keeps one, and only the kept scan is saved with its photo and counts toward the three free scans a month. A face, a mannequin or a blurry photo gets a kind explanation and never counts.
+
+**A routine from real products, with reasons.** For each routine step a `recommend` function writes a needs sentence from the scan and the quiz ("Leave-in conditioner for 4A hair. Keeps ends soft. Gentle on a flaky scalp."), embeds them all in one call, and shortlists the nearest products in that step's category with pgvector, dropping anything whose ingredients clash with the user's porosity. The model then picks one per step, but only ever sees short codes, never product IDs, so it cannot invent a product. Picks are saved once per scan, so Home and Journey always agree.
+
+**A journey, not a one-off.** Every kept scan joins a list with its photo, date and confidence. Any two can be compared side by side, with changed rows highlighted only when both scans actually saw that sign.
+
+## Notes on Building It
+
+**Cost is designed in, not measured later.** A reading costs about a tenth of a cent, and so does a routine. The function refuses a 31st reading in a month whatever happens on the client, so a bug or a bored user cannot run up a bill.
+
+**Privacy by default.** Photos live in a private bucket per user and are served through links that expire in an hour. Row-level security is on for every table, and a test signs in two throwaway users to prove neither can see the other's data. Deleting an account removes every photo first, then the login, and the rest cascades.
+
+**Wellness, not medicine.** Reasons and readings pass a wording check, and when the AI thinks a scalp sign deserves a professional look, the app says so gently rather than diagnosing.
+
+## Status
+
+In development for KrownAI. Sign-in, the quiz, the camera, readings, product picks and the journey are built and tested on dev; store builds run through EAS. The film on this card is the launch concept: one part line that becomes the camera guide, the routine spine and the journey divider in a single unbroken take.
+
+Music in the film: "Wepa" by Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0.
